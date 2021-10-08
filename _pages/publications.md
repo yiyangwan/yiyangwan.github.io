@@ -26,7 +26,7 @@ Yiyang Wang, Neda Masoud, and Anahita Khojandi.
 Yiyang Wang, Neda Masoud, and Anahita Khojandi.
 <i>In 2020 Forum on Integrated and Sustainable Transportation Systems (FISTS), pp. 156-161. IEEE, 2020.</i>
 
-<br><b>[Real-time Sensor Anomaly Detection and Identification in Automated Vehicles](/publications/TITS19)</b> <br>
+<br><b>[Real-time Sensor Anomaly Detection and Identification in Automated Vehicles](https://yiyang920.github.io/publications/TITS19)</b> <br>
 Franco van Wyk, Yiyang Wang, Anahita Khojandi, and Neda Masoud.
 <i>IEEE Transactions on Intelligent Transportation Systems 21, no. 3 (2019): 1264-1276.</i>
 
