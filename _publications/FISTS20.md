@@ -3,10 +3,10 @@ title: "Anomaly Detection in Connected and Automated Vehicles using an Augmented
 collection: publications
 permalink: /publications/FISTS20
 # excerpt: 'This paper is about the number 1. The number 2 is left for future work.'
-date: 2020-11-24
+# date: 2020-11-24
 venue: '2020 Forum on Integrated and Sustainable Transportation Systems (FISTS), pp. 156-161. IEEE, 2020.'
 # paperurl: 'https://ieeexplore.ieee.org/document/8684317'
-citation: 'Yiyang Wang, Neda Masoud, and Anahita Khojandi. &quot;Anomaly Detection in Connected and Automated Vehicles using an Augmented State Formulation&quot; <i>In 2020 Forum on Integrated and Sustainable Transportation Systems (FISTS), pp. 156-161. IEEE, 2020.</i>'
+citation: 'Yiyang Wang, Neda Masoud, and Anahita Khojandi. &quot;Anomaly Detection in Connected and Automated Vehicles using an Augmented State Formulation.&quot; <i>In 2020 Forum on Integrated and Sustainable Transportation Systems (FISTS), pp. 156-161. IEEE, 2020.</i>'
 ---
 
 [[PDF]](https://arxiv.org/pdf/2004.09496.pdf)
