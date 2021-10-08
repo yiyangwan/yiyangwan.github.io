@@ -22,7 +22,7 @@ Yiyang Wang, Neda Masoud.
 Yiyang Wang, Neda Masoud, and Anahita Khojandi.
 <i>IEEE Transactions on Intelligent Transportation Systems 22.3 (2020): 1411-1421.</i><b> [[Code]](https://github.com/yiyang920/CF_Anomaly_Detection)</b>
 
-<br><b>[Anomaly detection in connected and automated vehicles using an augmented state formulation](https://arxiv.org/pdf/2004.09496.pdf)</b> <br>
+<br><b>[Anomaly Detection in Connected and Automated Vehicles using an Augmented State Formulation](https://yiyang920.github.io/publications/FISTS20)</b> <br>
 Yiyang Wang, Neda Masoud, and Anahita Khojandi.
 <i>In 2020 Forum on Integrated and Sustainable Transportation Systems (FISTS), pp. 156-161. IEEE, 2020.</i>
 
