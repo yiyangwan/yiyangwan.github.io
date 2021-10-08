@@ -9,7 +9,7 @@ Yiyang Wang, Neda Masoud.
 <i>Working Paper.</i>
 
 
-<br><b>[A Dynamic Deep Reinforcement Learning-Bayesian Framework for Anomaly Detection](https://www.researchgate.net/profile/Jeremy-Watts/publication/349376559_A_Dynamic_Deep_Reinforcement_Learning-Bayesian_Framework_for_Anomaly_Detection)</b> <br>
+<br><b>[A Dynamic Deep Reinforcement Learning-Bayesian Framework for Anomaly Detection](https://yiyang920.github.io/publications/DYNAMIC)</b> <br>
 Jeremy Watts, Franco van Wyk, Shahrbanoo Rezaei, Yiyang Wang, Anahita Khojandi, Neda Masoud
 <i>IEEE Transactions on Intelligent Transportation Systems (under review). DOI: 10.13140/RG.2.2.35285.55526</i>
 
