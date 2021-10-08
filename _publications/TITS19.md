@@ -1,7 +1,7 @@
 ---
 title: "Real-time Sensor Anomaly Detection and Identification in Automated Vehicles"
 collection: publications
-permalink: /publication/TITS19
+permalink: /publications/TITS19
 # excerpt: 'This paper is about the number 1. The number 2 is left for future work.'
 date: 2019-04-09
 venue: 'IEEE Transactions on Intelligent Transportation Systems 21, no. 3 (2019): 1264-1276.'
