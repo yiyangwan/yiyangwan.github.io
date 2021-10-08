@@ -16,11 +16,11 @@ Jeremy Watts, Franco van Wyk, Shahrbanoo Rezaei, Yiyang Wang, Anahita Khojandi, 
 
 <br><b>[Adversarial Online Learning with Variable Plays in the Evasion-and-Pursuit Game: Theoretical Foundations and Application in Connected and Automated Vehicle Cybersecurity](https://www.researchgate.net/publication/345699783_Adversarial_Online_Learning_with_Variable_Plays_in_the_Pursuit-Evasion_Game_Theoretical_Foundations_and_Application_in_Connected_and_Automated_Vehicle_Cybersecurity)</b> <br>
 Yiyang Wang, Neda Masoud.
-<i>IEEE Access (under review). DOI: 10.13140/RG.2.2.17253.73440/1</i><b>[[Code]](https://github.com/yiyang920/adversarial_multi_armed_bandit_variable_plays)</b>
+<i>IEEE Access (under review). DOI: 10.13140/RG.2.2.17253.73440/1</i><b> [[Code]](https://github.com/yiyang920/adversarial_multi_armed_bandit_variable_plays)</b>
 
 <br><b>[Real-Time Sensor Anomaly Detection and Recovery in Connected Automated Vehicle Sensors](https://arxiv.org/pdf/1911.01531.pdf)</b> <br>
 Yiyang Wang, Neda Masoud, and Anahita Khojandi.
-<i>IEEE Transactions on Intelligent Transportation Systems 22.3 (2020): 1411-1421.</i><b>[[Code]](https://github.com/yiyang920/CF_Anomaly_Detection)</b>
+<i>IEEE Transactions on Intelligent Transportation Systems 22.3 (2020): 1411-1421.</i><b> [[Code]](https://github.com/yiyang920/CF_Anomaly_Detection)</b>
 
 <br><b>[Anomaly detection in connected and automated vehicles using an augmented state formulation](https://arxiv.org/pdf/2004.09496.pdf)</b> <br>
 Yiyang Wang, Neda Masoud, and Anahita Khojandi.
