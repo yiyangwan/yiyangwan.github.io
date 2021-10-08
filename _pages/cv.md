@@ -9,4 +9,4 @@ redirect_from:
 
 {% include base_path %}
 
-[Click to View My Up-to-date Curriculum Vitae [PDF]](http://yiyangw.github.io/files/yiyangwang_cv.pdf)
+[Click](http://yiyang920.github.io/files/yiyangwang_cv.pdf) to View My Up-to-date Curriculum Vitae
