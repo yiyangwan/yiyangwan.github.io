@@ -20,3 +20,5 @@ redirect_from:
 # Academic Services
 * Conference Reviewer: ITSC 2020, TRB Annual Meeting 2020, ITSC 2021, TRB Annual Meeting 2021
 * Journal Reviewer: IEEE Sensors Journal (IEEE Sens. J.), IEEE Transactions on Intelligent Transportation Systems (IEEE T-ITS), IEEE Transactions on Vehicular Technology (IEEE TVT).
+
+<br>纸上得来终觉浅，绝知此事要躬行。 ——  《冬夜读书示子聿》
