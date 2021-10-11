@@ -13,4 +13,4 @@ citation: 'Yiyang Wang, Neda Masoud.'
 [[CODE]](https://github.com/yiyang920/adversarial_multi_armed_bandit_variable_plays) -->
 
 ## Abstract
-We propose an iterative aggregation/disaggregation algorithm for solving transit planning problem in a large scale network. The aggregation algorithm solves a graph coarsening problem with input from the previous disaggregation solution. Then a peer-to-peer ride-matching problem is solved on the coarsened graph. The disaggregation algorithm disaggregates the solution of the ride-matching problem to the uncoarsened graph, and is designed to guarantee the convergenece over iterations.
+We propose an iterative aggregation/disaggregation scheme for solving transit planning problem in a large scale network. The aggregation algorithm solves a graph coarsening problem with input from the previous disaggregation solution. Then a peer-to-peer ride-matching problem is solved on the coarsened graph. The disaggregation algorithm disaggregates the solution of the ride-matching problem to the uncoarsened graph. The aggregation/disaggregation scheme is designed to guarantee the convergenece over iterations.
