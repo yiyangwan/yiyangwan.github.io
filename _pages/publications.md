@@ -4,7 +4,11 @@ title: "Publications"
 permalink: /publications/
 author_profile: true
 ---
-<br><b>An Aggregation/Disaggregation Algorithm for Transit Planning Problem</b> <br>
+<br><b>[Road-side Based Cybersecurity in Connected and Automated Vehicle System.](https://yiyang920.github.io/publications/RSU)</b> <br>
+Yiyang Wang, Neda Masoud.
+<i>Working Paper.</i>
+
+<br><b>[An Aggregation/Disaggregation Algorithm for Transit Planning Problem](https://yiyang920.github.io/publications/AGG)</b> <br>
 Yiyang Wang, Neda Masoud.
 <i>Working Paper.</i>
 
