@@ -4,7 +4,7 @@ title: "Publications"
 permalink: /publications/
 author_profile: true
 ---
-<br><b>[Road-side Based Cybersecurity in Connected and Automated Vehicle System.](https://yiyang920.github.io/publications/RSU)</b> <br>
+<br><b>[Road-side Based Cybersecurity in Connected and Automated Vehicle System](https://yiyang920.github.io/publications/RSU)</b> <br>
 Yiyang Wang, Neda Masoud.
 <i>Working Paper.</i>
 
