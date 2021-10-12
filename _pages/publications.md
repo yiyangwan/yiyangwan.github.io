@@ -4,6 +4,8 @@ title: "Publications"
 permalink: /publications/
 author_profile: true
 ---
+You can also find my articles on [<b>my Google Scholar profile</b>](https://scholar.google.com/citations?user=uAL9f8kAAAAJ&hl=en).
+
 <br><b>[Road-side Based Cybersecurity in Connected and Automated Vehicle System](https://yiyang920.github.io/publications/RSU)</b> <br>
 Yiyang Wang, Neda Masoud.
 <i>Working Paper.</i>
