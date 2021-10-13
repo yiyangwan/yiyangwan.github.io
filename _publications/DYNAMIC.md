@@ -3,7 +3,7 @@ title: "A Dynamic Deep Reinforcement Learning-Bayesian Framework for Anomaly Det
 collection: publications
 permalink: /publications/DYNAMIC
 # excerpt: 'This paper is about the number 1. The number 2 is left for future work.'
-date: 2021-08-23
+# date: 2021-08-23
 venue: 'IEEE Transactions on Intelligent Transportation Systems (under review).'
 # paperurl: 'https://ieeexplore.ieee.org/document/8684317'
 citation: 'Jeremy Watts, Franco van Wyk, Shahrbanoo Rezaei, Yiyang Wang, Anahita Khojandi, Neda Masoud. &quot;A Dynamic Deep Reinforcement Learning-Bayesian Framework for Anomaly Detection.&quot; <i>DOI: 10.13140/RG.2.2.35285.55526</i>'
