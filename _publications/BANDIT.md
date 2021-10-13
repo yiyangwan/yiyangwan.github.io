@@ -3,8 +3,8 @@ title: "Adversarial Online Learning with Variable Plays in the Evasion-and-Pursu
 collection: publications
 permalink: /publications/BANDIT
 # excerpt: 'This paper is about the number 1. The number 2 is left for future work.'
-# date: 2020-11-24
-venue: 'IEEE Access (under review).'
+date: 2020-10-12
+venue: 'IEEE Access.'
 # paperurl: 'https://ieeexplore.ieee.org/document/8684317'
 citation: 'Yiyang Wang, Neda Masoud. &quot;Adversarial Online Learning with Variable Plays in the Evasion-and-Pursuit Game: Theoretical Foundations and Application in Connected and Automated Vehicle Cybersecurity.&quot; <i>DOI: 10.13140/RG.2.2.17253.73440/1</i>'
 ---
