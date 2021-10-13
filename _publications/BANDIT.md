@@ -1,6 +1,6 @@
 ---
 title: "Adversarial Online Learning with Variable Plays in the Evasion-and-Pursuit Game: Theoretical Foundations and Application in Connected and Automated Vehicle Cybersecurity"
-<br/><img src='/images/BANDIT.png'>
+excerpt: "A pursuit-evasion game scenario where a malicious attacker who adopts Exp3 compromises the red vehicle, and a security monitor as defender who adopts Exp3.M-VP scans the red vehicle as well as two other vehicles. The pursuit-evasion game is conducted in a sequential manner. <br/><img src='/images/BANDIT.png'>"
 collection: publications
 permalink: /publications/BANDIT
 # excerpt: 'This paper is about the number 1. The number 2 is left for future work.'
