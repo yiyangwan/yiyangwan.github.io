@@ -1,6 +1,6 @@
 ---
 title: "Anomaly Detection in Connected and Automated Vehicles using an Augmented State Formulation"
-excerpt: "<img src='/images/FISTS20.png' style="width: 450px;">"
+excerpt: "<img src='/images/FISTS20.png' style='width: 450px;'/>"
 collection: publications
 permalink: /publications/FISTS20
 # excerpt: 'This paper is about the number 1. The number 2 is left for future work.'
