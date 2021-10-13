@@ -6,7 +6,7 @@ permalink: /publications/RSU
 # date: 2021-09-01
 venue: 'Working Paper.'
 # paperurl: 'https://ieeexplore.ieee.org/document/8684317'
-citation: 'Yiyang Wang, Neda Masoud. <i>Working Paper.</i>'
+# citation: 'Yiyang Wang, Neda Masoud. <i>Working Paper.</i>'
 ---
 
 Working paper. More details are coming!
