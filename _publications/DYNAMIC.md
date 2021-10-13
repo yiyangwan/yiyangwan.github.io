@@ -1,8 +1,8 @@
 ---
 title: "A Dynamic Deep Reinforcement Learning-Bayesian Framework for Anomaly Detection"
+excerpt: "<img src='/images/DYNAMIC.png' style='width: 500px;'/>
 collection: publications
 permalink: /publications/DYNAMIC
-excerpt: "<img src='/images/DYNAMIC.png' style='width: 500px;'/>
 date: 2021-08-23
 venue: 'IEEE Transactions on Intelligent Transportation Systems (under review).'
 # paperurl: 'https://ieeexplore.ieee.org/document/8684317'
