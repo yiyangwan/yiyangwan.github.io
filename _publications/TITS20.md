@@ -1,6 +1,6 @@
 ---
 title: "Real-Time Sensor Anomaly Detection and Recovery in Connected Automated Vehicle Sensors"
-excerpt: "<img src='/images/TITS20.jpg' style='width: 450px;'/>"
+excerpt: "<img src='/images/TITS20.jpg' style='width: 500px;'/>"
 collection: publications
 permalink: /publications/TITS20
 # excerpt: 'This paper is about the number 3. The number 4 is left for future work.'
