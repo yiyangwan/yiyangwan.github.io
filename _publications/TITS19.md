@@ -3,7 +3,7 @@ title: "Real-time Sensor Anomaly Detection and Identification in Automated Vehic
 collection: publications
 permalink: /publications/TITS19
 # excerpt: 'This paper is about the number 1. The number 2 is left for future work.'
-# date: 2019-04-09
+date: 2019-04-09
 venue: 'IEEE Transactions on Intelligent Transportation Systems 21, no. 3 (2019): 1264-1276.'
 # paperurl: 'https://ieeexplore.ieee.org/document/8684317'
 citation: 'Franco van Wyk, Yiyang Wang, Anahita Khojandi, and Neda Masoud. &quot;Real-time Sensor Anomaly Detection and Identification in Automated Vehicles.&quot; <i>IEEE Transactions on Intelligent Transportation Systems 21, no. 3 (2019): 1264-1276.</i>'
