@@ -4,7 +4,7 @@ excerpt: "<img src='/images/DYNAMIC.png' style='width: 500px;'/>"
 collection: publications
 permalink: /publications/DYNAMIC
 date: 2021-08-23
-venue: 'IEEE Transactions on Intelligent Transportation Systems (under review).'
+venue: 'IEEE Transactions on Intelligent Transportation Systems (under review)'
 # paperurl: 'https://ieeexplore.ieee.org/document/8684317'
 citation: 'Jeremy Watts, Franco van Wyk, Shahrbanoo Rezaei, Yiyang Wang, Anahita Khojandi, Neda Masoud. &quot;A Dynamic Deep Reinforcement Learning-Bayesian Framework for Anomaly Detection.&quot; <i>DOI: 10.13140/RG.2.2.35285.55526</i>'
 ---
