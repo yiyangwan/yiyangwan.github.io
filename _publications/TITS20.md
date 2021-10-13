@@ -1,5 +1,6 @@
 ---
 title: "Real-Time Sensor Anomaly Detection and Recovery in Connected Automated Vehicle Sensors"
+excerpt: "<img src='/images/TITS.jpg'>"
 collection: publications
 permalink: /publications/TITS20
 # excerpt: 'This paper is about the number 3. The number 4 is left for future work.'
