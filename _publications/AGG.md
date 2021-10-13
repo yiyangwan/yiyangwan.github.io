@@ -6,7 +6,7 @@ permalink: /publications/AGG
 # date: 2021-05-01
 venue: 'Working Paper.'
 # paperurl: 'https://ieeexplore.ieee.org/document/8684317'
-citation: 'Yiyang Wang, Neda Masoud. <i>Working Paper.</i>'
+# citation: 'Yiyang Wang, Neda Masoud. <i>Working Paper.</i>'
 ---
 
 <!-- [[PDF]](https://www.researchgate.net/publication/345699783_Adversarial_Online_Learning_with_Variable_Plays_in_the_Pursuit-Evasion_Game_Theoretical_Foundations_and_Application_in_Connected_and_Automated_Vehicle_Cybersecurity)
