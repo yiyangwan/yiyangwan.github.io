@@ -1,6 +1,6 @@
 ---
 title: "A Dynamic Deep Reinforcement Learning-Bayesian Framework for Anomaly Detection"
-excerpt: "<img src='/images/DYNAMIC.png' style='width: 500px;'/>
+excerpt: "<img src='/images/DYNAMIC.png' style='width: 500px;'/>"
 collection: publications
 permalink: /publications/DYNAMIC
 date: 2021-08-23
