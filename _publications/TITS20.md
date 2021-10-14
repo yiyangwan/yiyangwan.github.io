@@ -5,7 +5,7 @@ collection: publications
 permalink: /publications/TITS20
 # excerpt: 'This paper is about the number 3. The number 4 is left for future work.'
 date: 2020-02-05
-venue: 'IEEE Transactions on Intelligent Transportation Systems 22.3 (2020): 1411-1421'
+venue: 'IEEE Transactions on Intelligent Transportation Systems'
 # paperurl: 'http://academicpages.github.io/files/paper3.pdf'
 citation: 'Yiyang Wang, Neda Masoud, and Anahita Khojandi. &quot;Real-Time Sensor Anomaly Detection and Recovery in Connected Automated Vehicle Sensors.&quot; <i>IEEE Transactions on Intelligent Transportation Systems 22.3 (2020): 1411-1421.</i>'
 ---
