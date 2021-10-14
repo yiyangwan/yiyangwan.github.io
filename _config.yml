@@ -7,8 +7,7 @@
 
 # Site Settings
 locale                   : "en-US"
-title                    : "Yiyang Wang"
-masthead_title           : "YIYANG WANG | HOME"
+title                    : "Yiyang Wang's Homepage"
 title_separator          : "-"
 name                     : &name "Yiyang Wang"
 description              : &description "Yiyang Wang personal homepage, Ph.D. Candidate at University of Michigan"
