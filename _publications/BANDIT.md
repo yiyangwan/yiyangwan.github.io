@@ -1,6 +1,6 @@
 ---
 title: "Adversarial Online Learning with Variable Plays in the Evasion-and-Pursuit Game: Theoretical Foundations and Application in Connected and Automated Vehicle Cybersecurity"
-excerpt: "<p align="center"><img src='/images/BANDIT.png' style='width: 500px;'></p>"
+excerpt: "<p align='center'><img src='/images/BANDIT.png' style='width: 500px;'></p>"
 collection: publications
 permalink: /publications/BANDIT
 # excerpt: 'This paper is about the number 1. The number 2 is left for future work.'
