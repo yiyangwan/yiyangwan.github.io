@@ -13,4 +13,4 @@ venue: 'Working Paper'
 [[CODE]](https://github.com/yiyang920/adversarial_multi_armed_bandit_variable_plays) -->
 
 ## Abstract
-We propose an iterative aggregation/disaggregation scheme for solving transit planning problem in a large scale network. The aggregation algorithm solves a graph coarsening problem with input from the previous disaggregation solution. Then a peer-to-peer ride-matching problem is solved on the coarsened graph. The disaggregation algorithm disaggregates the solution of the ride-matching problem to the uncoarsened graph. The aggregation/disaggregation scheme is designed to guarantee the convergenece over iterations.
+Our main objective in this study is to implement an anomaly detection solution on RSUs to detect anomalies within CAV sensors or attacks/faults within the communication channel, and recover the corrupt signals by utilizing the information from multiple road users whose motions are affected by one another. To this end, we put forward a physics-based fault detector that can operate in a mixed traffic environment.
