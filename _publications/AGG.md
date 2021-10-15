@@ -1,5 +1,6 @@
 ---
 title: "An Aggregation/Disaggregation Algorithm for Transit Planning Problem"
+excerpt: "<p align='center'><img src='/images/AGG.png' style='width: 500px;'/></p>"
 collection: publications
 permalink: /publications/AGG
 # excerpt: 'This paper is about the number 1. The number 2 is left for future work.'
