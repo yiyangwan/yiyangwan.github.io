@@ -1,5 +1,6 @@
 ---
 title: "Road-side Based Cybersecurity in Connected and Automated Vehicle System"
+excerpt: "<p align='center'><img src='/images/RSU.png' style='width: 500px;'/></p>"
 collection: publications
 permalink: /publications/RSU
 # excerpt: 'This paper is about the number 1. The number 2 is left for future work.'
