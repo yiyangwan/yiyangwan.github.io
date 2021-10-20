@@ -19,4 +19,4 @@ We extend the adversarial/non-stochastic multi-play multi-armed bandit (MPMAB) t
 
 | ![](/images/BANDIT.png) |
 |:--:|
-| *<i>A pursuit-evasion game scenario where a malicious attacker who adopts Exp3 compromises the red vehicle, and a security monitor as defender who adopts Exp3.M-VP scans the red vehicle as well as two other vehicles. The pursuit-evasion game is conducted in a sequential manner.</i>* |
+| *A pursuit-evasion game scenario where a malicious attacker who adopts Exp3 compromises the red vehicle, and a security monitor as defender who adopts Exp3.M-VP scans the red vehicle as well as two other vehicles. The pursuit-evasion game is conducted in a sequential manner.* |

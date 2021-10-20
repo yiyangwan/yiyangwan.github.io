@@ -17,4 +17,4 @@ To assure the successful operation of connected and automated vehicles, it is cr
 
 | ![](/images/DYNAMIC.png) |
 |:--:| 
-| *<i>Overview of the anomaly detection framework.</i>* |
+| *Overview of the anomaly detection framework.* |

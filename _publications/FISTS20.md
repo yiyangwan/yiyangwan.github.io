@@ -18,4 +18,4 @@ In this paper we propose a novel observer-based method for anomaly detection in 
 
 | ![](/images/FISTS20.png) |
 |:--:|
-| *<i>Example of a normalized innovation sequence being non-zero mean. Left: scatter plot of EKF. Right: scatter plot of AEKF.</i>* |
+| *Example of a normalized innovation sequence being non-zero mean. Left: scatter plot of EKF. Right: scatter plot of AEKF.* |

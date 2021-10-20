@@ -17,4 +17,4 @@ Connected and automated vehicles (CAVs) are expected to revolutionize the transp
 
 | ![](/images/TITS19.png) |
 |:--:| 
-| *<br/><i>Overview of the CNN-KF Framework.</i>* |
+| *<br/>Overview of the CNN-KF Framework.* |

@@ -19,4 +19,4 @@ In this paper we propose a novel observer-based method to improve the safety and
 
 | ![](/images/TITS20.jpg) |
 |:--:|
-| *<i>Implementation flowchart of the proposed algorithm.</i>* |
+| *Implementation flowchart of the proposed algorithm.* |
