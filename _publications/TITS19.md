@@ -1,6 +1,6 @@
 ---
 title: "Real-time Sensor Anomaly Detection and Identification in Automated Vehicles"
-excerpt: "<p align='center'><img src='/images/TITS19.png' style='width: 500px;'></p>"
+excerpt: "<p align='center'><a href='/publications/TITS19'><img src='/images/TITS19.png' style='width: 500px;'></a></p>"
 collection: publications
 permalink: /publications/TITS19
 # excerpt: 'This paper is about the number 1. The number 2 is left for future work.'
