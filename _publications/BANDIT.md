@@ -11,7 +11,7 @@ citation: 'Yiyang Wang, Neda Masoud. &quot;Adversarial Online Learning with Vari
 10.1109/ACCESS.2021.3120700, IEEE Access.</i>'
 ---
 
-[[PDF]](files\articles\BANDIT.pdf)
+[[PDF]](https://github.com/yiyang920/files/articles/BANDIT.pdf)
 [[CODE]](https://github.com/yiyang920/adversarial_multi_armed_bandit_variable_plays)
 
 ## Abstract
