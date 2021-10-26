@@ -11,7 +11,7 @@ citation: 'Yiyang Wang, Neda Masoud, and Anahita Khojandi. &quot;Real-Time Senso
 ---
 
 
-[[PDF]](https://arxiv.org/pdf/1911.01531.pdf)
+[[PDF]](files\articles\TITS20.pdf)
 [[CODE]](https://github.com/yiyang920/CF_Anomaly_Detection)
 
 ## Abstract
