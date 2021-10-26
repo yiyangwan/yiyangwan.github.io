@@ -1,5 +1,5 @@
 ---
-title: "Adversarial Online Learning with Variable Plays in the Evasion-and-Pursuit Game: Theoretical Foundations and Application in Connected and Automated Vehicle Cybersecurity"
+title: "Adversarial Online Learning with Variable Plays in the Pursuit-Evasion Game: Theoretical Foundations and Application in Connected and Automated Vehicle Cybersecurity"
 excerpt: "<p align='center'><img src='/images/BANDIT.png' style='width: 500px;'></p>"
 collection: publications
 permalink: /publications/BANDIT
@@ -11,7 +11,7 @@ citation: 'Yiyang Wang, Neda Masoud. &quot;Adversarial Online Learning with Vari
 10.1109/ACCESS.2021.3120700, IEEE Access.</i>'
 ---
 
-[[PDF]](https://www.researchgate.net/publication/345699783_Adversarial_Online_Learning_with_Variable_Plays_in_the_Pursuit-Evasion_Game_Theoretical_Foundations_and_Application_in_Connected_and_Automated_Vehicle_Cybersecurity)
+[[PDF]](files\articles\BANDITS.pdf)
 [[CODE]](https://github.com/yiyang920/adversarial_multi_armed_bandit_variable_plays)
 
 ## Abstract
