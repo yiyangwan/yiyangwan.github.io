@@ -9,7 +9,7 @@ redirect_from:
 ---
 
 <p align="center">
-  <img src="https://yiyang920.github.io/images/yiyangwang_img2_bw.jpg?raw=true" alt="Photo" style="width: 420px;"/> 
+  <img src="https://yiyang920.github.io/images/horseshoe_bend.jpg?raw=true" alt="Photo" style="width: 420px;"/> 
 </p>
 
 <!-- # About Me -->
