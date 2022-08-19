@@ -1,6 +1,6 @@
 ---
 title: "Improving Transit in Small Cities through Collaborative and Data-driven Scenario Planning"
-excerpt: "<p align='center'><a href='/publications/AGG'><img src='/images/AGG.png' style='width: 500px;'/></a></p>"
+excerpt: "<p align='center'><a href='/publications/AGG'><img src='/images/BH.png' style='width: 500px;'/></a></p>"
 collection: publications
 permalink: /publications/BH
 # excerpt: 'This paper is about the number 1. The number 2 is left for future work.'
