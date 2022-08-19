@@ -15,3 +15,7 @@ venue: 'Working Paper'
 
 ## Abstract
 In this study, we develop a comprehensive framework to model the impact of cyberattacks on safety, security, and head-to-tail stability of connected and automated vehicular platoons. First, we propose a general platoon dynamics model with heterogeneous time delays that may originate from the communication channel and/or vehicle onboard sensors. Based on the proposed dynamics model, we develop an augmented state extended Kalman filter (ASEKF) to smooth the sensor reading, and use it in conjunction with an anomaly detector to detect sensor anomalies. Specifically, we consider two detectors: a parametric detector, the $\chi^2$-detector, and a learning-based detector, the one class support vector machine (OCSVM). We investigate the detection power of all combinations of vehicle dynamics models (EKF and ASEKF) and detectors ($\chi^2$ and OCSVM). Furthermore, we introduce a novel concept in string stability, namely, pseudo string stability, to measure a platoon's string stability under cyberattacks and model uncertainties. We demonstrate the relationship between the pseudo string stability of a platoon and its detection rate, which enables us to identity the critical detection sensitivity/recall that the platoon's members should posses for the platoon to remain pseudo string stable.
+
+| ![](/images/PLATOON.png) |
+|:--:|
+| *An example of platoon with 3-predecessor following information flow topology and with cloud information.* |
