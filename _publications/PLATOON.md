@@ -1,6 +1,6 @@
 ---
 title: "Anomaly Detection and String Stability Analysis in Connected Automated Vehicular Platoons"
-excerpt: "<p align='center'><a href='/publications/RSU'><img src='/images/PLATOON.png' style='width: 500px;'/></a></p>"
+excerpt: "<p align='center'><a href='/publications/PLATOON'><img src='/images/PLATOON.png' style='width: 500px;'/></a></p>"
 collection: publications
 permalink: /publications/PLATOON
 # excerpt: 'This paper is about the number 1. The number 2 is left for future work.'
