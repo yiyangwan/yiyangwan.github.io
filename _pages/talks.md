@@ -5,7 +5,7 @@ permalink: /talks/
 author_profile: true
 ---
 <br><b>Real-Time Sensor Anomaly Detection and Recovery in Connected Automated Vehicle Sensors.</b><br> 
-<i>Bridging Transportation Researchers (BTR) Online Conference. Aug. 2021. (virtual)</i>
+<i>Bridging Transportation Researchers (BTR) Online Conference. Aug. 2022. (virtual)</i>
 
 <br><b>Real-Time Sensor Anomaly Detection and Recovery in Connected Automated Vehicle Sensors.</b><br> 
 <i>International Symposium on Transportation Data and Modelling, Ann Arbor, MI. Jun. 2021. (virtual)</i>
