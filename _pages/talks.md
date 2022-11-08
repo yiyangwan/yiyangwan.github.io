@@ -5,7 +5,7 @@ permalink: /talks/
 author_profile: true
 ---
 <br><b>Anomaly Detection and String Stability Analysis in Connected Automated Vehicular Platoons.</b><br> 
-<i>MCity. Oct. 2022. (virtual)</i>
+<i>Mcity's Cyber Working Group. Oct. 2022. (virtual)</i>
 
 <br><b>Anomaly Detection and String Stability Analysis in Connected Automated Vehicular Platoons.</b><br> 
 <i>NGTS Seminar, Department of Civil and Environmental Engineering, University of Michigan, Ann Arbor, Sept. 2022.</i>
