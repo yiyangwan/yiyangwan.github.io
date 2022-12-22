@@ -12,6 +12,10 @@ redirect_from:
   <img src="https://yiyang920.github.io/images/horseshoe_bend.jpg?raw=true" alt="Photo" style="width: 500px;"/> 
 </p>
 
+<p align = "center">
+<font size="3"><span style="font-style: italic;">Horseshoe Bend, AZ, 2021</span></font>
+</p>
+
 <!-- # About Me -->
 * I received my Ph.D. degree in civil engineering at
 <!-- in the [Department of Civil and Environmental Engineering](https://cee.engin.umich.edu/)  -->
