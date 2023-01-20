@@ -4,8 +4,8 @@ excerpt: "<p align='center'><a href='/publications/BH'><img src='/images/BH.png'
 collection: publications
 permalink: /publications/BH
 # excerpt: 'This paper is about the number 1. The number 2 is left for future work.'
-date: 2022-07-29
-venue: 'Transportation (under review)'
+date: 2023-01-20
+venue: 'Case Studies on Transport Policy'
 # paperurl: 'https://ieeexplore.ieee.org/document/8684317'
 # citation: 'Yiyang Wang, Neda Masoud. <i>Working Paper.</i>'
 ---
