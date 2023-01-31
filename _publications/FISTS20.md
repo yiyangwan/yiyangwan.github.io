@@ -10,8 +10,8 @@ venue: '2020 IEEE Forum on Integrated and Sustainable Transportation Systems (FI
 citation: 'Yiyang Wang, Neda Masoud, and Anahita Khojandi. &quot;Anomaly Detection in Connected and Automated Vehicles using an Augmented State Formulation.&quot; <i>In 2020 Forum on Integrated and Sustainable Transportation Systems (FISTS), pp. 156-161. IEEE, 2020.</i>'
 ---
 
-[[CODE]](https://github.com/yiyang920/CF_Anomaly_Detection)
-[[PDF]](https://yiyang920.github.io/files/articles/FISTS20.pdf)
+[[CODE]](https://github.com/wayiya/CF_Anomaly_Detection)
+[[PDF]](https://wayiya.github.io/files/articles/FISTS20.pdf)
 
 
 ## Abstract
