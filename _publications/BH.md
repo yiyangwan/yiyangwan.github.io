@@ -11,7 +11,7 @@ venue: 'Case Studies on Transport Policy'
 ---
 
 <!-- [[PDF]](https://www.researchgate.net/publication/345699783_Adversarial_Online_Learning_with_Variable_Plays_in_the_Pursuit-Evasion_Game_Theoretical_Foundations_and_Application_in_Connected_and_Automated_Vehicle_Cybersecurity)
-[[CODE]](https://github.com/yiyang920/adversarial_multi_armed_bandit_variable_plays) -->
+[[CODE]](https://github.com/wayiya/adversarial_multi_armed_bandit_variable_plays) -->
 
 ## Abstract
 Small communities often lack effective transit planning methods that can integrate diverse forms of knowledge, foster collaboration, and envision better transit futures. To address these needs, this paper presents a case study of a project conducted in Benton Harbor, Michigan. The case study demonstrates a collaborative and data-driven scenario planning process conducted for a small region, and evaluates it through a mixed-methods research design. Through the use of normative service scenarios and 
