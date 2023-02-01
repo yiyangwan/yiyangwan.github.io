@@ -11,7 +11,7 @@ citation: 'Yiyang Wang, Neda Masoud. &quot;Adversarial Online Learning with Vari
 ---
 
 [[CODE]](https://github.com/wayiya/adversarial_multi_armed_bandit_variable_plays)
-[[PDF]](https://wayiya.github.io/files/articles/BANDIT.pdf)
+[[PDF]](/files/articles/BANDIT.pdf)
 
 
 ## Abstract
