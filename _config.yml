@@ -11,9 +11,9 @@ title                    : "Yiyang Wang's Homepage"
 title_separator          : "-"
 name                     : &name "Yiyang Wang"
 description              : &description "Yiyang Wang personal homepage, Ph.D. at University of Michigan"
-url                      : https://wayiya.github.io # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
+url                      : https://yiyangwan.github.io # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
 baseurl                  : "" # the subpath of your site, e.g. "/blog"
-repository               : "wayiya/wayiya.github.io"
+repository               : "yiyangwan/yiyangwan.github.io"
 teaser                   :  # filename of teaser fallback teaser image placed in /images/, .e.g. "500x300.png"
 breadcrumbs              : false # true, false (default)
 words_per_minute         : 160
@@ -96,7 +96,7 @@ author:
   flickr           :
   facebook         :
   foursquare       :
-  github           : "wayiya"
+  github           : "yiyangwan"
   google_plus      :
   keybase          :
   instagram        :
