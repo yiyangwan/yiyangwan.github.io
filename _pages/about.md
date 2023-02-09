@@ -9,7 +9,7 @@ redirect_from:
 ---
 
 <p align="center">
-  <img src="https://wayiya.github.io/images/horseshoe_bend.jpg?raw=true" alt="Photo" style="width: 500px;"/> 
+  <img src="/images/horseshoe_bend.jpg?raw=true" alt="Photo" style="width: 500px;"/> 
 </p>
 
 <p align = "center">
