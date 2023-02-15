@@ -25,6 +25,6 @@ at [University of Michigan](https://umich.edu/), where I was advised by [Prof. N
 
 # Academic Services
 * Conference Reviewer: [ISTTT25](https://limos.engin.umich.edu/isttt25/), TRB Annual Meeting 2023, TRB Annual Meeting 2022, [BTR4](https://easychair.org/cfp/BTR4), [ITSC 2021](https://2021.ieee-itsc.org/), TRB Annual Meeting 2021, [ITSC 2020](https://www.ieee-itsc2020.org/), TRB Annual Meeting 2020
-* Journal Reviewer: IEEE Sensors Journal (IEEE Sens. J.), IEEE Transactions on Intelligent Transportation Systems (IEEE T-ITS), IEEE Transactions on Intelligent Vehicles (IEEE T-IV), IEEE Transactions on Vehicular Technology (IEEE TVT), Peer-to-Peer Networking and Applications.
+* Journal Reviewer: IEEE Network, IEEE Sensors Journal (IEEE Sens. J.), IEEE Transactions on Intelligent Transportation Systems (IEEE T-ITS), IEEE Transactions on Intelligent Vehicles (IEEE T-IV), IEEE Transactions on Vehicular Technology (IEEE TVT), Peer-to-Peer Networking and Applications.
 
 <br>恐懈怠，则思慎始而敬终。 ——  《谏太宗十思疏》
