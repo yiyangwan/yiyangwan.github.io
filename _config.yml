@@ -72,11 +72,11 @@ social:
 
 
 # Analytics
-# analytics:
-#   provider               :  "google-universal" # false (default), "google", "google-universal", "custom"
-#   google:
-#     tracking_id          : 
-google_analytics: G-0X16EGXERM
+analytics:
+  provider               :  "google" # false (default), "google", "google-universal", "custom"
+  google:
+    tracking_id          : G-0X16EGXERM
+# google_analytics: G-0X16EGXERM
 
 # Site Author
 author:
