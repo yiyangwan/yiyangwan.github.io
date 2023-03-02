@@ -76,7 +76,7 @@ social:
 #   provider               :  "google-universal" # false (default), "google", "google-universal", "custom"
 #   google:
 #     tracking_id          : 
-google-analytics: G-0X16EGXERM
+google_analytics: G-0X16EGXERM
 
 # Site Author
 author:
