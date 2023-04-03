@@ -9,4 +9,4 @@ redirect_from:
 
 {% include base_path %}
 
-[Click](/files/yiyangwang_cv.pdf) to view my up-to-date curriculum vitae.
+[Click](/files/yiyangwang_cv.pdf) to view my curriculum vitae, updated January 2023.
