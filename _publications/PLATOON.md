@@ -4,7 +4,7 @@ excerpt: "<p align='center'><a href='/publications/PLATOON'><img src='/images/PL
 collection: publications
 permalink: /publications/PLATOON
 # excerpt: 'This paper is about the number 1. The number 2 is left for future work.'
-date: 2021-10-19
+date: 2023-4-5
 venue: 'Transportation Research Part C: Emerging Technologies'
 paperurl: 'https://www.researchgate.net/publication/362382000_Anomaly_Detection_and_String_Stability_Analysis_in_Connected_Automated_Vehicular_Platoons'
 citation: 'Yiyang Wang, Ruixuan Zhang, Neda Masoud, Henry X. Liu, "Anomaly detection and string stability analysis in connected automated vehicular platoons" <i>Transportation Research Part C: Emerging Technologies, Volume 151, 2023, 104114, ISSN 0968-090X, https://doi.org/10.1016/j.trc.2023.104114.</i>'
