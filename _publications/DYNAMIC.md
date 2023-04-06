@@ -6,7 +6,7 @@ permalink: /publications/DYNAMIC
 date: 2022-08-12
 venue: 'IEEE Transactions on Intelligent Transportation Systems'
 # paperurl: 'https://ieeexplore.ieee.org/document/8684317'
-citation: 'J. Watts, F. van Wyk, S. Rezaei, Y. Wang, N. Masoud and A. Khojandi, "A Dynamic Deep Reinforcement Learning-Bayesian Framework for Anomaly Detection," in IEEE Transactions on Intelligent Transportation Systems, 2022, <i>DOI: doi: 10.1109/TITS.2022.3200906.</i>'
+citation: 'J. Watts, F. van Wyk, S. Rezaei, Y. Wang, N. Masoud and A. Khojandi, "A Dynamic Deep Reinforcement Learning-Bayesian Framework for Anomaly Detection," in IEEE Transactions on Intelligent Transportation Systems, 2022, <i>doi: 10.1109/TITS.2022.3200906.</i>'
 ---
 
 [[PDF]](https://www.researchgate.net/publication/349376559_A_Dynamic_Deep_Reinforcement_Learning-Bayesian_Framework_for_Anomaly_Detection)
