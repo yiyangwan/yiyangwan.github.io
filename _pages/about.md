@@ -9,7 +9,7 @@ redirect_from:
 ---
 
 <p align="center">
-  <img src="/images/portland.jpg?raw=true" alt="Photo" style="width: 500px;"/> 
+  <img src="/images/portland.jpg?raw=true" alt="Photo" style="width: 700px;"/> 
 </p>
 
 <p align = "center">
