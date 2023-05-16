@@ -6,7 +6,7 @@ permalink: /publications/BH
 # excerpt: 'This paper is about the number 1. The number 2 is left for future work.'
 date: 2023-01-19
 venue: 'Case Studies on Transport Policy'
-paperurl: '[ScienceDirect](https://www.sciencedirect.com/science/article/pii/S2213624X23000111)'
+paperurl: 'https://www.sciencedirect.com/science/article/pii/S2213624X23000111'
 citation: 'Goodspeed, Robert, et al. "Improving Transit in Small Cities through Collaborative and Data-driven Scenario Planning." <i>Case Studies on Transport Policy (2023): 100957.</i>'
 ---
 
