@@ -22,7 +22,11 @@ redirect_from:
 * Throughout my Ph.D. studies, I have conducted research in two distinct areas. The first line of research focused on secure sensor state estimation and reinforcement learning, with applications in connected and automated vehicle technologies. Within this field, I explored topics including anomaly detection, adversarial bandits learning, and algorithmic game theory. The second line of research delved into combinatorial optimization, including peer-to-peer ride-matching and graph aggregation/disaggregation algorithms.
 
 # Academic Services
-* Conference Reviewer: [ISTTT25](https://limos.engin.umich.edu/isttt25/), TRB Annual Meeting 2023, TRB Annual Meeting 2022, [BTR4](https://easychair.org/cfp/BTR4), [ITSC 2021](https://2021.ieee-itsc.org/), TRB Annual Meeting 2021, [ITSC 2020](https://www.ieee-itsc2020.org/), TRB Annual Meeting 2020
+* Conference Reviewer:
+  - [TRB Annual Meeting](https://www.trb.org/AnnualMeeting/AnnualMeeting.aspx): 2024, 2023, 2022, 2021, 2020
+  - [ISTTT25](https://limos.engin.umich.edu/isttt25/)
+  - [BTR4](https://easychair.org/cfp/BTR4)
+  - ITSC: [2021](https://2021.ieee-itsc.org/), [2020](https://www.ieee-itsc2020.org/)
 * Journal Reviewer: IEEE Network, IEEE Sensors Journal (IEEE Sens. J.), IEEE Transactions on Intelligent Transportation Systems (IEEE T-ITS), IEEE Transactions on Intelligent Vehicles (IEEE T-IV), IEEE Transactions on Vehicular Technology (IEEE TVT), Peer-to-Peer Networking and Applications, Space: Science & Technology, Wireless Communications and Mobile Computing.
 
 <br>忧懈怠，则思慎始而敬终。 ——  《谏太宗十思疏》
