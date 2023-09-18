@@ -29,6 +29,7 @@ redirect_from:
   - ITSC: [2021](https://2021.ieee-itsc.org/), [2020](https://www.ieee-itsc2020.org/)
 * Journal Reviewer: IEEE Network, IEEE Sensors Journal (IEEE Sens. J.), IEEE Transactions on Intelligent Transportation Systems (IEEE T-ITS), IEEE Transactions on Intelligent Vehicles (IEEE T-IV), IEEE Transactions on Vehicular Technology (IEEE TVT), Peer-to-Peer Networking and Applications, Space: Science & Technology, Wireless Communications and Mobile Computing.
 
-<br>莫听穿林打叶声，何妨吟啸且徐行。 ——  《定风波》
+<br><p style="text-align: center;">莫听穿林打叶声，何妨吟啸且徐行。 ——  《定风波》</p>
 
+<br>
 <script type='text/javascript' id='clustrmaps' src='//cdn.clustrmaps.com/map_v2.js?cl=2d78ad&w=200&t=n&d=SnPnk6Cr29vf5sju4MaC5b19XvAQdITwdEP5GKvFztg&co=f9f9f9'></script>
