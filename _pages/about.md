@@ -23,10 +23,10 @@ redirect_from:
 
 # Academic Services
 * Conference Reviewer:
-  - [ISTTT25](https://limos.engin.umich.edu/isttt25/)
-  - [TRB Annual Meeting](https://www.trb.org/AnnualMeeting/AnnualMeeting.aspx): 2024, 2023, 2022, 2021, 2020
-  - [BTR4](https://easychair.org/cfp/BTR4)
-  - ITSC: [2021](https://2021.ieee-itsc.org/), [2020](https://www.ieee-itsc2020.org/)
+  - ISTTT: [2025](https://limos.engin.umich.edu/isttt25/)
+  - [TRB Annual Meeting](https://www.trb.org/AnnualMeeting/AnnualMeeting.aspx): 2020 - 2024
+  - BTR: [2022](https://easychair.org/cfp/BTR4)
+  - [ITSC](https://ieee-itss.org/conf/itsc/): 2020 - 2021
 * Journal Reviewer: 
   - IEEE Network Magazine
   - IEEE Sensors Journal (IEEE Sens. J.) 
