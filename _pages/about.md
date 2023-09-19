@@ -27,7 +27,7 @@ redirect_from:
   - [ISTTT25](https://limos.engin.umich.edu/isttt25/)
   - [BTR4](https://easychair.org/cfp/BTR4)
   - ITSC: [2021](https://2021.ieee-itsc.org/), [2020](https://www.ieee-itsc2020.org/)
-* Journal Reviewer: IEEE Network, IEEE Sensors Journal (IEEE Sens. J.), IEEE Transactions on Intelligent Transportation Systems (IEEE T-ITS), IEEE Transactions on Intelligent Vehicles (IEEE T-IV), IEEE Transactions on Vehicular Technology (IEEE TVT), Peer-to-Peer Networking and Applications, Space: Science & Technology, Wireless Communications and Mobile Computing.
+* Journal Reviewer: IEEE Network Magazine, IEEE Sensors Journal (IEEE Sens. J.), IEEE Transactions on Intelligent Transportation Systems (IEEE T-ITS), IEEE Transactions on Intelligent Vehicles (IEEE T-IV), IEEE Transactions on Vehicular Technology (IEEE TVT), Peer-to-Peer Networking and Applications, Space: Science & Technology, Wireless Communications and Mobile Computing.
 
 <br/>
 <div align="center">莫听穿林打叶声，何妨吟啸且徐行。</div>
