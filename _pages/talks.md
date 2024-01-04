@@ -8,6 +8,7 @@ author_profile: true
 - <i>TRB Annual Meeting, Washington DC, Jan. 2024. </i><br>
 
 <b>Anomaly Detection and String Stability Analysis in Connected Automated Vehicular Platoons.</b><br> 
+- <i>INFORMS Annual Conference, Phoenix, AZ, Oct. 2023.</i><br>
 - <i>TRB Annual Meeting, Washington DC, Jan. 2023. </i><br>
 - <i>Mcity Research Review, Ann Arbor, MI, Nov. 2022. </i><br>
 - <i>Mcity's Cyber Working Group. Oct. 2022. (virtual)</i><br>
