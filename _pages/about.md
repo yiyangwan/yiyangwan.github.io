@@ -43,4 +43,4 @@ redirect_from:
 <div align="center">-- 莫听穿林打叶声，何妨吟啸且徐行。</div>
 
 <br/><br/><br/><br/>
-<script type="text/javascript" id="clustrmaps" src="//clustrmaps.com/map_v2.js?d=SnPnk6Cr29vf5sju4MaC5b19XvAQdITwdEP5GKvFztg&cl=ffffff&w=a"></script>
+<script type='text/javascript' id='clustrmaps' src='//cdn.clustrmaps.com/map_v2.js?cl=e0e4f2&w=150&t=n&d=SnPnk6Cr29vf5sju4MaC5b19XvAQdITwdEP5GKvFztg&co=ffffff&cmo=6898db&cmn=6be06b&ct=808080'></script>
