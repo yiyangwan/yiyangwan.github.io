@@ -6,8 +6,8 @@ permalink: /publications/PLATOON
 # excerpt: 'This paper is about the number 1. The number 2 is left for future work.'
 date: 2023-4-5
 venue: 'Transportation Research Part C: Emerging Technologies'
-paperurl: 'https://www.researchgate.net/publication/362382000_Anomaly_Detection_and_String_Stability_Analysis_in_Connected_Automated_Vehicular_Platoons'
-citation: 'Wang, Yiyang, et al. "Anomaly detection and string stability analysis in connected automated vehicular platoons." <i>Transportation Research Part C: Emerging Technologies 151 (2023): 104114.</i>'
+paperurl: 'https://www.sciencedirect.com/science/article/abs/pii/S0968090X23001031'
+# citation: 'Wang, Yiyang, et al. "Anomaly detection and string stability analysis in connected automated vehicular platoons." <i>Transportation Research Part C: Emerging Technologies 151 (2023): 104114.</i>'
 ---
 
 <!-- [[PDF]](https://www.researchgate.net/publication/345699783_Adversarial_Online_Learning_with_Variable_Plays_in_the_Pursuit-Evasion_Game_Theoretical_Foundations_and_Application_in_Connected_and_Automated_Vehicle_Cybersecurity)

@@ -6,8 +6,8 @@ permalink: /publications/BANDIT
 # excerpt: 'This paper is about the number 1. The number 2 is left for future work.'
 date: 2021-10-15
 venue: 'IEEE Access'
-# paperurl: 'https://ieeexplore.ieee.org/document/8684317'
-citation: 'Yiyang Wang, Neda Masoud. &quot;Adversarial Online Learning with Variable Plays in the Pursuit-Evasion Game: Theoretical Foundations and Application in Connected and Automated Vehicle Cybersecurity.&quot; <i>In IEEE Access, vol. 9, pp. 142475-142488, 2021, doi: 10.1109/ACCESS.2021.3120700.</i>'
+paperurl: 'https://ieeexplore.ieee.org/abstract/document/9576732'
+# citation: 'Yiyang Wang, Neda Masoud. &quot;Adversarial Online Learning with Variable Plays in the Pursuit-Evasion Game: Theoretical Foundations and Application in Connected and Automated Vehicle Cybersecurity.&quot; <i>In IEEE Access, vol. 9, pp. 142475-142488, 2021, doi: 10.1109/ACCESS.2021.3120700.</i>'
 ---
 
 [[CODE]](https://github.com/wayiya/adversarial_multi_armed_bandit_variable_plays)

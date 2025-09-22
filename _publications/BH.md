@@ -7,7 +7,7 @@ permalink: /publications/BH
 date: 2023-01-19
 venue: 'Case Studies on Transport Policy'
 paperurl: 'https://www.sciencedirect.com/science/article/pii/S2213624X23000111'
-citation: 'Goodspeed, Robert, et al. "Improving Transit in Small Cities through Collaborative and Data-driven Scenario Planning." <i>Case Studies on Transport Policy (2023): 100957.</i>'
+# citation: 'Goodspeed, Robert, et al. "Improving Transit in Small Cities through Collaborative and Data-driven Scenario Planning." <i>Case Studies on Transport Policy (2023): 100957.</i>'
 ---
 
 <!-- [[PDF]](https://www.researchgate.net/publication/345699783_Adversarial_Online_Learning_with_Variable_Plays_in_the_Pursuit-Evasion_Game_Theoretical_Foundations_and_Application_in_Connected_and_Automated_Vehicle_Cybersecurity)

@@ -7,7 +7,7 @@ permalink: /publications/POMDP
 date: 2025-11-1
 venue: 'Transportation Research Part C: Emerging Technologies'
 paperurl: 'https://www.sciencedirect.com/science/article/pii/S0968090X25003560'
-citation: 'Yiyang Wang, Ethan Zhang, Neda Masoud, Anahita Khojandi, Dynamic cybersecurity resource allocation in connected and automated vehicles, <i>Transportation Research Part C: Emerging Technologies, Volume 180, 2025, 105352</i>, ISSN 0968-090X.'
+# citation: 'Yiyang Wang, Ethan Zhang, Neda Masoud, Anahita Khojandi, Dynamic cybersecurity resource allocation in connected and automated vehicles, <i>Transportation Research Part C: Emerging Technologies, Volume 180, 2025, 105352</i>, ISSN 0968-090X.'
 ---
 
 <!-- [[PDF]](https://www.researchgate.net/publication/345699783_Adversarial_Online_Learning_with_Variable_Plays_in_the_Pursuit-Evasion_Game_Theoretical_Foundations_and_Application_in_Connected_and_Automated_Vehicle_Cybersecurity)
