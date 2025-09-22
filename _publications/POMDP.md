@@ -4,9 +4,9 @@ excerpt: "<p align='center'><a href='/publications/POMDP'><img src='/images/POMD
 collection: publications
 permalink: /publications/POMDP
 # excerpt: 'This paper is about the number 1. The number 2 is left for future work.'
-date: 2022-9-1
-venue: 'Under Review'
-# paperurl: 'https://www.researchgate.net/publication/362382000_Anomaly_Detection_and_String_Stability_Analysis_in_Connected_Automated_Vehicular_Platoons'
+date: 2025-11-1
+venue: 'Transportation Research Part C: Emerging Technologies'
+paperurl: 'https://authors.elsevier.com/c/1lpd9,M0mRY~0e'
 # citation: 'Wang, Yiyang, et al. "Anomaly detection and string stability analysis in connected automated vehicular platoons." <i>Transportation Research Part C: Emerging Technologies 151 (2023): 104114.</i>'
 ---
 
