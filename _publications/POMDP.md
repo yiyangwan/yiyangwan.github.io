@@ -4,7 +4,7 @@ excerpt: "<p align='center'><a href='/publications/POMDP'><img src='/images/POMD
 collection: publications
 permalink: /publications/POMDP
 # excerpt: 'This paper is about the number 1. The number 2 is left for future work.'
-date: 2025-11-1
+date: 2025-9-1
 venue: 'Transportation Research Part C: Emerging Technologies'
 paperurl: 'https://www.sciencedirect.com/science/article/pii/S0968090X25003560'
 # citation: 'Yiyang Wang, Ethan Zhang, Neda Masoud, Anahita Khojandi, Dynamic cybersecurity resource allocation in connected and automated vehicles, <i>Transportation Research Part C: Emerging Technologies, Volume 180, 2025, 105352</i>, ISSN 0968-090X.'
