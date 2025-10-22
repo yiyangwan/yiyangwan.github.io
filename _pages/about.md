@@ -13,7 +13,7 @@ redirect_from:
 </p>
 
 <p align = "center">
-<font size="3"><span style="font-style: italic;">Portland, OR, 2023</span></font>
+<font size="3"><span style="font-style: italic;">Photo taken in Portland, OR, 2023</span></font>
 </p>
 
 <!-- # About Me -->
