@@ -5,7 +5,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Project Overview
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 This is a Jekyll-based personal academic website for Yiyang Wang, hosted on GitHub Pages. The site uses the Minimal Mistakes theme and is structured around Jekyll collections for organizing academic content (publications, talks, teaching, portfolio).
+=======
+This is a Jekyll-based personal academic homepage for Yiyang Wang (https://yiyangwan.github.io/), built using the Minimal Mistakes theme. The site showcases publications, blog posts, teaching materials, talks, and portfolio items.
+>>>>>>> Stashed changes
 =======
 This is a Jekyll-based personal academic homepage for Yiyang Wang (https://yiyangwan.github.io/), built using the Minimal Mistakes theme. The site showcases publications, blog posts, teaching materials, talks, and portfolio items.
 >>>>>>> Stashed changes
@@ -14,6 +18,7 @@ This is a Jekyll-based personal academic homepage for Yiyang Wang (https://yiyan
 
 ### Local Development
 ```bash
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 # Install Ruby dependencies
 bundle install
@@ -109,6 +114,8 @@ This site uses the Minimal Mistakes theme via github-pages gem. The theme is con
 ## Deployment
 The site is deployed via GitHub Pages. Push to the main branch to trigger deployment. Jekyll builds automatically on GitHub's servers using the github-pages gem configuration.
 =======
+=======
+>>>>>>> Stashed changes
 # Install dependencies
 bundle install
 
@@ -220,4 +227,7 @@ The site is deployed via GitHub Pages. Pushing to the `main` branch automaticall
 - The site uses the `future: false` setting, so posts dated in the future won't be published
 - Development mode (`_config.dev.yml`) disables Google Analytics for local testing
 - The JavaScript build process concatenates and minifies multiple vendor libraries and custom scripts into `assets/js/main.min.js`
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
