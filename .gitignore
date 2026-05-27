@@ -2,4 +2,6 @@ _site/
 .DS_Store
 # ignore all files in "hidden" folder
 hidden/*
+CV/
+docs/
 
