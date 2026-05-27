@@ -4,240 +4,96 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-This is a Jekyll-based personal academic website for Yiyang Wang, hosted on GitHub Pages. The site uses the Minimal Mistakes theme and is structured around Jekyll collections for organizing academic content (publications, talks, teaching, portfolio).
-=======
-This is a Jekyll-based personal academic homepage for Yiyang Wang (https://yiyangwan.github.io/), built using the Minimal Mistakes theme. The site showcases publications, blog posts, teaching materials, talks, and portfolio items.
->>>>>>> Stashed changes
-=======
-This is a Jekyll-based personal academic homepage for Yiyang Wang (https://yiyangwan.github.io/), built using the Minimal Mistakes theme. The site showcases publications, blog posts, teaching materials, talks, and portfolio items.
->>>>>>> Stashed changes
-=======
-This is a Jekyll-based personal academic homepage for Yiyang Wang (https://yiyangwan.github.io/), built using the Minimal Mistakes theme. The site showcases publications, blog posts, teaching materials, talks, and portfolio items.
->>>>>>> Stashed changes
+Jekyll-based personal academic homepage for Yiyang Wang, hosted on GitHub Pages at https://yiyangwan.github.io. Built on the academicpages template (a Minimal Mistakes derivative). Live site rebuilds automatically when `main` is pushed.
 
 ## Development Commands
 
-### Local Development
 ```bash
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-# Install Ruby dependencies
-bundle install
-
-# Serve site locally (development config)
+# Local dev (analytics disabled, base URL = localhost:4000)
 bundle exec jekyll serve --config _config.yml,_config.dev.yml
 
-# Serve site locally (production config)
+# Production-config preview
 bundle exec jekyll serve
 
-# Build site
+# Static build into _site/
 bundle exec jekyll build
 ```
 
-### JavaScript Build
+JavaScript bundle (`assets/js/main.min.js`) is generated via npm — only needed if editing files under `assets/js/_main.js`, `assets/js/plugins/`, or `assets/js/vendor/`:
+
 ```bash
-# Install Node dependencies
 npm install
-
-# Build and minify JavaScript
-npm run build:js
-
-# Watch for JavaScript changes and rebuild
-npm run watch:js
+npm run build:js     # one-shot uglify
+npm run watch:js     # rebuild on change
 ```
 
-## Architecture and Structure
+## Architecture
 
-### Jekyll Collections
-The site uses Jekyll collections to organize different content types:
-- `_publications/` - Research papers and working papers
-- `_talks/` - Conference talks and presentations
-- `_teaching/` - Teaching materials and courses
-- `_portfolio/` - Portfolio items
-- `_pages/` - Static pages (about, CV, contact, etc.)
-- `_posts/` - Blog posts (if used)
+### Collections (defined in `_config.yml`)
 
-Each collection item is a markdown file with YAML frontmatter defining metadata like title, date, venue, and permalink.
+Four Jekyll collections with `output: true` and `permalink: /:collection/:path/`:
 
-### Content Generation with Markdown Generator
-The `markdown_generator/` directory contains Jupyter notebooks and Python scripts for batch-generating markdown files from TSV data:
-- `publications.tsv` / `publications.py` / `publications.ipynb` - Generate publication pages
-- `talks.tsv` / `talks.py` / `talks.ipynb` - Generate talk pages
-- `PubsFromBib.ipynb` / `pubsFromBib.py` - Generate publications from BibTeX
+- `_publications/` — research papers (one md file per paper, e.g. `AGG.md`, `BANDIT.md`)
+- `_talks/` — talks; uses dedicated `talk` layout (which renders the `location:` field used by talkmap)
+- `_teaching/` — courses
+- `_portfolio/` — portfolio items
 
-Use these tools when adding multiple publications or talks at once. Edit the TSV files, then run the corresponding notebook or Python script to generate markdown files.
+`_posts/` is the standard Jekyll posts directory (not a collection). `_pages/` is included via the `include:` list and contains static pages plus the homepage `about.md` (`permalink: /`).
 
-### Configuration Files
-- `_config.yml` - Main Jekyll configuration (author info, collections, plugins, theme settings)
-- `_config.dev.yml` - Development overrides (can be merged with main config)
-- `Gemfile` - Ruby dependencies (Jekyll, github-pages gem, plugins)
-- `package.json` - Node dependencies for JavaScript build
+Per-collection layout defaults are configured under `defaults:` in `_config.yml` — touching `layout:` in individual files is rarely needed.
 
-### Key Directories
-- `_data/` - YAML/JSON data files used across the site
-- `_includes/` - Reusable HTML/Liquid template components
-- `_layouts/` - Page layout templates
-- `_sass/` - Sass stylesheets
-- `assets/` - Static assets (CSS, JS, images)
-- `files/` - Downloadable files (e.g., CV PDF)
-- `images/` - Image files for content
+### Batch content generation
 
-## Content Management
+`markdown_generator/` converts TSV → markdown. Edit the TSV, then run the matching script:
 
-### Adding a New Publication
-1. Create a new markdown file in `_publications/` with filename like `SHORT-NAME.md`
-2. Use YAML frontmatter:
-   ```yaml
-   ---
-   title: "Paper Title"
-   collection: publications
-   permalink: /publications/SHORT-NAME
-   date: YYYY-MM-DD
-   venue: 'Venue Name'
-   paperurl: 'https://link-to-paper'
-   ---
-   ```
-3. Add abstract and content below frontmatter
+- `publications.tsv` → `python publications.py` (or `publications.ipynb`)
+- `talks.tsv` → `python talks.py` (or `talks.ipynb`)
+- `PubsFromBib.ipynb` / `pubsFromBib.py` — generate publications from a `.bib` file
 
-Alternatively, for batch additions:
-1. Add entry to `markdown_generator/publications.tsv`
-2. Run `python markdown_generator/publications.py` or execute the Jupyter notebook
+Generated files land in `_publications/` or `_talks/` and overwrite by filename — keep TSV as source of truth if using this flow.
 
-### Adding Static Pages
-Create markdown files in `_pages/` with appropriate frontmatter. Use `permalink` to define URL structure.
+### Talkmap
 
-### Updating Author Info
-Edit the `author:` section in `_config.yml` to update bio, social links, and contact information.
+`talkmap.py` (run from `_talks/`) scrapes `location:` fields, geocodes via Nominatim, and writes a Leaflet cluster map into `talkmap/`. Surfaced through `_pages/talkmap.html`. Requires `glob`, `getorg`, `geopy`.
 
-## Theme Customization
-This site uses the Minimal Mistakes theme via github-pages gem. The theme is configured through `_config.yml`. Layout defaults are defined per collection type in the `defaults:` section.
+### Theme & layouts
 
-## Deployment
-The site is deployed via GitHub Pages. Push to the main branch to trigger deployment. Jekyll builds automatically on GitHub's servers using the github-pages gem configuration.
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-# Install dependencies
-bundle install
+`theme: jekyll-theme-merlot` is set in `_config.yml`, but actual rendering uses the local layouts in `_layouts/` (`single.html`, `talk.html`, `archive.html`, `splash.html`, `default.html`, `compress.html`). Custom partials live in `_includes/`; styles in `_sass/` (compiled with `style: compressed`).
 
-# Serve the site locally with development config (disables analytics)
-bundle exec jekyll serve --config _config.yml,_config.dev.yml
+### Configuration notes
 
-# Serve with production config
-bundle exec jekyll serve
+- `_config.yml` is **not** auto-reloaded — restart `jekyll serve` after editing.
+- `future: false` — posts dated in the future are skipped (see `_posts/2199-01-01-future-post.md` for the placeholder).
+- `incremental: false` — full rebuild every time.
+- Author profile (sidebar on every page) is centralized in the `author:` block in `_config.yml`.
+- Analytics: `google-gtag` with tracking_id `G-0X16EGXERM`; disabled by `_config.dev.yml`.
+- Plugins: `jekyll-paginate`, `jekyll-gist`, `jekyll-feed`, `jekyll-redirect-from`. `jekyll-sitemap` comes from the Gemfile via GitHub source. `hawkins` is available for LiveReload.
 
-# Build the site
-bundle exec jekyll build
-```
+### Frontmatter conventions
 
-### JavaScript Build (if needed)
-```bash
-# Install npm dependencies
-npm install
-
-# Build/minify JavaScript
-npm run build:js
-
-# Watch for JavaScript changes
-npm run watch:js
-```
-
-## Site Architecture
-
-### Jekyll Collections
-The site uses five Jekyll collections defined in `_config.yml`:
-- **`_publications/`** - Research publications with abstracts, excerpts, and metadata
-- **`_posts/`** - Blog posts following `YYYY-MM-DD-title.md` naming convention
-- **`_talks/`** - Conference talks and presentations
-- **`_teaching/`** - Teaching materials and courses
-- **`_portfolio/`** - Portfolio projects
-
-### Key Directories
-- **`_pages/`** - Static pages (about, awards, contact, etc.). Note: `about.md` is the homepage (permalink: `/`)
-- **`_layouts/`** - Page templates (`single.html`, `talk.html`, `archive.html`, etc.)
-- **`_includes/`** - Reusable components (author profile, analytics, navigation, etc.)
-- **`_sass/`** - Sass stylesheets
-- **`_data/`** - YAML data files for structured content
-- **`images/`** - Image assets
-- **`files/`** - Downloadable files (PDFs, etc.)
-- **`_site/`** - Generated site output (excluded from git)
-
-### Configuration Files
-- **`_config.yml`** - Main production configuration (site metadata, author info, collections, plugins)
-- **`_config.dev.yml`** - Development overrides (disables analytics, uses localhost URL)
-- **`Gemfile`** - Ruby dependencies (uses `github-pages` gem for compatibility)
-- **`package.json`** - npm build scripts for JavaScript minification
-
-## Content Structure
-
-### Publications Format
-Publications in `_publications/` use frontmatter:
+Publication:
 ```yaml
 ---
-title: "Publication Title"
-excerpt: "<p align='center'><a href='/publications/SLUG'><img src='/images/SLUG.png' style='width: 500px;'/></a></p>"
+title: "Paper Title"
 collection: publications
-permalink: /publications/SLUG
+permalink: /publications/SHORT-NAME
 date: YYYY-MM-DD
-venue: 'Conference/Journal Name'
+venue: 'Venue Name'
+excerpt: "<p align='center'><a href='/publications/SHORT-NAME'><img src='/images/SHORT-NAME.png' style='width: 500px;'/></a></p>"
+# paperurl, citation are optional
 ---
 ```
 
-### Blog Posts Format
-Posts in `_posts/` follow Jekyll conventions:
+Post (filename must be `YYYY-MM-DD-slug.md`):
 ```yaml
 ---
 title: 'Post Title'
 date: YYYY-MM-DD
-permalink: /posts/YYYY/MM/blog-post-slug/
-tags:
-  - tag1
-  - tag2
+permalink: /posts/YYYY/MM/slug/
+tags: [tag1, tag2]
 ---
 ```
 
-### Homepage
-The homepage is `_pages/about.md` with `permalink: /`. When updating the homepage, edit this file, not `index.html`.
-
-## Important Configuration Details
-
-### Site Settings
-- **Base URL**: https://yiyangwan.github.io
-- **Timezone**: America/Los_Angeles
-- **Markdown**: kramdown with GFM input
-- **Highlighter**: rouge
-
-### Plugins
-Active Jekyll plugins:
-- jekyll-paginate
-- jekyll-gist
-- jekyll-feed
-- jekyll-redirect-from
-- jekyll-sitemap (from GitHub)
-
-### Author Profile
-Author information is centralized in `_config.yml` under the `author:` section. This populates the sidebar on all pages.
-
 ## Deployment
 
-The site is deployed via GitHub Pages. Pushing to the `main` branch automatically triggers a rebuild. The generated site serves from the repository root, not a `/docs` folder.
-
-## Notes
-
-- When adding new publications, ensure images are placed in `/images/` and referenced correctly in the excerpt
-- The site uses the `future: false` setting, so posts dated in the future won't be published
-- Development mode (`_config.dev.yml`) disables Google Analytics for local testing
-- The JavaScript build process concatenates and minifies multiple vendor libraries and custom scripts into `assets/js/main.min.js`
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+Push to `main` → GitHub Pages rebuilds via the `github-pages` gem. The site serves from the repo root (no `/docs` folder). `_site/` is gitignored and only used locally.
