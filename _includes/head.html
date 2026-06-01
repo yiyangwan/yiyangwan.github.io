@@ -2,6 +2,8 @@
 
 <meta charset="utf-8">
 
+{% include analytics.html %}
+
 {% include seo.html %}
 
 <link href="{% if site.atom_feed.path %}{{ site.atom_feed.path }}{% else %}{{ base_path }}/feed.xml{% endif %}"
