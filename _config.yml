@@ -75,7 +75,7 @@ social:
 analytics:
   provider               : "google-gtag" # false (default), "google", "google-universal", "custom"
   google:
-    tracking_id          : "G-0X16EGXERM"
+    tracking_id          : "G-VMN314Y800" # "G-0X16EGXERM"
     anonymize_ip         : false # default
 # google_analytics: G-0X16EGXERM
 
