@@ -4,6 +4,9 @@ title: "Talks and Presentations"
 permalink: /talks/
 author_profile: true
 ---
+<b>A Bayesian-Guided Aggregation-Disaggregation Algorithm for Transit Planning.</b><br>
+- <i>Bridging Transportation Researchers (BTR8) Conference, Session W8: Public Transit Planning & Operations. Aug. 2026. (virtual)</i><br>
+
 <b>Dynamic Resource Allocation for Connected and Automated Vehicles' Cybersecurity.</b><br>
 - <i>TRB Annual Meeting, Washington DC, Jan. 2024. </i><br>
 

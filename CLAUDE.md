@@ -19,6 +19,20 @@ bundle exec jekyll serve
 bundle exec jekyll build
 ```
 
+CV (`files/yiyangwang_cv.pdf`, the PDF `_pages/cv.md` links to) is compiled from LaTeX:
+
+```bash
+./CV/build.sh        # CV/yiyangwang_cv.tex -> files/yiyangwang_cv.pdf (in place)
+```
+
+The script backs up the previous PDF to `CV/backups/` first, then builds via `tectonic`
+in a temp dir and moves the result over `files/yiyangwang_cv.pdf` — no manual copy or
+rename step. `CV/` is tracked (source, class, bundled fonts, and build script), so the
+build is reproducible from a fresh clone. `Keval-resume.cls` uses `fontspec` with fonts
+loaded by relative path from `CV/fonts/georgia/`, so the engine must be XeLaTeX
+(`tectonic`) run with `CV/` as the working directory — `pdflatex` will not work.
+Prune `CV/backups/` occasionally; it grows by one PDF per build.
+
 JavaScript bundle (`assets/js/main.min.js`) is generated via npm — only needed if editing files under `assets/js/_main.js`, `assets/js/plugins/`, or `assets/js/vendor/`:
 
 ```bash

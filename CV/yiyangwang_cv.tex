@@ -1,0 +1,479 @@
+\documentclass[]{Keval-resume}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage{lastpage}
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+
+\rfoot{Page \thepage \hspace{1pt} of \pageref{LastPage}}
+
+
+\hypersetup{%
+ 	colorlinks=false,% hyperlinks will be black
+ 	linkbordercolor=red,% hyperlink borders will be red
+ 	pdfborderstyle={/S/U/W 0.25}% border style will be underline of width 0.25pt
+ }
+ 
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%     TITLE NAME
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\namesection{Yiyang Wang}{
+    % xxx-xxx-xxxx -> Phone Number
+	yiyangw920@gmail.com
+    % yiyangw@umich.edu
+% 	\\
+    ||~\normalfont \href{https://scholar.google.com/citations?user=uAL9f8kAAAAJ&hl=en}{\textbf{Google Scholar}} 
+	||~\normalfont\href{https://yiyangwan.github.io/}{\textbf{Homepage}}
+	||~\normalfont\href{https://www.linkedin.com/in/yiyang-wang-82b38613b/}{\textbf{LinkedIn}}
+}
+
+\descript{}
+\postsectionsep
+
+\descript{}
+\postsectionsep
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%     EDUCATION
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Education}
+\hrulefill
+\postsectionsep
+
+\subsection{University of Michigan, Ann Arbor \hfill \normalfont A\lowercase{nn} A\lowercase{rbor}, MI}
+\position{Ph.D. in \textbf{Autonomous Vehicles} (GPA: 3.96/4.00)}{Dec 2022}
+% \normalfont w/ specialization in \emph{Next Generation Transportation Systems}\\
+\position{M.S. in \textbf{Electrical Engineering and Computer Science} (GPA: 3.81/4.00)}{Apr 2018}
+% \normalfont w/ specialization in \emph{Signal \& Image Processing and Machine Learning}
+% \newline
+% Coursework: EECS 545: Machine Learning, EECS 502: Stochastic Processes, EECS 598: Reinforcement Learning Theory, IOE 512: Dynamic Programming, IOE 517: Game Theory, STATS 507: Data Science in Python
+\vspace{1mm}
+\subsection{Jilin University \hfill \normalfont C\lowercase{hangchun}, C\lowercase{hina}}
+\position{B.Eng. in \textbf{Communications Engineering} (GPA:90.32/100, Rank: Top 1/91)}{June 2016}
+w/ \emph{National Scholarship Award}
+% Coursework: Linear Algebra, Probability Theory and Mathematical Statistics, Mathematical Analysis II, Vector Calculus and Field Theory
+\sectionsep
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%     SKILLS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Skills} 
+\hrulefill
+\postsectionsep
+\begin{cvitems}
+\item
+{\textbf{Core Expertise:} Multimodal LLMs / Vision-Language Models, LLM Fine-Tuning (LoRA, SFT) and evaluation, RL Post-Training (RLHF / GRPO, Reward Design), Quantization/efficient inference, Deep Learning, Causal Discovery/Inference, Combinatorial Optimization}
+\item
+    {\textbf{Programming Languages:} Python (Proficient), SQL, C/C++, Bash}
+\item
+    {\textbf{ML Frameworks \& Tools:} PyTorch, Hugging Face Transformers, vLLM, LLaMA-Factory, verl / EasyR1, ms-swift, DeepSpeed, Docker, Git}
+\item
+    {\textbf{Cloud \& Distributed Training:} AWS (Bedrock, SageMaker, S3, FSX), SLURM / HyperPod multi-node clusters, GCP}
+\end{cvitems}
+% \textbullet{} \textbf{Programming Languages:} Python (Proficient), MATLAB (Proficient), SQL, R, C/C++\\
+% \textbullet{} \textbf{Packages \& Tools:} PyTorch, Gurobi, TensorFlow, NumPy, Pandas, Spicy, Matplotlib, Git, Bash \\
+% \textbullet{} \textbf{Research Interests:} Machine Learning, Deep Learning, Anomaly Detection, Multi-Armed Bandits, Combinatorial Optimization
+\sectionsep
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%     PROFESSIONAL EXPERIENCE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Professional Experience} 
+\hrulefill
+\postsectionsep 
+
+\subsection{Amazon | Seller Partner Service \hfill \normalfont S\lowercase{eattle}, WA}
+\position{Senior Applied Scientist}{Dec 2025 - Present}
+\begin{cvitems}
+\item
+    {Lead applied scientist for a production \textbf{multimodal vision-language model (VLM)} detecting trademark/copyright infringement on Amazon storefront. Drove backbone migration (\textbf{Pixtral-12B} $\rightarrow$ \textbf{Qwen3-VL-8B}) and designed a two-phase \textbf{SFT curriculum} on a \textbf{900K+}-sample multi-source dataset spanning \textbf{52K brand IDs} (\textbf{4.2$\times$} prior coverage); achieved \textbf{33\%} reduction of genuine false positives on shadow-launch audit with transparent recall trade-off.}
+\item
+    {Built end-to-end \textbf{SFT + GRPO} reinforcement-learning training pipeline with multi-component reward (brand-ID correctness, IP-type alignment, decision calibration); diagnosed and fixed reward-induced distributional collapse via joint-distribution checks. Multi-node training on \textbf{88$\times$A100-40GB} HyperPod cluster (DeepSpeed ZeRO-2, two-step tokenized-data pattern on FSX/Lustre).}
+\item
+    {Designed and executed a \textbf{353K-ASIN} auditor-aware backfill through \textbf{AWS Bedrock} (Claude Opus) to generate structured reasoning traces; integrated as supervised training data, increasing auditor-verified true-negative coverage by \textbf{20$\times$} and lifting recall on hard true-positive subset by \textbf{+28pp} at near-flat precision.}
+\item
+    {Trained an \textbf{MLP confidence head} on VLM hidden states for production risk scoring; deployed via \textbf{SageMaker} endpoints for shadow-audit integration. Cross-team collaboration to acquire heterogeneous data sources and address brand long-tail and compatibility-term false-positive imbalance.}
+\end{cvitems}
+\sectionsep
+
+
+\subsection{Intel Corporation | Technology Development \hfill \normalfont H\lowercase{illsboro}, OR}
+\position{Senior Machine Learning Engineer}{Jan 2023 - Dec 2025}
+\begin{cvitems}
+\item 
+     {Developed novel graph-based casual discovery algorithms to unveil hidden causality among high-dimensional features with extreme limited and noisy data, to identify root sources of semiconductor variation. Close collaboration with internal customers to design real-silicon experiments, and decrease variation by at least 50\% ahead of schedule and enable faster PDK target achievement. Leaded this project with a focus team, which has been identified as one of three esteemed top jobs within SVP organization.
+    % Adopted machine learning algorithms in \textbf{Python} to reduce the variation of device performance
+    }
+\item
+    {
+    Built and trained supervised auto-encoder and transformer models to predict semiconductor performance using Intel inline optical spectral data and achieved best-in-class prediction performance on internal real-silicon data. The pre-trained models are launched in production for internal integration team to monitor and trend real product performance. Enabled fast and accurate performance prediction to timely identify any potential production "excursion" (i.e. deviation from target) to prevent wafer loss.
+    % Conducted data analysis and casual discovery given limited and noisy inline measurement
+    }
+\end{cvitems}
+\sectionsep
+
+\subsection{SiriusXM \& Pandora | Science Pandora Department \hfill \normalfont O\lowercase{akland}, CA}
+\position{\emph{Science Intern - Recommendation, Search, \& Voice}}{May 2022 - Aug 2022}
+\begin{cvitems}
+\item 
+    {Built a \textbf{Siamese neural network with attention fusion} (PyTorch) for \textbf{semantic retrieval} of music on \textbf{GCP}; improved \textbf{recall by 22\%} vs. production baseline and increased robustness to paraphrased/natural language queries.}
+\item
+    {\textbf{Advanced NLP/retrieval:} engineered contrastive objectives (triplet/in-batch negatives) and indexed vectors with ANN for low-latency search at catalog scale.}
+\item 
+    {Built \textbf{PySpark} pipelines for data acquisition and query understanding (entity normalization, synonyms, spelling variants); developed offline evaluation harnesses (recall@K) with \textbf{Gensim} and \textbf{NLTK}.}
+\end{cvitems}
+\sectionsep
+
+
+\subsection{Univ. of Michigan | Next Generation Mobility Systems Lab \hfill \normalfont A\lowercase{nn} A\lowercase{rbor}, MI}
+\position{Research Associate}{Sep 2018 - Dec 2018}
+\begin{cvitems}
+\item 
+    {Designed an anomaly detection approach with time series trajectory data
+    % , \textbf{CNN-KF}, 
+    % based on a combination of 
+    by combining
+    \textbf{convolutional neural network (CNN)} and \textbf{Kalman filter} with $\chi^2$-detector in \textbf{Python (PyTorch) \& MATLAB} with F1 score \textbf{97.8}\%}
+\item
+    {Pre-processed the large-scale (more than 1GB) raw dataset (Safety Pilot Dataset) for training and testing using \textbf{SQL} to filter specific vehicle trajectories}
+\item 
+    {\textbf{Sensor fusion} with CNN to further improve detection performance (\textbf{14\%} above benchmark) on time series dataset}
+\end{cvitems}
+% \textbullet{} Real-time anomaly detection in CAV sensors\\
+% \textbullet{} Combined \textbf{CNN} and \textbf{Kalman Filter} with \textbf{$\chi^2$-detetor} to smooth noisy data and detect sensor anomalies\\
+% \textbullet{} Improved detection performance by replacing \textbf{$\chi^2$-detetor} with \textbf{OCSVM} models
+\sectionsep
+
+\subsection{Ford Motor Company | Research and Advanced Engineering (R\&A) \hfill \normalfont D\lowercase{earborn}, MI}
+\position{Product Development Intern}{May 2018 - Jul 2018}
+\begin{cvitems}
+\item
+    {Forecasted the travel demand in 5 and 10 years of Ann Arbor city using a \textbf{four-step travel demand model}}
+\item 
+    {Used \textbf{logistic regression} for travel mode choice prediction}, and \textbf{gravity model} for trip distribution prediction
+\item 
+    {Predicted and visualized the traffic congestion level on each road in Ann Arbor city with \textbf{SUMO}, specified the roads need expansion}
+% \item 
+%     {Analyzed the impact of different penetration rates of CAVs on traffic with \textbf{SUMO}
+%     }
+\end{cvitems}
+% \textbullet{} Tested code of shuttle dispatching algorithm
+\sectionsep
+
+% \subsection{China Unicom | Network Management Center  \hfill \normalfont J\lowercase{inan}, C\lowercase{hina}}
+% \position{Network Telecommunications Engineer Intern}{Jul 2015 - Sep 2015}
+% \begin{cvitems}
+% \item
+%     {Enabled rapid and dynamic IP assignment to all China Unicom internet customers in Jinan city, by pre-allocating IP address resources in the IP address resources management system}
+% \item 
+%     {Tested the packet loss rate with \textbf{secureCRT} and fixed the line failures}
+% \end{cvitems}
+% \sectionsep
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%     RESEARCH EXPERIENCE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Research Experience}
+\hrulefill
+\postsectionsep 
+
+\subsection{Dynamic Security Resource Allocation in Connected and Automated Vehicles
+\hfill
+\normalfont
+}
+\position{\emph{Python}}{A\lowercase{ug} 2022 - P\lowercase{resent}}
+
+\begin{cvitems}
+    \item
+        {Formulated a partially observable Markov Decision Process (POMDP) to prescribe an optimal policy for dynamical security resource allocation during the trip, which ensures the security and energy efficiency of CAVs}
+    \item
+        {Solved the POMDP model using \textbf{point based value iteration (PBVI)} algorithm in \textbf{Python}}
+\end{cvitems}
+\sectionsep
+
+\subsection{Demand Forecasting and Vehicle Route Planning Algorithm in Benton Harbor
+\hfill 
+\normalfont 
+% Paper in Progress
+}
+\position{\emph{Python (Gurobi), MATLAB}}{J\lowercase{an} 2021 - J\lowercase{an} 2022}
+
+\begin{cvitems}
+\item 
+    {Forecasted travel demand and designed new transit routes in Benton Harbor to improve mobility for local residents, which increased the annual ridership up to \textbf{78\%}}
+\item 
+    {Trained \textbf{radial basis function (RBF) network for regression}, with socioeconomic data, for travel demand forecasting by \textbf{MATLAB} with high accuracy (\textbf{RMSE 4.93})}
+\item 
+    {Proposed and solved a demand-responsive optimization model in \textbf{Python \& Gurobi} on large-scale datasets (preprocessed by \textbf{SQL}), which provided the optimal new bus routes}
+\item
+    {Devised a graph aggregation-disaggregation algorithm (\textbf{Python} \& \textbf{Gurobi}) which dynamically clustered the large-scale network to \textbf{reduce computation time}, 
+    % of optimization problem 
+    and efficiently recovered from the aggregated solution (w/ convergence guaranteed)}
+% \item 
+%     {Used \textbf{SQL} to preprocess large-scale New York Taxi dataset and MDOT dataset, implemented the algorithms on both datasets}
+% \item 
+%     {Developed graph aggregation/disaggregation algorithms (\textbf{Python \& Gurobi}) which dynamically clustered the large-scale network to \textbf{reduce computation time of optimization model}, and recovered the aggregated solution (w/ convergence guarantee)}
+\end{cvitems}
+\sectionsep
+
+\subsection{Deep Reinforcement Learning-Bayesian Framework for Anomaly Detection \hfill\normalfont
+% \href{https://www.researchgate.net/profile/Jeremy-Watts/publication/349376559_A_Dynamic_Deep_Reinforcement_Learning-Bayesian_Framework_for_Anomaly_Detection/links/602d3825299bf1cc26d21a91/A-Dynamic-Deep-Reinforcement-Learning-Bayesian-Framework-for-Anomaly-Detection.pdf}{[\textbf{Paper 1}]}
+}
+\position{\emph{Python (PyTorch)}}{J\lowercase{uly} 2020 - Dec 2020}
+
+\begin{cvitems}
+\item 
+    {Developed a POMDP model, which was solved by a novel and effective deep reinforcement learning algorithm (\textbf{A3C}), to online update CNN detecting anomalies in vehicle sensor data}
+% \item 
+%     {Developed and paired an time-series anomaly classification algorithm, based on \textbf{convolutional neural network (CNN)},
+%     % i.e. \textbf{AlexNet},
+%     with a \textbf{
+%     partially observable Markov decision process (POMDP)
+%     % deep reinforcement learning
+%     } model, which determined the \textbf{optimal dynamic threshold} of the anomaly classification algorithm}
+\item 
+    {Outperformed state-of-the-art benchmarks (\textbf{12\%} above CNN, \textbf{18\%} above RNN) on large-scale dataset (Safety Pilot Dataset)
+    % , \textbf{7\%} above \textbf{CNN-KF}
+    % )
+    }
+\end{cvitems}
+% \textbullet{} POMDP determined the \textbf{optimal dynamic threshold} of an anomaly classification algorithm\\
+% \textbullet{}  Solved the resulting POMDP  model  using  the  \textbf{asynchronous advantage actor critic (A3C)} deep reinforcement learning algorithm\\
+\sectionsep
+
+\subsection{Adversarial Online Learning with Variable Plays in Sequential Game for Vehicle Cybersecurity \hfill\normalfont 
+% \href{https://www.researchgate.net/publication/355347858_Adversarial_Online_Learning_with_Variable_Plays_in_the_Pursuit-Evasion_Game_Theoretical_Foundations_and_Application_in_Connected_and_Automated_Vehicle_Cybersecurity}{[\textbf{Paper 2}]} 
+}
+\position{\emph{Python}}{S\lowercase{ep} 2019 - O\lowercase{ct} 2020}
+\begin{cvitems}
+\item 
+    {Devised a fast (no-regret) algorithm for the \textbf{adversarial multi-armed bandit with variable plays (MAB-VP)} problem to predict adversarial behaviours and tested on real dataset (Car-Hacking Dataset)}
+\item
+    {
+    Showed two directions on improving the cybersecurity from a game-theoretical perspective (\textbf{two-player sequential constant-sum games}): increase threat-monitoring resources, and/or increase reliability of the system 
+    }
+\end{cvitems}
+\sectionsep
+
+% \textbullet{} Formulated the cyber attack-and-defense problem for the two players (attacker and defender) as a \textbf{sequential pursuit-evasion game} where defender adopted MPMAB algorithm\\
+% \textbullet{} Variable play represents dynamically changing security resource\\
+% \textbullet{} Developed a \textbf{no-regret algorithm} for MPMAB problem \\
+% shown to have \textbf{sublinear pseudo-regret}\\
+% \textbullet{} Derived the condition under which a \textbf{Nash equilibrium} of the strategic game exists\\
+% \textbullet{} Extended the model to \textbf{heterogeneous rewards} for both players\\
+% \textbullet{} Showed two directions on improving the defense from a game-theoretical perspective: increase threat monitoring resource, and/or increase reliability of the system
+
+\subsection{Anomaly Detection in Connected \& Automated Vehicle Sensors \hfill \normalfont
+% \href{https://ieeexplore.ieee.org/abstract/document/8684317}{[\textbf{Paper 2}]} 
+% \href{https://ieeexplore.ieee.org/abstract/document/8984345}{[\textbf{Paper 3}]}
+% \href{https://ieeexplore.ieee.org/abstract/document/9264885}{[\textbf{Paper 4}]}
+}
+\position{\emph{Python, MATLAB}}{J\lowercase{an} 2019-D\lowercase{ec} 2019}
+
+\begin{cvitems}
+\item 
+    {Proposed an anomaly detection method for time series trajectory data by combining \textbf{Kalman filter} with unsupervised learning \textbf{One Class Support Vector Machine (OCSVM)} models, achieved AUC score \textbf{0.98/1.00} (\textbf{23\%} above
+    $\chi^2$-detector
+    benchmark)}
+\item
+    {Conducted stability analysis of the platoon dynamics under cybersecurity uncertainties}
+    % {Predicted and estimated vehicle trajectory and fused surrounding vehicles' information by adaptive extended Kalman filter, which enhanced detection performance up to \textbf{21\%}}
+% \item 
+%     {
+%     % Combined \textbf{baysian network} and \textbf{inverse reinforcement learning} for \textbf{vehicle intention and trajectory prediction}
+%     Used \textbf{car-following model} and \textbf{platooning model} for motion prediction and tracking
+%     }
+\item 
+    {Derived an \textbf{augmented-state formulation} to further boost detection performance (up to \textbf{27\%}) under \textbf{stochastic time delay}}
+\end{cvitems}
+% \textbullet{} Developed an anomaly detection approach based on a combination of \textbf{AlexNet (CNN)} and \textbf{Kalman filter with $\chi^2$-detector}\\
+% \textbullet{} Considered the \textbf{stochastic time delay} effect, proposed a \textbf{switching policy} among different trained OCSVM models\\
+\sectionsep
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%     TEACHING EXPERIENCE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\section{Teaching Experience} 
+\hrulefill
+\postsectionsep
+
+\subsection{CEE 373: Statistical Methods for Data Analysis and Uncertainty Modeling,
+% | \normalfont 
+Univ. of Michigan \hfill\normalfont}
+\position{Graduate Student Instructor}{Sep 2020 - Dec 2020}
+\position{}{Sep 2019 - Dec 2019}
+% \newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%     PUBLICATIONS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Publications} 
+\hrulefill
+\postsectionsep 
+% van Wyk, Franco, Yiyang Wang, Anahita Khojandi, and Neda Masoud. 
+\begin{cvitems}
+\item 
+    {\textbf{
+    ``Real-time Sensor Anomaly Detection and Identification in Automated Vehicles."}~ IEEE Transactions on Intelligent Transportation Systems
+    \hfill\href{https://ieeexplore.ieee.org/abstract/document/8684317}{[\textbf{Paper}]}~\textit{(428 citations)}}
+\item
+    {\textbf{``Real-Time Sensor Anomaly Detection and Recovery in Connected Automated Vehicle Sensors."}~ IEEE Transactions on Intelligent Transportation Systems
+    \hfill\href{https://ieeexplore.ieee.org/abstract/document/8984345}{[\textbf{Paper}]}~\textit{(207 citations)}}
+\item 
+    {\textbf{``Anomaly detection in connected and automated vehicles using an augmented state formulation."}~ 2020 Forum on Integrated and Sustainable Transportation Systems (FISTS) 
+    \hfill\href{https://ieeexplore.ieee.org/abstract/document/9264885}{[\textbf{Paper}]}~\textit{(31 citations)}}
+\item
+    {\textbf{``Adversarial Online Learning with Variable Plays in the Pursuit-Evasion Game: Theoretical Foundations and Application in Connected and Automated Vehicle Cybersecurity."}~ IEEE Access
+    \hfill\href{https://arxiv.org/pdf/2110.14078.pdf}{[\textbf{Paper}]}~\textit{(7 citations)}}
+\item
+    {\textbf{``A Dynamic Deep Reinforcement Learning-Bayesian Framework for Anomaly Detection."}~ IEEE Transactions on Intelligent Transportation Systems \hfill\href{https://www.researchgate.net/profile/Jeremy-Watts/publication/349376559_A_Dynamic_Deep_Reinforcement_Learning-Bayesian_Framework_for_Anomaly_Detection/links/602d3825299bf1cc26d21a91/A-Dynamic-Deep-Reinforcement-Learning-Bayesian-Framework-for-Anomaly-Detection.pdf}{[\textbf{Paper}]}~\textit{(63 citations)}}
+\item 
+    {\textbf{``Anomaly Detection and String Stability Analysis in Connected Automated Vehicular Platoons."}~ Transportation Research Part C\hfill\href{https://www.researchgate.net/publication/362382000_Anomaly_Detection_and_String_Stability_Analysis_in_Connected_Automated_Vehicular_Platoons}{[\textbf{Paper}]}~\textit{(34 citations)}}
+\item
+    {\textbf{``Improving Transit in Small Cities through Collaborative and Data-driven Scenario Planning."}~ Case Studies on Transport Policy \hfill\href{https://www.sciencedirect.com/science/article/pii/S2213624X23000111}{[\textbf{Paper}]}~\textit{(10 citations)}}
+\item
+    {\textbf{``Cybersecurity in Connected and Automated Transportation Systems."}~ Ph.D. Thesis \hfill\href{https://deepblue.lib.umich.edu/bitstream/handle/2027.42/175624/yiyangw_1.pdf?sequence=1}{[\textbf{Paper}]}}
+\item 
+    {\textbf{``Dynamic Security Resource Allocation for Connected and Automated Vehicles."}~ Transportation Research Part C\hfill\href{https://www.sciencedirect.com/science/article/abs/pii/S0968090X25003560}{[\textbf{Paper}]}}
+\item
+    {\textbf{``A Bayesian-Guided Aggregation-Disaggregation Algorithm for Transit Planning."}~ Bridging Transportation Researchers (BTR8) Conference \hfill\href{https://www.researchgate.net/profile/Jisoon-Lim/publication/400258414_A_Bayesian-Guided_Aggregation-Disaggregation_Algorithm_for_Transit_Planning/links/697cfb4a12f837212a166204/A-Bayesian-Guided-Aggregation-Disaggregation-Algorithm-for-Transit-Planning.pdf}{[\textbf{Paper}]}}
+
+\end{cvitems}
+\sectionsep
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%     TALKS AND SEMINARS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\section{Talks and Presentations}
+\hrulefill
+\postsectionsep
+
+\textbf{A Bayesian-Guided Aggregation-Disaggregation Algorithm for Transit Planning.}
+\begin{cvitems}
+    \item
+    {Bridging Transportation Researchers (BTR8) Conference, Session W8: Public Transit Planning \& Operations. Aug. 2026. (virtual)}
+\end{cvitems}
+\sectionsep
+\textbf{Dynamic Resource Allocation for Connected and Automated Vehicles' Cybersecurity.}
+\begin{cvitems}
+    \item 
+    {TRB Annual Meeting, Washington DC, Jan. 2024.}
+\end{cvitems}
+\sectionsep
+\textbf{Anomaly Detection and String Stability Analysis in Connected Automated Vehicular Platoons.}
+\begin{cvitems}
+    \item 
+    {INFORMS Annual Conference, Phoenix, AZ, Oct. 2023.}
+    \item 
+    {TRB Annual Meeting, Washington DC, Jan. 2023.}
+    \item
+    {Mcity Research Review, Ann Arbor, MI, Nov. 2022.}
+    \item 
+    {Mcity's Cyber Working Group. Oct. 2022. (virtual)}
+    \item
+    {NGTS Seminar, Department of Civil and Environmental Engineering, University of Michigan, Ann Arbor, Sept. 2022.}
+\end{cvitems}
+\sectionsep
+\textbf{Real-Time Sensor Anomaly Detection and Recovery in Connected Automated Vehicle Sensors.}
+\begin{cvitems}
+    \item 
+    {Bridging Transportation Researchers (BTR) Conference. Aug. 2022. (virtual)}
+    \item 
+    {International Symposium on Transportation Data and Modelling, Ann Arbor, MI. Jun. 2021. (virtual)}
+    \item 
+    {International Symposium on Transportation Data and Modelling, Ann Arbor, MI. June. 2020. (postponed)}
+    \item 
+    {INFORMS Annual Conference, Seattle, WA, Oct. 2019.}
+    \item 
+    {IAVSD Workshop on Dynamics of Road Vehicles Connected and Automated Vehicles, Ann Arbor, MI, Apr. 2019.}
+    \item 
+    {NGTS Seminar, Department of Civil and Environmental Engineering, University of Michigan, Ann Arbor, Jan. 2019.}
+\end{cvitems}
+\sectionsep
+\textbf{Anomaly Detection in Connected and Automated Vehicles Using an Augmented State Formulation.}
+\begin{cvitems}
+    \item 
+    {Forum on Integrated and Sustainable Transportation Systems (FISTS), Nov. 2020. (virtual)}
+\end{cvitems}
+\sectionsep
+\textbf{Adversarial Online Learning with Variable Plays in the Evasion-and-Pursuit Game: Theoretical Foundations and Application in Connected and Automated Vehicle Cybersecurity.}
+\begin{cvitems}
+    \item 
+    {NGTS Seminar, Department of Civil and Environmental Engineering, University of Michigan, Ann Arbor, Oct. 2020. (virtual)}
+\end{cvitems}
+\sectionsep
+\textbf{A Data-Driven Framework for Optimizing Transit Itineraries.}
+\begin{cvitems}
+    \item 
+    {2019 Michigan Institute for Data Science Symposium, Ann Arbor, MI, Nov. 2019.}
+\end{cvitems}
+\sectionsep
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%     LEADERSHIP AND HONORS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Academic Services}
+\hrulefill
+\postsectionsep
+
+\textbf{Conference Reviewer:} 
+\begin{cvitems}
+    \item {International Symposium on Transportation and Traffic Theory (ISTTT): \href{https://limos.engin.umich.edu/isttt25/}{\underline{2025}}}
+    \item {\href{https://www.trb.org/AnnualMeeting/AnnualMeeting.aspx}{\underline{Transportation Research Board Annual Meeting (TRBAM)}}: 2020 - 2024}
+    \item {Bridging Transport Researchers Conference (BTR): \href{https://easychair.org/cfp/BTR4}{\underline{BTR4}}}  
+    \item {\href{https://ieee-itss.org/conf/itsc/}{\underline{IEEE International Conference on Intelligent Transportation Systems (ITSC)}}: \href{https://2021.ieee-itsc.org/}{\underline{2021}} - \href{https://www.ieee-itsc2020.org/}{\underline{2020}}
+    }
+\end{cvitems}
+\sectionsep
+\textbf{Journal Reviewer:} 
+\begin{cvitems}
+    \item {IEEE Network Magazine}
+    \item {IEEE Sensors Journal (IEEE Sens. J.)}
+    \item {IEEE Transactions on Intelligent Transportation Systems (IEEE T-ITS)}
+    \item {IEEE Transactions on Vehicular Technology (IEEE TVT)}
+    \item {Peer-to-Peer Networking and Applications}
+    \item {Space: Science \& Technology}
+    \item {Wireless Communications and Mobile Computing}
+\end{cvitems}
+
+\sectionsep
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%     LEADERSHIP AND HONORS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Honors} 
+\hrulefill
+\postsectionsep 
+
+\begin{cvitems}
+\item 
+    {\textbf{William S. Housel Fellowship}, University of Michigan, Ann Arbor\hfill Jan 2019 - Dec 2019}
+\item 
+    {\textbf{Outstanding Graduates Honer}, Jilin University\hfill Apr 2016}
+\item 
+    {\textbf{Posts and Telecommunications Alumni Scholarship (top 2\%)}, Jilin University\hfill Sep 2015 - Apr 2016}
+\item 
+    {\textbf{Dong-Rong Scholarship (top 3\%)}, Jilin University\hfill Sep 2015 - Apr 2016}
+\item 
+    {\textbf{First Prize Scholarship (top 5\%)}, Jilin University\hfill Sep 2015 - Apr 2016}
+\item
+    {\textbf{National Scholarship (top 1/91)}, Jilin University\hfill Sep 2014 - Apr 2015}
+\item
+    {\textbf{First Prize Scholarship (top 5\%)}, Jilin University\hfill  Sep 2013 - Apr 2014}
+\end{cvitems} 
+\sectionsep
+
+\section{Leadership}
+\hrulefill
+\postsectionsep 
+
+\subsection{Michigan Transportation Student Organization (MiTSO) | \normalfont Treasurer\hfill \normalfont}
+\position{University of Michigan, Ann Arbor}{Sep 2019 - Apr 2022}
+
+\subsection{Michigan Transportation Student Organization (MiTSO) | \normalfont Secretary\hfill\normalfont}
+\position{University of Michigan, Ann Arbor}{Sep 2019 - Apr 2020}
+
+
+% \sectionsep
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	
+\end{document}  \documentclass[]{article}
