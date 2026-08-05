@@ -4,14 +4,17 @@ excerpt: "<p align='center'><a href='/publications/AGG'><img src='/images/AGG.pn
 collection: publications
 permalink: /publications/AGG
 # excerpt: 'This paper is about the number 1. The number 2 is left for future work.'
-date: 2021-10-19
-venue: 'Working Paper'
-# paperurl: 'https://ieeexplore.ieee.org/document/8684317'
-# citation: 'Yiyang Wang, Neda Masoud. <i>Working Paper.</i>'
+# Kept at/before today: _config.yml sets `future: false`, so a future date would
+# drop this page from the build and 404 the link on /publications/.
+date: 2026-08-05
+venue: 'Bridging Transportation Researchers (BTR8) Conference'
+paperurl: 'https://www.researchgate.net/profile/Jisoon-Lim/publication/400258414_A_Bayesian-Guided_Aggregation-Disaggregation_Algorithm_for_Transit_Planning/links/697cfb4a12f837212a166204/A-Bayesian-Guided-Aggregation-Disaggregation-Algorithm-for-Transit-Planning.pdf'
+# citation: 'Golbarg Dokhani, Jisoon Lim, Neda Masoud, Yiyang Wang, Amirmahdi Tafreshian. <i>Bridging Transportation Researchers (BTR8) Conference.</i>'
 ---
 
-<!-- [[PDF]](https://www.researchgate.net/publication/345699783_Adversarial_Online_Learning_with_Variable_Plays_in_the_Pursuit-Evasion_Game_Theoretical_Foundations_and_Application_in_Connected_and_Automated_Vehicle_Cybersecurity)
-[[CODE]](https://github.com/yiyang920/adversarial_multi_armed_bandit_variable_plays) -->
+[[PDF]](https://www.researchgate.net/profile/Jisoon-Lim/publication/400258414_A_Bayesian-Guided_Aggregation-Disaggregation_Algorithm_for_Transit_Planning/links/697cfb4a12f837212a166204/A-Bayesian-Guided-Aggregation-Disaggregation-Algorithm-for-Transit-Planning.pdf)
+
+Presented at the [Bridging Transportation Researchers (BTR8) Conference](https://bridgingtransport.org/btr-program/), Session W8: Public Transit Planning & Operations, August 13, 2026 (virtual).
 
 ## Abstract
 Public transit is essential for daily mobility, especially for individuals without access to private vehicles, yet designing efficient transit systems remains challenging when demand is spatially dispersed, density is low, and operational resources are constrained.
