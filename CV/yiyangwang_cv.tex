@@ -85,17 +85,23 @@ w/ \emph{National Scholarship Award}
 \postsectionsep 
 
 \subsection{Amazon | Seller Partner Service \hfill \normalfont S\lowercase{eattle}, WA}
-\position{Senior Applied Scientist}{Dec 2025 - Present}
+\position{Senior Applied Scientist | Science Lead, IP Infringement Detection}{Dec 2025 - Present}
 \begin{cvitems}
+
 \item
-    {Lead applied scientist for a production \textbf{multimodal vision-language model (VLM)} detecting trademark/copyright infringement on Amazon storefront. Drove backbone migration (\textbf{Pixtral-12B} $\rightarrow$ \textbf{Qwen3-VL-8B}) and designed a two-phase \textbf{SFT curriculum} on a \textbf{900K+}-sample multi-source dataset spanning \textbf{52K brand IDs} (\textbf{4.2$\times$} prior coverage); achieved \textbf{33\%} reduction of genuine false positives on shadow-launch audit with transparent recall trade-off.}
+{\textbf{Science lead and primary POC for Amazon's end-to-end IP infringement detection pipeline}, owning the multimodal infringement detection stack and upstream brand detection models that operate at \textbf{Amazon catalog scale} and support automated enforcement decisions across Brand Protection.}
+
 \item
-    {Built end-to-end \textbf{SFT + GRPO} reinforcement-learning training pipeline with multi-component reward (brand-ID correctness, IP-type alignment, decision calibration); diagnosed and fixed reward-induced distributional collapse via joint-distribution checks. Multi-node training on \textbf{88$\times$A100-40GB} HyperPod cluster (DeepSpeed ZeRO-2, two-step tokenized-data pattern on FSX/Lustre).}
+{\textbf{Own the science and model strategy for a core foundation model in Amazon Brand Protection}, setting the technical roadmap across multimodal reasoning, model architecture, continued pre-training, post-training, evaluation, and efficient inference.}
+
 \item
-    {Designed and executed a \textbf{353K-ASIN} auditor-aware backfill through \textbf{AWS Bedrock} (Claude Opus) to generate structured reasoning traces; integrated as supervised training data, increasing auditor-verified true-negative coverage by \textbf{20$\times$} and lifting recall on hard true-positive subset by \textbf{+28pp} at near-flat precision.}
+{\textbf{Lead cross-functional model launches across Science, SDE, Data, and Audit/Program teams}, defining model-readiness and automated-enforcement standards, resolving science-to-production gaps, and driving models from research through large-scale production deployment.}
+
 \item
-    {Trained an \textbf{MLP confidence head} on VLM hidden states for production risk scoring; deployed via \textbf{SageMaker} endpoints for shadow-audit integration. Cross-team collaboration to acquire heterogeneous data sources and address brand long-tail and compatibility-term false-positive imbalance.}
+{\textbf{Drive organization-level business impact by improving infringement detection quality and operating efficiency}, delivering \textbf{33\% fewer false positives, a 28-point catch-rate improvement on the hardest cases, and 3$\times$ lower serving cost} while advancing broader Brand Protection goals.}
+
 \end{cvitems}
+
 \sectionsep
 
 
