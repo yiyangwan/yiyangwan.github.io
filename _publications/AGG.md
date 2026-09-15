@@ -7,7 +7,7 @@ permalink: /publications/AGG
 # Kept at/before today: _config.yml sets `future: false`, so a future date would
 # drop this page from the build and 404 the link on /publications/.
 date: 2026-08-05
-venue: 'Bridging Transportation Researchers (BTR8) Conference'
+venue: 'Working Paper'
 paperurl: 'https://www.researchgate.net/profile/Jisoon-Lim/publication/400258414_A_Bayesian-Guided_Aggregation-Disaggregation_Algorithm_for_Transit_Planning/links/697cfb4a12f837212a166204/A-Bayesian-Guided-Aggregation-Disaggregation-Algorithm-for-Transit-Planning.pdf'
 # citation: 'Golbarg Dokhani, Jisoon Lim, Neda Masoud, Yiyang Wang, Amirmahdi Tafreshian. <i>Bridging Transportation Researchers (BTR8) Conference.</i>'
 ---

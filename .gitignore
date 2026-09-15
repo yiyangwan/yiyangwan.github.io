@@ -3,5 +3,10 @@ _site/
 # ignore all files in "hidden" folder
 hidden/*
 # CV/ is tracked: LaTeX source, class, fonts, and build.sh (see CLAUDE.md).
+# CV/backups/ is NOT tracked. build.sh snapshots the previous PDF there on every
+# run, so it accumulates superseded CV revisions. Committing them publishes old
+# versions of the CV — that is how a stale copy came to be served at
+# /CV/backups/ on the live site. Keep them local.
+CV/backups/
 docs/
 

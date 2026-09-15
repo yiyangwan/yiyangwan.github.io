@@ -2,6 +2,19 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## HARD RULE: never change information beyond the ask
+
+**Never update any information beyond what the owner explicitly asked for.** Not a preference — a hard rule, and it outranks every other instruction in this file.
+
+This repo is the owner's public academic identity and CV. Every line is a factual claim they personally stand behind in hiring, immigration, and academic contexts. An unauthorized edit misstates their record publicly without their knowledge, and costs them the ability to trust the repo without re-auditing it line by line.
+
+- Scope each edit to the exact file, field, and record named in the request. Updating a talk record does **not** license editing the matching publication record — `_talks/` and `_publications/` are separate collections holding separate claims.
+- If an adjacent field looks stale, wrong, or improvable while you are in there, **stop and ask.** Do not fix it in passing, do not bundle it into the same commit, and do not justify it as keeping the record consistent.
+- Never add a metric that was not requested. In particular, **no citation counts, h-index, download counts, or impact factors in the CV.**
+- If a requested change leaves a neighbouring field inconsistent, surface the inconsistency and let the owner decide. Do not resolve it yourself.
+- Before committing, read every hunk of the diff and ask "was this one requested?" Drop any hunk where the answer is no.
+- Adding a comment that explains why a value is what it is: fine. Changing the value: not without asking.
+
 ## Project Overview
 
 Jekyll-based personal academic homepage for Yiyang Wang, hosted on GitHub Pages at https://yiyangwan.github.io. Built on the academicpages template (a Minimal Mistakes derivative). Live site rebuilds automatically when `main` is pushed.

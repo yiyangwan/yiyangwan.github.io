@@ -132,6 +132,12 @@ exclude:
   - .sass-cache
   - CHANGELOG
   - CLAUDE.md
+  # CV/ holds the LaTeX source, .cls, fonts and build.sh. It is tracked so the
+  # build is reproducible, but it must NOT be published: without this exclude,
+  # Jekyll copies the whole directory into _site/ and GitHub Pages serves
+  # CV/yiyangwang_cv.tex as readable plain text plus every file under
+  # CV/backups/. The published CV is files/yiyangwang_cv.pdf only.
+  - CV
   - Capfile
   - Gemfile
   - Gruntfile.js
