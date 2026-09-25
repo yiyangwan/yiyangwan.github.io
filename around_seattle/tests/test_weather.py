@@ -53,6 +53,16 @@ def test_collect_treats_null_periods_as_failure():
     assert weather.collect(http) is None
 
 
+def test_collect_isolates_a_number_overflow_to_its_region():
+    # A JSON number like 1e400 parses to float('inf'); int(inf) then overflows.
+    good = read_fixture("nws_seattle.json")
+    bad = good.replace('"temperature": 54,', '"temperature": 1e400,', 1)
+    http = FakeHttp({weather.FORECAST_URLS["seattle"]: bad, weather.FORECAST_URLS["eastside"]: good})
+    data = weather.collect(http)
+    assert data["seattle"] is None
+    assert len(data["eastside"]["periods"]) == 6
+
+
 def test_collect_isolates_a_wrongly_typed_period_to_its_region():
     good = read_fixture("nws_seattle.json")
     bad = good.replace('"probabilityOfPrecipitation": {"unitCode": "wmoUnit:percent", "value": 94}',

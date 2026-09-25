@@ -77,7 +77,7 @@ def collect(http) -> dict | None:
             # api.weather.gov's robots.txt disallows crawlers, but NWS documents this API for applications.
             data = http.get_json(url, respect_robots=False, headers={"Accept": "application/geo+json"})
             periods = [_period(raw) for raw in data["properties"]["periods"]]
-        except (SourceError, KeyError, TypeError, ValueError, AttributeError):
+        except (SourceError, KeyError, TypeError, ValueError, AttributeError, OverflowError):
             result[region] = None
             continue
         result[region] = {"periods": periods} if periods else None

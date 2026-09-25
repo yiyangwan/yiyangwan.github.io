@@ -112,6 +112,33 @@ def test_main_fails_on_invalid_output(config_dir, tmp_path, monkeypatch):
     assert not out.exists()
 
 
+def test_weather_failure_becomes_null_and_is_logged(config_dir, tmp_path, monkeypatch, capsys):
+    def boom(client):
+        raise RuntimeError("nws down")
+    monkeypatch.setattr(build.weather, "collect", boom)
+    code, out = run_main(config_dir, tmp_path, fixture_http())
+    assert code == 0
+    data = json.loads(out.read_text(encoding="utf-8"))
+    assert data["weather"] is None
+    assert "weather: error (RuntimeError)" in capsys.readouterr().out
+
+
+def test_weather_unavailable_is_logged_without_an_exception(config_dir, tmp_path, capsys):
+    http = fixture_http()
+    http.routes = {url: text for url, text in http.routes.items() if url not in FORECAST_URLS.values()}
+    code, out = run_main(config_dir, tmp_path, http)
+    assert code == 0
+    data = json.loads(out.read_text(encoding="utf-8"))
+    assert data["weather"] is None
+    assert "weather: unavailable" in capsys.readouterr().out
+
+
+def test_weather_ok_is_logged_with_the_regions_present(config_dir, tmp_path, capsys):
+    code, out = run_main(config_dir, tmp_path, fixture_http())
+    assert code == 0
+    assert "weather: ok (seattle, eastside)" in capsys.readouterr().out
+
+
 def test_run_sources_isolates_failures_and_redacts_secrets(monkeypatch, window):
     def ok(config, http, window, env):
         return [make_event()]
@@ -131,6 +158,16 @@ def test_run_sources_isolates_failures_and_redacts_secrets(monkeypatch, window):
     assert [(r.status, r.error) for r in results] == [
         ("ok", None), ("error", "HTTP 403"), ("skipped", "no API key configured"), ("error", "RuntimeError")]
     assert len(results[0].events) == 1
+
+
+def test_run_sources_redacts_a_configs_own_secret_env(monkeypatch, window):
+    def forbidden(config, http, window, env):
+        raise SourceError("blocked: s3cret-other-key")
+
+    monkeypatch.setattr(build, "ADAPTERS", {"a": forbidden})
+    config = make_config(id="a", type="a", secret_env="OTHER_API_KEY")
+    results = build.run_sources([config], None, window, {"OTHER_API_KEY": "s3cret-other-key"})
+    assert results[0].error == "blocked: ***"
 
 
 def test_process_filters_places_and_selects(window):

@@ -23,7 +23,6 @@ from .sources import civicplus, ticketmaster, tribe, trumba_ics
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_CONFIG_DIR = REPO_ROOT / "_data" / "around_seattle"
-SECRET_ENV_NAMES = ("TICKETMASTER_API_KEY",)
 ADAPTERS = {
     "ics": lambda config, http, window, env: trumba_ics.collect(config, http, window),
     "tribe": lambda config, http, window, env: tribe.collect(config, http, window),
@@ -52,8 +51,8 @@ def load_sources(path: Path) -> tuple[list[SourceConfig], dict]:
     return configs, {"min_score": int(further.get("min_score", 50)), "max_events": int(further.get("max_events", 30))}
 
 
-def _redact(message: str, env) -> str:
-    for name in SECRET_ENV_NAMES:
+def _redact(message: str, env, names) -> str:
+    for name in names:
         secret = env.get(name)
         if secret:
             message = message.replace(secret, "***")
@@ -61,6 +60,7 @@ def _redact(message: str, env) -> str:
 
 
 def run_sources(configs, http, window: Window, env) -> list[SourceResult]:
+    names = {c.secret_env for c in configs if c.secret_env} | {"TICKETMASTER_API_KEY"}
     results = []
     for config in configs:
         try:
@@ -69,9 +69,9 @@ def run_sources(configs, http, window: Window, env) -> list[SourceResult]:
         except SourceSkipped as exc:
             results.append(SourceResult(config, "skipped", error=str(exc)))
         except SourceError as exc:
-            results.append(SourceResult(config, "error", error=_redact(str(exc), env)))
+            results.append(SourceResult(config, "error", error=_redact(str(exc), env, names)))
         except Exception as exc:  # a bug in one adapter must not stop the others
-            print(_redact(f"{config.id}: {type(exc).__name__}: {exc}", env), file=sys.stderr)
+            print(_redact(f"{config.id}: {type(exc).__name__}: {exc}", env, names), file=sys.stderr)
             results.append(SourceResult(config, "error", error=type(exc).__name__))
     return results
 
@@ -128,8 +128,15 @@ def main(argv=None, *, http=None, env=None) -> int:
         return 2
 
     events = process(results, configs, window, further)
+    try:
+        weather_data = weather.collect(client)
+    except Exception as exc:  # a weather outage must not stop the rest of the build
+        weather_data = None
+        print(f"weather: error ({type(exc).__name__})")
+    else:
+        print(f"weather: ok ({', '.join(weather_data)})" if weather_data else "weather: unavailable")
     output = schema.to_output(generated_at=now, window=window, results=results, events=events,
-                              weather=weather.collect(client), sun=sun.for_window(window),
+                              weather=weather_data, sun=sun.for_window(window),
                               seasonal=seasonal.active(picks, window.today))
     try:
         schema.validate(output)
