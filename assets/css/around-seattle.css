@@ -44,9 +44,10 @@
   background: var(--paper);
 }
 .around *, .around *::before, .around *::after { box-sizing: border-box; }
-.around h1, .around h2, .around h3, .around h4, .around p, .around ol, .around ul, .around li,
-.around form, .around fieldset, .around legend, .around label { margin: 0; padding: 0; }
-.around h1, .around h2, .around h3, .around h4 { font-family: inherit; line-height: 1.2; color: var(--fir); }
+/* :where() keeps these at one class of specificity: enough to beat the theme's element rules, and low enough that
+   the component rules below set their own spacing. */
+.around :where(h1, h2, h3, h4, p, ol, ul, li, form, fieldset, legend, label) { margin: 0; padding: 0; }
+.around :where(h1, h2, h3, h4) { font-family: inherit; line-height: 1.2; color: var(--fir); }
 .around a { color: var(--fir); text-decoration: underline; text-decoration-color: rgba(23, 58, 46, 0.35);
   text-decoration-thickness: 1px; text-underline-offset: 0.2em; }
 .around a:hover { color: var(--sound); text-decoration-color: currentColor; }
