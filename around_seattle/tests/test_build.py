@@ -179,11 +179,11 @@ def test_run_sources_isolates_failures_and_redacts_secrets(monkeypatch, window):
         raise SourceSkipped("no API key configured")
 
     def bug(config, http, window, env):
-        raise RuntimeError("boom with s3cret-key inside")
+        raise RuntimeError("boom with fake-value inside")
 
     monkeypatch.setattr(build, "ADAPTERS", {"a": ok, "b": forbidden, "c": dormant, "d": bug})
     configs = [make_config(id=kind, type=kind) for kind in "abcd"]
-    results = build.run_sources(configs, None, window, {"TICKETMASTER_API_KEY": "s3cret-key"})
+    results = build.run_sources(configs, None, window, {"TICKETMASTER_API_KEY": "fake-value"})
     assert [(r.status, r.error) for r in results] == [
         ("ok", None), ("error", "HTTP 403"), ("skipped", "no API key configured"), ("error", "RuntimeError")]
     assert len(results[0].events) == 1
@@ -191,11 +191,11 @@ def test_run_sources_isolates_failures_and_redacts_secrets(monkeypatch, window):
 
 def test_run_sources_redacts_a_configs_own_secret_env(monkeypatch, window):
     def forbidden(config, http, window, env):
-        raise SourceError("blocked: s3cret-other-key")
+        raise SourceError("blocked: fake-other-value")
 
     monkeypatch.setattr(build, "ADAPTERS", {"a": forbidden})
     config = make_config(id="a", type="a", secret_env="OTHER_API_KEY")
-    results = build.run_sources([config], None, window, {"OTHER_API_KEY": "s3cret-other-key"})
+    results = build.run_sources([config], None, window, {"OTHER_API_KEY": "fake-other-value"})
     assert results[0].error == "blocked: ***"
 
 
