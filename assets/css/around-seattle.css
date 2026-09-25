@@ -35,7 +35,7 @@
   --sky: #e9eef0;
   --fog: 1;
   --wrap: 70rem;
-  --column: 48rem;
+  --column: 42rem; /* about 760px at the theme's 18px root (spec 6.2) */
   --gutter: 4.5rem;
   font-family: "Overpass", "Helvetica Neue", Arial, sans-serif;
   font-size: 1rem;
@@ -48,6 +48,9 @@
    the component rules below set their own spacing. */
 .around :where(h1, h2, h3, h4, p, ol, ul, li, form, fieldset, legend, label) { margin: 0; padding: 0; }
 .around :where(h1, h2, h3, h4) { font-family: inherit; line-height: 1.2; color: var(--fir); }
+/* The theme fades every p, span, a, and input (transition: all 0.2s), which also slows the focus ring. This page's
+   only motion is the fog and sky, so state changes here are instant. */
+.around :where(p, span, h1, h2, h3, h4, a, input) { transition: none; }
 .around a { color: var(--fir); text-decoration: underline; text-decoration-color: rgba(23, 58, 46, 0.35);
   text-decoration-thickness: 1px; text-underline-offset: 0.2em; }
 .around a:hover { color: var(--sound); text-decoration-color: currentColor; }
@@ -75,21 +78,30 @@
 .around-forecast span { display: block; }
 .around-week { display: flex; gap: 1.1rem; margin-top: 1.75rem; padding-bottom: 0.25rem; list-style: none;
   overflow-x: auto; font-variant-numeric: tabular-nums; }
-.around-week__day { display: grid; justify-items: center; gap: 0.15rem; min-width: 2.6rem; color: var(--fir); }
+/* position: relative keeps each visually hidden label inside the strip's scroll box, so it cannot widen the page. */
+.around-week__day { position: relative; display: grid; justify-items: center; gap: 0.15rem; min-width: 2.6rem;
+  color: var(--fir); }
 .around-week__name { font-size: 0.875rem; font-weight: 700; }
 .around-wx { width: 1.6rem; height: 1.6rem; fill: none; stroke: currentColor; stroke-width: 1.75;
   stroke-linecap: round; stroke-linejoin: round; }
 .around-mountain { display: block; width: 100%; height: auto; }
-.around-mountain .fog { opacity: var(--fog); transition: opacity 1.6s cubic-bezier(0.2, 0.7, 0.2, 1); }
-.around-mountain .fog rect { fill: var(--sky); transition: fill 1.6s ease; }
+/* Fog is data (--fog is the fog opacity per sky state): the fog bank takes that opacity, and the peak fades by the
+   same amount, which looks the same as a sky-colored veil. Nothing covers the art as a box, so no edge shows. */
+.around-mountain .peak { opacity: calc(1 - var(--fog)); transition: opacity 1.6s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.around-mountain .mist { opacity: var(--fog); transition: opacity 1.6s cubic-bezier(0.2, 0.7, 0.2, 1); }
 
-/* Filters: flat chips; the selected state is a Fir fill. */
-.around-filters { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 2.25rem; max-width: var(--wrap);
-  margin: 0 auto; padding: 1.5rem 1.25rem 0.5rem; }
-.around .around-chips { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; min-width: 0; margin: 0;
-  border: 0; }
-.around .around-chips legend { float: left; width: auto; margin: 0 0.5rem 0 0; padding: 0; border: 0;
-  font-weight: 700; color: var(--fir); }
+/* Filters: flat chips; the selected state is a Fir fill. "Where" takes its own row and "What" shares the next one
+   with "Free only". The form's left padding is a fixed legend column: each fieldset pulls its legend back into it, so
+   first-row chips, wrapped chips, and a wrapped "Free only" all start on the same line. */
+.around-filters { --legend: 4rem; --chip-gap: 0.5rem; display: flex; flex-wrap: wrap; align-items: center;
+  gap: 0.6rem 2rem; max-width: var(--wrap); margin: 0 auto;
+  padding: 1.5rem 1.25rem 0.5rem calc(1.25rem + var(--legend)); }
+.around .around-chips { display: flex; flex-wrap: wrap; align-items: center; gap: var(--chip-gap); min-width: 0;
+  margin: 0 0 0 calc(-1 * var(--legend)); padding: 0 0 0 var(--legend); border: 0; }
+.around .around-chips:first-of-type { flex-basis: calc(100% + var(--legend)); }
+.around .around-chips legend { float: left; width: var(--legend);
+  margin: 0 calc(-1 * var(--chip-gap)) 0 calc(-1 * var(--legend)); padding: 0; border: 0; font-weight: 700;
+  color: var(--fir); }
 .around .around-chip { position: relative; display: inline-flex; margin: 0; color: var(--fir); cursor: pointer; }
 .around .around-chip input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; padding: 0;
   opacity: 0; cursor: pointer; }
@@ -116,8 +128,9 @@
 .around-ev--market { border-left-color: var(--type-market); }
 .around-ev--outdoors { border-left-color: var(--type-outdoors); }
 .around-ev--arts { border-left-color: var(--type-arts); }
-.around-ev__title { font-size: 1.125rem; font-weight: 700; line-height: 1.25; }
+.around-ev__title { font-size: 1.125rem; font-weight: 700; line-height: 1.25; text-wrap: balance; }
 .around-ev--featured .around-ev__title { font-size: 1.563rem; line-height: 1.15; }
+.around-ev__when, .around-ev__kind, .around-ev__more { max-width: 68ch; }
 .around-ev__when { margin-top: 0.2rem; font-variant-numeric: tabular-nums; }
 .around-ev__kind { font-size: 0.95rem; font-weight: 700; color: var(--type-other); }
 .around-ev--festival .around-ev__kind { color: var(--type-festival); }
@@ -136,7 +149,7 @@
 .around-empty { margin-top: 0.75rem; }
 .around-day { display: grid; grid-template-columns: var(--gutter) minmax(0, 1fr); gap: 0 1rem; margin-top: 1.5rem; }
 .around-day__head { display: grid; align-content: start; }
-.around-day__weekday { font-size: 1.25rem; font-weight: 800; line-height: 1.1; }
+.around-day__weekday { font-size: 1.25rem; font-weight: 700; line-height: 1.1; }
 .around-day__date { font-size: 0.95rem; font-weight: 400; color: var(--slate); }
 .around-day__body > .around-list, .around-day__body > .around-empty { margin-top: 0; }
 .around-weekblock { margin-top: 1.75rem; }
@@ -147,11 +160,14 @@
 @media (max-width: 760px) {
   .around-hero__inner { grid-template-columns: minmax(0, 1fr); padding-top: 1.75rem; }
   .around-hero__text { padding-bottom: 0.5rem; }
-  .around-filters { gap: 0.75rem; }
+  .around-filters { gap: 0.6rem 1rem; }
+  /* Seven equal columns fit the strip at 390px; it still scrolls on anything narrower than seven 2.25rem days. */
+  .around-week { display: grid; grid-template-columns: repeat(7, minmax(2.25rem, 1fr)); gap: 0.25rem; }
+  .around-week__day { min-width: 0; }
   .around-day { grid-template-columns: 3.25rem minmax(0, 1fr); gap: 0 0.75rem; }
   .around-section { margin-top: 2.5rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .around-hero, .around-mountain .fog, .around-mountain .fog rect { transition: none; }
+  .around-hero, .around-mountain .peak, .around-mountain .mist { transition: none; }
 }
