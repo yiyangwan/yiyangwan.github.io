@@ -1,0 +1,96 @@
+BEGIN:VCALENDAR
+PRODID:-//Trumba Corporation//Trumba Calendar Services 0.11.26123//EN
+VERSION:2.0
+CALSCALE:GREGORIAN
+X-WR-CALNAME:Seattle.Gov|City-Wide
+X-WR-TIMEZONE:America/Los_Angeles
+METHOD:PUBLISH
+BEGIN:VTIMEZONE
+TZID:America/Los_Angeles
+BEGIN:STANDARD
+TZOFFSETFROM:-0700
+TZOFFSETTO:-0800
+TZNAME:PST
+DTSTART:20071104T020000
+RRULE:FREQ=YEARLY;BYMONTH=11;BYDAY=1SU
+END:STANDARD
+BEGIN:DAYLIGHT
+TZOFFSETFROM:-0800
+TZOFFSETTO:-0700
+TZNAME:PDT
+DTSTART:20070311T020000
+RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=2SU
+END:DAYLIGHT
+END:VTIMEZONE
+BEGIN:VEVENT
+SUMMARY:Mid-Autumn Lantern Walk
+LOCATION:Volunteer Park<br>1247 15th Ave E Seattle WA 98112
+DTSTART;TZID=America/Los_Angeles:20260926T180000
+DTEND;TZID=America/Los_Angeles:20260926T200000
+X-MICROSOFT-CDO-ALLDAYEVENT:FALSE
+URL:https://example.org/lantern-walk
+X-TRUMBA-CUSTOMFIELD;NAME="Event Types";ID=1;TYPE=CustomAsset:Festivals/Fairs\,Ethnic/Cultural
+X-TRUMBA-CUSTOMFIELD;NAME="Location Type";ID=2;TYPE=CustomAsset:Outdoor
+X-TRUMBA-CUSTOMFIELD;NAME="Parks Event Category";ID=3;TYPE=CustomAsset:Park Activation\,Arts\,Music
+X-TRUMBA-CUSTOMFIELD;NAME="Contact";ID=4;TYPE=SingleLine:Example Contact
+X-TRUMBA-CUSTOMFIELD;NAME="Contact Email";ID=5;TYPE=Email:<a href="mailto:contact@example.org">contact@example.org</a>
+X-TRUMBA-CUSTOMFIELD;NAME="Cost";ID=6;TYPE=SingleLine:Free
+DTSTAMP:20260901T000000Z
+DESCRIPTION:Event Types: Festivals/Fairs\,Ethnic/Cultural<br>Location Type: Outdoor<br>Contact: Example Contact<br>Contact Phone: 206-555-0100<br>Contact Email: contact@example.org<br>Cost: Free<br><br>Carry a paper lantern through the park at dusk.
+CATEGORIES:Parks &amp\; Recreation
+UID:http://uid.trumba.com/event/1001
+X-TRUMBA-LINK:https://www.seattle.gov/event-calendar?trumbaEmbed=view%3Devent%26eventid%3D1001
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Seattle City Council Briefing
+LOCATION:Council Chamber\, City Hall
+DTSTART;TZID=America/Los_Angeles:20260928T093000
+DTEND;TZID=America/Los_Angeles:20260928T113000
+DESCRIPTION:Agendas: example
+CATEGORIES:Seattle City Council
+UID:http://uid.trumba.com/event/1002
+X-TRUMBA-LINK:https://www.seattle.gov/event-calendar?trumbaEmbed=view%3Devent%26eventid%3D1002
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Watercolor paintings of a floral world
+LOCATION:Elisabeth Miller Library\, 3501 NE 41st St\, WA\, 98105
+DTSTART;VALUE=DATE:20260925
+DTEND;VALUE=DATE:20261001
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+X-TRUMBA-CUSTOMFIELD;NAME="Event Types";ID=1;TYPE=CustomAsset:Arts
+X-TRUMBA-CUSTOMFIELD;NAME="Cost";ID=6;TYPE=SingleLine:free
+DESCRIPTION:Event Types: Arts<br>Cost: free<br><br>Botanical watercolors on display.
+CATEGORIES:City-Wide
+UID:http://uid.trumba.com/event/1003
+X-TRUMBA-LINK:https://www.seattle.gov/event-calendar?trumbaEmbed=view%3Devent%26eventid%3D1003
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Chinatown&#8211\;International District Walking Tour
+LOCATION:Chinatown&#8211\;International District
+DTSTART;TZID=America/Los_Angeles:20260927T100000
+DTEND;TZID=America/Los_Angeles:20260927T100000
+X-TRUMBA-CUSTOMFIELD;NAME="Event Types";ID=1;TYPE=CustomAsset:Arts\,Community
+X-TRUMBA-CUSTOMFIELD;NAME="Cost";ID=6;TYPE=SingleLine:$22
+DESCRIPTION:Event Types: Arts\,Community<br>Cost: $22<br><br>A two-hour walk through neighborhood history.
+CATEGORIES:Arts and Culture
+UID:http://uid.trumba.com/event/1004
+URL:https://example.org/cid-walk
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Summer Movie Night
+LOCATION:Magnuson Park
+DTSTART;TZID=America/Los_Angeles:20260920T200000
+DTEND;TZID=America/Los_Angeles:20260920T220000
+CATEGORIES:Parks &amp\; Recreation
+UID:http://uid.trumba.com/event/1005
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Night Market at Seattle Center
+LOCATION:Seattle Center
+DTSTART;TZID=America/Los_Angeles:20261003T170000
+DTEND;TZID=America/Los_Angeles:20261003T220000
+CATEGORIES:City-Wide
+UID:http://uid.trumba.com/event/1006
+URL:javascript:alert(1)
+END:VEVENT
+END:VCALENDAR
