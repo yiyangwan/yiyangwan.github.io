@@ -82,6 +82,8 @@
 .around-week__day { position: relative; display: grid; justify-items: center; gap: 0.15rem; min-width: 2.6rem;
   color: var(--fir); }
 .around-week__name { font-size: 0.875rem; font-weight: 700; }
+/* Celsius stacked over Fahrenheit: side by side, the pair is wider than a day column on a phone. */
+.around-week__temp { display: grid; justify-items: center; line-height: 1.25; }
 .around-wx { width: 1.6rem; height: 1.6rem; fill: none; stroke: currentColor; stroke-width: 1.75;
   stroke-linecap: round; stroke-linejoin: round; }
 .around-mountain { display: block; width: 100%; height: auto; }

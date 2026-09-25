@@ -210,8 +210,21 @@ export function headline(sky) {
   return "What's on around Seattle";
 }
 
+// NWS sends whole degrees Fahrenheit; a period in Celsius converts the other way, in case the feed ever switches.
+export function temperatures(period) {
+  const { temperature: value, unit } = period;
+  const celsius = unit === "C" ? value : ((value - 32) * 5) / 9;
+  const fahrenheit = unit === "C" ? (value * 9) / 5 + 32 : value;
+  return { celsius: Math.round(celsius), fahrenheit: Math.round(fahrenheit) };
+}
+
+export function formatTemperature(period) {
+  const { celsius, fahrenheit } = temperatures(period);
+  return `${celsius}°C / ${fahrenheit}°F`;
+}
+
 export function forecastLine(period) {
-  return period ? `${period.temperature}°, ${period.shortForecast.toLowerCase()}.` : "";
+  return period ? `${formatTemperature(period)}, ${period.shortForecast.toLowerCase()}.` : "";
 }
 
 export function sunsetLine(sun, key) {
@@ -223,8 +236,8 @@ export function weekStrip(periods, now) {
   return (periods ?? []).filter((item) => item.isDaytime && new Date(item.end) > now).slice(0, 7).map((item) => {
     const key = dayKey(new Date(item.start));
     const day = weekday(key);
-    return { key, label: WEEKDAYS_SHORT[day], temperature: item.temperature, condition: item.condition,
-      text: `${WEEKDAYS_LONG[day]}: ${item.temperature}°, ${item.shortForecast.toLowerCase()}` };
+    return { key, label: WEEKDAYS_SHORT[day], ...temperatures(item), condition: item.condition,
+      text: `${WEEKDAYS_LONG[day]}: ${formatTemperature(item)}, ${item.shortForecast.toLowerCase()}` };
   });
 }
 

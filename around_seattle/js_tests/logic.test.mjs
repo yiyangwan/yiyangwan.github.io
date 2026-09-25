@@ -211,7 +211,7 @@ test("headline, forecast, sunset, and week strip copy", () => {
   assert.equal(L.headline({ state: "peek", when: "tomorrow" }), "The mountain might peek out tomorrow.");
   assert.equal(L.headline({ state: "hiding", when: "on Sunday" }), "The mountain's hiding on Sunday.");
   assert.equal(L.headline({ state: "unknown" }), "What's on around Seattle");
-  assert.equal(L.forecastLine(period()), "62°, mostly sunny.");
+  assert.equal(L.forecastLine(period()), "17°C / 62°F, mostly sunny.");
   assert.equal(L.forecastLine(null), "");
   assert.equal(L.sunsetLine({ "2026-09-25": { sunset: "2026-09-25T19:01:00-07:00" } }, "2026-09-25"),
     "Sunset at 7:01 pm.");
@@ -219,7 +219,17 @@ test("headline, forecast, sunset, and week strip copy", () => {
   const strip = L.weekStrip([period({ isDaytime: false }), period(),
     period({ start: "2026-09-26T06:00:00-07:00", end: "2026-09-26T18:00:00-07:00" })], at("2026-09-25T05:00:00-07:00"));
   assert.deepEqual(strip.map((d) => d.label), ["Fri", "Sat"]);
-  assert.equal(strip[0].text, "Friday: 62°, mostly sunny");
+  assert.equal(strip[0].text, "Friday: 17°C / 62°F, mostly sunny");
+  assert.deepEqual([strip[0].celsius, strip[0].fahrenheit], [17, 62]);
+});
+
+test("temperatures come in whole degrees Celsius and Fahrenheit, Celsius first", () => {
+  assert.deepEqual(L.temperatures(period()), { celsius: 17, fahrenheit: 62 });
+  assert.deepEqual(L.temperatures(period({ temperature: -40 })), { celsius: -40, fahrenheit: -40 });
+  assert.deepEqual(L.temperatures(period({ temperature: 17, unit: "C" })), { celsius: 17, fahrenheit: 63 });
+  assert.deepEqual(L.temperatures(period({ temperature: 50, unit: undefined })), { celsius: 10, fahrenheit: 50 });
+  assert.equal(L.formatTemperature(period()), "17°C / 62°F");
+  assert.equal(L.formatTemperature(period({ temperature: 31 })), "-1°C / 31°F");
 });
 
 test("weekStrip leaves out daytime periods that have ended, then takes seven days", () => {

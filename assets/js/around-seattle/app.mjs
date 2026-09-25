@@ -153,7 +153,10 @@ function renderHero(now) {
   week.replaceChildren(...days.map((day) => el("li", { className: "around-week__day" }, [
     el("span", { className: "around-week__name", text: day.label, "aria-hidden": "true" }),
     glyph(day.condition),
-    el("span", { className: "around-week__temp", text: `${day.temperature}°`, "aria-hidden": "true" }),
+    el("span", { className: "around-week__temp", "aria-hidden": "true" }, [
+      el("span", { text: `${day.celsius}°C` }),
+      el("span", { text: `${day.fahrenheit}°F` }),
+    ]),
     el("span", { className: "around-sr", text: day.text }),
   ])));
   week.hidden = days.length === 0;
