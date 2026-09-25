@@ -121,6 +121,15 @@ tags: [tag1, tag2]
 ---
 ```
 
+### Around Seattle tab
+
+`/around-seattle/` (`_pages/around-seattle.html`, `_layouts/around-seattle.html`) is a static shell that loads
+`around-seattle.json` in the browser from the `around-seattle-data` branch. `.github/workflows/around-seattle.yml`
+rebuilds that file every morning with the Python package in `around_seattle/` (excluded from the Jekyll build) and
+commits it only to `around-seattle-data`, never to `main`. Sources and seasonal picks live in
+`_data/around_seattle/`; page code is `assets/css/around-seattle.css` and `assets/js/around-seattle/` (`logic.mjs` is
+pure and tested by `around_seattle/js_tests/`). Local commands and operations: `around_seattle/README.md`.
+
 ## Deployment
 
 Push to `main` → GitHub Pages rebuilds via the `github-pages` gem. The site serves from the repo root (no `/docs` folder). `_site/` is gitignored and only used locally.
