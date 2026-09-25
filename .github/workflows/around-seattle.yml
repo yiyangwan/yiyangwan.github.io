@@ -11,21 +11,23 @@ on:
       - "_data/around_seattle/**"
       - ".github/workflows/around-seattle.yml"
 
+# Read-only by default. Only the publish job, which installs no packages, gets a token that can push.
 permissions:
-  contents: write  # push to the around-seattle-data branch
-  actions: write  # keepalive: re-enable this workflow on scheduled runs
+  contents: read
 
 concurrency:
   group: around-seattle-data
   cancel-in-progress: false
 
 jobs:
-  refresh:
+  build:
     if: github.repository == 'yiyangwan/yiyangwan.github.io'
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false  # keep the token out of .git/config, where installed packages could read it
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97  # v7.0.0
         with:
           python-version: "3.12"
@@ -41,8 +43,33 @@ jobs:
         env:
           TICKETMASTER_API_KEY: ${{ secrets.TICKETMASTER_API_KEY }}
         run: python -m around_seattle.build --out "$RUNNER_TEMP/around-seattle.json"
+      - name: Upload the data file
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # v7.0.1
+        with:
+          name: around-seattle-json
+          path: ${{ runner.temp }}/around-seattle.json
+          retention-days: 3
+          if-no-files-found: error
+
+  publish:
+    needs: build
+    if: github.repository == 'yiyangwan/yiyangwan.github.io'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: write  # push to the around-seattle-data branch
+      actions: write  # keepalive: re-enable this workflow on scheduled runs
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+      - name: Download the data file
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c  # v8.0.1
+        with:
+          name: around-seattle-json
+          path: ${{ runner.temp }}/data
+      - name: Check the data file with the standard library
+        run: python3 -c "import json,sys; d=json.load(open(sys.argv[1])); assert d.get('schemaVersion')==1 and isinstance(d.get('events'), list)" "$RUNNER_TEMP/data/around-seattle.json"
       - name: Publish to the data branch
-        run: bash around_seattle/publish.sh "$RUNNER_TEMP/around-seattle.json"
+        run: bash around_seattle/publish.sh "$RUNNER_TEMP/data/around-seattle.json"
       - name: Purge the jsDelivr copy (best effort)
         continue-on-error: true
         env:

@@ -6,11 +6,12 @@ This folder builds the data behind <https://yiyangwan.github.io/around-seattle/>
 
 1. `.github/workflows/around-seattle.yml` runs every morning at 13:17 UTC (06:17 PDT, 05:17 PST), on manual
    dispatch, and when this folder, `_data/around_seattle/`, or the workflow changes on `main`.
-2. The job runs the tests, then `python -m around_seattle.build`, which fetches each calendar in
-   `_data/around_seattle/sources.yml`, drops noise (meetings, classes, storytimes), keeps Seattle and Eastside
-   events, merges duplicates, collapses repeats, scores each event, and adds the NWS forecast, sunset times, and
-   the active picks from `_data/around_seattle/seasonal.yml`.
-3. `publish.sh` commits `around-seattle.json` to the `around-seattle-data` branch. The job never commits to `main`.
+2. The `build` job has a read-only token. It runs the tests, then `python -m around_seattle.build`, which fetches
+   each calendar in `_data/around_seattle/sources.yml`, drops noise (meetings, classes, storytimes), keeps Seattle
+   and Eastside events, merges duplicates, collapses repeats, scores each event, and adds the NWS forecast, sunset
+   times, and the active picks from `_data/around_seattle/seasonal.yml`.
+3. A separate `publish` job, the only one allowed to push, takes the file from `build`, checks it, and runs
+   `publish.sh`, which commits `around-seattle.json` to the `around-seattle-data` branch. It never commits to `main`.
 4. The page (`_pages/around-seattle.html`, `assets/js/around-seattle/`) fetches that file from
    raw.githubusercontent.com, with jsDelivr as a fallback, and renders it in the browser.
 
