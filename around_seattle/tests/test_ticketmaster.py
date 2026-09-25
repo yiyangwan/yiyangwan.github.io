@@ -79,3 +79,43 @@ def test_collect_isolates_malformed_items_and_stops_on_invalid_page_count(window
     events = ticketmaster.collect(CONFIG, http, window, env=ENV)
     assert [event.uid for event in events] == ["ticketmaster:tm4", "ticketmaster:tm7"]
     assert len(http.calls) == 1
+
+
+def test_safe_event_isolates_an_overflow_error():
+    # An all-day item on datetime.date.max overflows when to_event adds a day for the exclusive end.
+    item = {"name": "Overflow Event", "id": "overflow1", "url": "https://example.org/overflow",
+           "dates": {"start": {"localDate": "9999-12-31", "noSpecificTime": True}, "status": {"code": "onsale"}},
+           "classifications": [{"segment": {"name": "Music"}}],
+           "_embedded": {"venues": [{"name": "Test Venue", "city": {"name": "Seattle"}}]}}
+    with pytest.raises(OverflowError):
+        ticketmaster.to_event(item, CONFIG)
+    assert ticketmaster._safe_event(item, CONFIG) is None
+
+
+def test_page_count_isolates_an_overflow_error():
+    assert ticketmaster._page_count(float("inf")) == 0
+
+
+def test_collect_raises_when_every_item_fails_to_parse(window):
+    body = {"_embedded": {"events": [{"name": "No dates"}]}, "page": {"totalPages": 1}}
+    http = FakeHttp({CONFIG.url: json.dumps(body)})
+    with pytest.raises(SourceError, match="could not parse any items"):
+        ticketmaster.collect(CONFIG, http, window, env=ENV)
+
+
+def test_collect_empty_feed_is_ok(window):
+    body = {"_embedded": {"events": []}, "page": {"totalPages": 1}}
+    http = FakeHttp({CONFIG.url: json.dumps(body)})
+    assert ticketmaster.collect(CONFIG, http, window, env=ENV) == []
+
+
+def test_non_dict_embedded_raises_unexpected_response(window):
+    http = FakeHttp({CONFIG.url: json.dumps({"_embedded": ["oops"], "page": {"totalPages": 1}})})
+    with pytest.raises(SourceError, match="unexpected response"):
+        ticketmaster.collect(CONFIG, http, window, env=ENV)
+
+
+def test_non_dict_page_raises_unexpected_response(window):
+    http = FakeHttp({CONFIG.url: json.dumps({"_embedded": {"events": []}, "page": ["oops"]})})
+    with pytest.raises(SourceError, match="unexpected response"):
+        ticketmaster.collect(CONFIG, http, window, env=ENV)

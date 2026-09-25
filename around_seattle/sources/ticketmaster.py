@@ -25,6 +25,7 @@ def collect(config: SourceConfig, http, window: Window, env=None) -> list[Event]
     start = datetime.combine(window.today, time(0), tzinfo=LA).astimezone(timezone.utc)
     end = datetime.combine(window.far_end + timedelta(days=1), time(0), tzinfo=LA).astimezone(timezone.utc)
     events: list[Event] = []
+    saw_items = False
     for page in range(config.max_pages):
         params = {"apikey": key, "dmaId": SEATTLE_TACOMA_DMA, "size": PAGE_SIZE, "page": page, "sort": "date,asc",
                   "startDateTime": start.strftime(UTC_FORMAT), "endDateTime": end.strftime(UTC_FORMAT)}
@@ -32,18 +33,30 @@ def collect(config: SourceConfig, http, window: Window, env=None) -> list[Event]
                              respect_robots=config.respect_robots)
         if not isinstance(data, dict):
             raise SourceError("unexpected response")
-        items = (data.get("_embedded") or {}).get("events") or []
+        items = _as_dict(data.get("_embedded")).get("events") or []
+        saw_items = saw_items or bool(items)
         events.extend(event for event in (_safe_event(item, config) for item in items) if event is not None)
-        if page + 1 >= _page_count((data.get("page") or {}).get("totalPages")):
+        if page + 1 >= _page_count(_as_dict(data.get("page")).get("totalPages")):
             break
+    if saw_items and not events:
+        raise SourceError("could not parse any items")
     return [event for event in events if in_window(event, window)]
+
+
+def _as_dict(value) -> dict:
+    """value if it is a dict, {} if the field is absent, else a SourceError (a systematically wrong shape)."""
+    if value is None:
+        return {}
+    if not isinstance(value, dict):
+        raise SourceError("unexpected response")
+    return value
 
 
 def _page_count(value) -> int:
     """The response's page count, or 0 (stop after this page) when it is not a number."""
     try:
         return int(value)
-    except (TypeError, ValueError):
+    except (TypeError, ValueError, OverflowError):
         return 0
 
 
@@ -51,7 +64,7 @@ def _safe_event(item, config: SourceConfig) -> Event | None:
     """to_event for one item; a malformed item is skipped instead of failing the whole source."""
     try:
         return to_event(item, config)
-    except (TypeError, ValueError, AttributeError, KeyError):
+    except (TypeError, ValueError, AttributeError, KeyError, OverflowError):
         return None
 
 

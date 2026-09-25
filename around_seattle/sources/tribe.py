@@ -13,6 +13,7 @@ LOCAL_FORMAT = "%Y-%m-%d %H:%M:%S"
 
 def collect(config: SourceConfig, http, window: Window) -> list[Event]:
     events: list[Event] = []
+    saw_items = False
     for page in range(1, config.max_pages + 1):
         params = {"start_date": window.today.isoformat(), "end_date": window.far_end.isoformat(),
                   "per_page": PER_PAGE, "page": page}
@@ -21,9 +22,12 @@ def collect(config: SourceConfig, http, window: Window) -> list[Event]:
         items = data.get("events") if isinstance(data, dict) else None
         if not isinstance(items, list):
             raise SourceError("unexpected response")
+        saw_items = saw_items or bool(items)
         events.extend(event for event in (_safe_event(item, config) for item in items) if event is not None)
         if page >= _page_count(data.get("total_pages")):
             break
+    if saw_items and not events:
+        raise SourceError("could not parse any items")
     return [event for event in events if in_window(event, window)]
 
 
@@ -31,7 +35,7 @@ def _page_count(value) -> int:
     """The feed's page count, or 0 (stop after this page) when it is not a number."""
     try:
         return int(value)
-    except (TypeError, ValueError):
+    except (TypeError, ValueError, OverflowError):
         return 0
 
 
@@ -39,14 +43,14 @@ def _safe_event(item, config: SourceConfig) -> Event | None:
     """to_event for one item; a malformed item is skipped instead of failing the whole source."""
     try:
         return to_event(item, config)
-    except (TypeError, ValueError, AttributeError, KeyError):
+    except (TypeError, ValueError, AttributeError, KeyError, OverflowError):
         return None
 
 
 def _zone(name) -> ZoneInfo:
     try:
         return ZoneInfo(name) if name else LA
-    except (ZoneInfoNotFoundError, ValueError, TypeError):
+    except (ZoneInfoNotFoundError, ValueError, TypeError, OSError):
         return LA
 
 
