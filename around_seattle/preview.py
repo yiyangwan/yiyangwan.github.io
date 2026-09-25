@@ -7,8 +7,10 @@ from __future__ import annotations
 import argparse
 import html
 import json
+import re
 import shutil
 import subprocess
+import sys
 import threading
 from datetime import datetime, timedelta, timezone
 from functools import partial
@@ -27,6 +29,24 @@ MIN_WINDOW_WIDTH = 500
 FRAME = ('<!doctype html><meta charset="utf-8"><title>Preview frame</title>'
          '<style>html, body {{ margin: 0; }} iframe {{ display: block; border: 0; }}</style>'
          '<iframe src="{src}" width="{width}" height="{height}" title="Preview"></iframe>\n')
+# Chrome's log gives every console line the same level, so the served copy of the page records its own errors: any
+# console.error call, uncaught error, unhandled rejection, or failed load lands on <html data-preview-errors>, which
+# the DOM dump keeps.
+ERROR_HOOK = """<script>(() => {
+  const seen = [];
+  const note = (text) => {
+    seen.push(String(text).slice(0, 300));
+    document.documentElement.setAttribute("data-preview-errors", JSON.stringify(seen));
+  };
+  const original = console.error;
+  console.error = function (...args) { note(args.map(String).join(" ")); return original.apply(this, args); };
+  addEventListener("error", (event) => note(event.target instanceof Element
+    ? `Failed to load ${event.target.src || event.target.href || event.target.tagName}` : `Uncaught ${event.message}`),
+    true);
+  addEventListener("unhandledrejection",
+    (event) => note(`Uncaught (in promise) ${event.reason?.stack ?? event.reason}`));
+})();</script>"""
+TAIL = 2000
 
 
 class QuietHandler(SimpleHTTPRequestHandler):
@@ -53,9 +73,54 @@ def capture_url(site: Path, url: str, name: str, width: int, height: int) -> str
     return url.split("/around-seattle/")[0] + f"/around-seattle/{frame.name}"
 
 
+def add_error_hook(page: Path) -> None:
+    text = page.read_text(encoding="utf-8")
+    if "<head>" not in text:
+        raise SystemExit(f"cannot add the error hook: no <head> in {page}")
+    page.write_text(text.replace("<head>", "<head>" + ERROR_HOOK, 1), encoding="utf-8")
+
+
+def page_errors(dom: str) -> list[str]:
+    match = re.search(r'<html[^>]*\sdata-preview-errors="([^"]*)"', dom)
+    return json.loads(html.unescape(match.group(1))) if match else []
+
+
 def chrome(*args: str) -> subprocess.CompletedProcess:
     binary = shutil.which("google-chrome") or shutil.which("chromium") or "google-chrome"
-    return subprocess.run([binary, *CHROME_FLAGS, *args], capture_output=True, text=True, timeout=180, check=False)
+    try:
+        return subprocess.run([binary, *CHROME_FLAGS, *args], capture_output=True, text=True, timeout=180, check=False)
+    except (OSError, subprocess.TimeoutExpired) as error:
+        return subprocess.CompletedProcess([binary, *args], returncode=-1, stdout="", stderr=str(error))
+
+
+def build_site(site: Path) -> int:
+    command = ["bundle", "exec", "jekyll", "build", "--config", "_config.yml,_config.dev.yml", "-d", str(site)]
+    build = subprocess.run(command, cwd=REPO, capture_output=True, text=True, check=False)
+    if build.returncode != 0:
+        print(f"jekyll build failed with exit code {build.returncode}:", file=sys.stderr)
+        print((build.stdout + build.stderr)[-TAIL:], file=sys.stderr)
+    return build.returncode
+
+
+def capture(name: str, url: str, site: Path, out: Path) -> list[str]:
+    """Save the phone and desktop screenshots and the DOM dump for one variant; return any failures."""
+    failures = []
+    for label, (width, height) in SIZES.items():
+        shot = out / f"{name}-{label}.png"
+        shot.unlink(missing_ok=True)
+        target = capture_url(site, url, f"{name}-{label}", width, height)
+        result = chrome(f"--window-size={width},{height}", f"--screenshot={shot}", target)
+        if result.returncode != 0 or not shot.exists():
+            failures.append(f"{shot.name}: chrome exit {result.returncode}: {result.stderr[-TAIL:].strip()}")
+    dom = chrome("--dump-dom", url)
+    if dom.returncode != 0 or "<html" not in dom.stdout:
+        failures.append(f"{name}.html: chrome exit {dom.returncode}: {dom.stderr[-TAIL:].strip()}")
+    (out / f"{name}.html").write_text(dom.stdout, encoding="utf-8")
+    errors = page_errors(dom.stdout)
+    print(f"{name}: {dom.stdout.count('class=\"around-ev ')} items rendered; console errors: {len(errors)}")
+    for line in errors[:5]:
+        print("   ", " ".join(line.split())[:200])
+    return failures
 
 
 def main(argv=None) -> int:
@@ -66,30 +131,25 @@ def main(argv=None) -> int:
     args = parser.parse_args(argv)
     site = args.out / "site"
     args.out.mkdir(parents=True, exist_ok=True)
-    subprocess.run(["bundle", "exec", "jekyll", "build", "--config", "_config.yml,_config.dev.yml", "-d", str(site)],
-                   cwd=REPO, check=True, capture_output=True)
+    if build_site(site) != 0:
+        return 1
+    add_error_hook(site / "around-seattle" / "index.html")
     data = json.loads(args.data.read_text(encoding="utf-8"))
     for name, variant in variants(data).items():
         (site / "around-seattle" / f"dev-{name}.json").write_text(json.dumps(variant), encoding="utf-8")
     server = ThreadingHTTPServer(("127.0.0.1", args.port), partial(QuietHandler, directory=str(site)))
     threading.Thread(target=server.serve_forever, daemon=True).start()
+    failures = []
     try:
         for name in [*variants(data), "error"]:
             query = f"?data=/around-seattle/dev-{name}.json" if name != "error" else "?data=/around-seattle/missing.json"
-            url = f"http://localhost:{args.port}/around-seattle/{query}"
-            for label, (width, height) in SIZES.items():
-                target = capture_url(site, url, f"{name}-{label}", width, height)
-                chrome(f"--window-size={width},{height}", f"--screenshot={args.out / f'{name}-{label}.png'}", target)
-            dom = chrome("--enable-logging=stderr", "--v=0", "--dump-dom", url)
-            (args.out / f"{name}.html").write_text(dom.stdout, encoding="utf-8")
-            errors = [line for line in dom.stderr.splitlines() if "Uncaught" in line or "CONSOLE" in line and "rror" in line]
-            print(f"{name}: {dom.stdout.count('class=\"around-ev ')} items rendered; console errors: {len(errors)}")
-            for line in errors[:5]:
-                print("   ", line[:200])
+            failures += capture(name, f"http://localhost:{args.port}/around-seattle/{query}", site, args.out)
     finally:
         server.shutdown()
+    for failure in failures:
+        print(f"chrome failed: {failure}", file=sys.stderr)
     print(f"screenshots and DOM dumps in {args.out}")
-    return 0
+    return 1 if failures else 0
 
 
 if __name__ == "__main__":

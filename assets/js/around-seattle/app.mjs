@@ -14,7 +14,8 @@ const root = document.getElementById("around");
 const form = document.getElementById("around-filters");
 // The site loads MathJax 2 on every page, and it would typeset any "$...$" or backtick span in feed text as math
 // (a price like "$25 – $50" turns into a formula, and TeX's \href can make links). These classes opt the page out.
-// MathJax typesets after window load, which is always after this module runs.
+// They are in place before any feed text is fetched or rendered, and MathJax skips an ignored subtree on every
+// later typeset.
 root.classList.add("tex2jax_ignore", "asciimath2jax_ignore");
 const byId = (id) => document.getElementById(id);
 let state = Object.freeze({ data: null, filters: NO_FILTERS, expanded: Object.freeze([]) });
@@ -83,6 +84,21 @@ function seasonalItem(pick) {
   ]);
 }
 
+// Moving focus to the first revealed item keeps the reader's place; preventScroll keeps the page where it was.
+function focusTitle(item) {
+  const title = item?.querySelector(".around-ev__title");
+  if (!title) return;
+  const link = title.querySelector("a");
+  if (!link) title.setAttribute("tabindex", "-1");
+  (link ?? title).focus({ preventScroll: true });
+}
+
+// Screen readers announce every write to a live region, so write only when the text changes.
+function setStatus(text) {
+  const status = byId("around-status");
+  if (status.textContent !== text) status.textContent = text;
+}
+
 function eventList(events, { id, limit, featuredFirst = false, ...itemOptions }) {
   const expanded = state.expanded.includes(id);
   const shown = expanded ? events : events.slice(0, limit);
@@ -94,9 +110,13 @@ function eventList(events, { id, limit, featuredFirst = false, ...itemOptions })
     "aria-expanded": String(expanded), text: expanded ? "Show fewer" : `Show ${events.length - limit} more`,
   });
   button.addEventListener("click", () => {
-    const next = expanded ? state.expanded.filter((item) => item !== id) : [...state.expanded, id];
-    setState({ expanded: Object.freeze(next) });
-    byId(`${id}-more`)?.focus();
+    if (expanded) {
+      setState({ expanded: Object.freeze(state.expanded.filter((item) => item !== id)) });
+      byId(`${id}-more`)?.focus();
+      return;
+    }
+    setState({ expanded: Object.freeze([...state.expanded, id]) });
+    focusTitle(byId(id)?.children[limit]);
   });
   return [list, button];
 }
@@ -201,11 +221,13 @@ function renderFooter(now) {
 }
 
 function render() {
+  // Filters picked while loading are kept in state and apply on the first render; until then the page keeps its
+  // loading state.
+  if (!state.data) return;
   const now = new Date();
   renderHero(now);
-  if (!state.data) return;
   const count = renderSections(now);
-  byId("around-status").textContent = `Showing ${count} ${count === 1 ? "event" : "events"}.`;
+  setStatus(`Showing ${count} ${count === 1 ? "event" : "events"}.`);
   renderNotice(count, now);
   renderFooter(now);
 }
@@ -216,9 +238,10 @@ function renderError() {
   byId("around-forecast").hidden = true;
   byId("around-week").hidden = true;
   form.hidden = true;
-  byId("around-status").textContent = "";
+  setStatus("");
   root.querySelectorAll(".around-section").forEach((section) => { section.hidden = true; });
   const notice = byId("around-notice");
+  notice.setAttribute("role", "alert");
   notice.replaceChildren(
     el("p", { text: "Today's events didn't load. Reload the page to try again, or browse the calendars directly:" }),
     byId("around-source-links").content.cloneNode(true));
