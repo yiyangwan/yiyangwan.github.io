@@ -6,7 +6,7 @@ from datetime import datetime, timezone
 
 from . import seasonal as seasonal_picks
 from .dedupe import MAX_MORE_DATES
-from .models import CATEGORIES, REGIONS, Event, SeasonalPick, SourceResult, Window
+from .models import CATEGORIES, REGIONS, Event, SeasonalPick, SourceResult, Window, effective_end
 from .text import safe_url
 from .weather import SEVERITY
 
@@ -26,9 +26,12 @@ def event_id(event: Event) -> str:
 
 
 def _event(event: Event) -> dict:
+    # An all-day event with no explicit end still needs one: the page must never compute it
+    # itself, because that goes wrong on DST days. A timed event with no end stays null.
+    end = effective_end(event) if event.all_day and event.end is None else event.end
     return {
         "id": event_id(event), "title": event.title, "start": event.start.isoformat(),
-        "end": event.end.isoformat() if event.end else None, "allDay": event.all_day,
+        "end": end.isoformat() if end else None, "allDay": event.all_day,
         "venue": event.venue, "city": event.city, "region": event.region, "category": event.category,
         "free": event.free, "price": event.price, "url": event.url, "summary": event.summary,
         "source": event.source_id, "score": event.score,

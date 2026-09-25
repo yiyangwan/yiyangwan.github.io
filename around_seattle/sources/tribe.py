@@ -5,7 +5,7 @@ from datetime import datetime, time, timedelta
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 from ..models import LA, Event, SourceConfig, SourceError, Window, in_window
-from ..text import clean_inline, html_to_text, parse_price, safe_url, scrub_contacts, truncate
+from ..text import clean_inline, html_to_text, parse_price, safe_url, scrub_contacts, tidy_summary, truncate
 
 PER_PAGE = 50
 LOCAL_FORMAT = "%Y-%m-%d %H:%M:%S"
@@ -96,7 +96,7 @@ def to_event(item, config: SourceConfig) -> Event | None:
         location_text=address or None,
         city=city,
         url=safe_url(item.get("url")),
-        summary=truncate(scrub_contacts(" ".join(description.splitlines()))) or None,
+        summary=truncate(tidy_summary(scrub_contacts(" ".join(description.splitlines())))) or None,
         price=price,
         free=free,
         raw_categories=categories,

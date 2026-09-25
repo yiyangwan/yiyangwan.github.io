@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 import pytest
 
 from around_seattle import schema
-from around_seattle.models import LA, SeasonalPick, SourceResult, Window
+from around_seattle.models import LA, SeasonalPick, SourceResult, Window, effective_end
 from around_seattle.tests.conftest import NOW, make_config, make_event
 
 PICK = SeasonalPick(id="kubota", title="Fall color at Kubota Garden", summary="Maples turn.", place="Kubota Garden",
@@ -45,6 +45,18 @@ def test_to_output_shape():
     assert output["seasonal"][0]["until"] == "2026-11-15"
     assert output["seasonal"][0]["free"] is True
     schema.validate(output)
+
+
+def test_event_all_day_with_no_end_emits_effective_end():
+    event = make_event(all_day=True, end=None, start=datetime(2026, 9, 26, 0, 0, tzinfo=LA))
+    data = schema._event(event)
+    assert data["end"] == effective_end(event).isoformat() == "2026-09-27T00:00:00-07:00"
+
+
+def test_event_timed_with_no_end_still_emits_null():
+    event = make_event(all_day=False, end=None)
+    data = schema._event(event)
+    assert data["end"] is None
 
 
 @pytest.mark.parametrize("mutate, message", [

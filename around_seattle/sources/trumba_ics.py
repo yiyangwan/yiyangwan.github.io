@@ -6,7 +6,7 @@ from datetime import date, datetime, time
 from icalendar import Calendar
 
 from ..models import LA, Event, SourceConfig, SourceError, Window, in_window
-from ..text import clean_inline, html_to_text, join_lines, parse_price, safe_url, scrub_contacts, truncate
+from ..text import clean_inline, html_to_text, join_lines, parse_price, safe_url, scrub_contacts, tidy_summary, truncate
 
 # Custom fields that describe the event type. "Parks Event Category" is the same boilerplate on
 # almost every Parks event, so it is ignored.
@@ -72,7 +72,7 @@ def _summary(description: str, field_names) -> str | None:
         if separator and label.strip().casefold() in labels:
             continue
         kept.append(line)
-    return truncate(scrub_contacts(" ".join(kept))) or None
+    return truncate(tidy_summary(scrub_contacts(" ".join(kept)))) or None
 
 
 def _to_event(component, config: SourceConfig) -> Event | None:

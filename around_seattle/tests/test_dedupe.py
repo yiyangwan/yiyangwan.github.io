@@ -49,6 +49,16 @@ def test_collapse_recurring_series_by_title_and_venue():
     assert len(series.more_dates) == 3
 
 
+def test_collapse_recurring_ignores_city_when_venue_matches():
+    nights = [make_event(uid=letter, title="Trivia Night", venue="Pub", city=city, end=None,
+                         start=datetime(2026, 10, day, 19, 0, tzinfo=LA))
+             for letter, city, day in [("a", "Seattle", 1), ("b", None, 8), ("c", None, 15)]]
+    collapsed = collapse_recurring(nights)
+    assert len(collapsed) == 1
+    assert collapsed[0].start == datetime(2026, 10, 1, 19, 0, tzinfo=LA)
+    assert len(collapsed[0].more_dates) == 2
+
+
 def test_collapse_recurring_keeps_same_title_in_different_cities_apart():
     seattle = make_event(uid="s", title="Farmers Market", venue=None, city="Seattle", region="seattle", end=None,
                          start=datetime(2026, 9, 27, 10, 0, tzinfo=LA))

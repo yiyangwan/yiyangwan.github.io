@@ -63,3 +63,11 @@ def test_unsafe_urls_are_dropped():
 def test_invalid_calendar_raises_source_error():
     with pytest.raises(SourceError, match="invalid iCal"):
         trumba_ics.parse("<!DOCTYPE html><html>Just a moment...</html>", CONFIG)
+
+
+def test_summary_strips_markup_runs():
+    ics = ("BEGIN:VCALENDAR\nBEGIN:VEVENT\nSUMMARY:Trivia Night\n"
+          "DTSTART;TZID=America/Los_Angeles:20260926T190000\n"
+          "DESCRIPTION:** 6:00 p.m. ** doors\nUID:markup-1\nEND:VEVENT\nEND:VCALENDAR\n")
+    event = trumba_ics.parse(ics, CONFIG)[0]
+    assert event.summary == "6:00 p.m. doors"

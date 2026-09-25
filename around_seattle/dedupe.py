@@ -41,10 +41,15 @@ def merge_duplicates(events: list[Event], weights: dict[str, int]) -> list[Event
 
 
 def collapse_recurring(events: list[Event]) -> list[Event]:
-    """Collapse a repeating series (same title, venue, city, and region) into its next occurrence."""
+    """Collapse a repeating series (same title, venue, and region) into its next occurrence.
+
+    The key falls back to city only when venue is empty, so a cross-listed night that gained a
+    city string does not split off from a series that otherwise shares a venue.
+    """
     groups: dict[tuple, list[Event]] = {}
     for event in events:
-        key = (normalize_title(event.title), (event.venue or "").casefold(), (event.city or "").casefold(),
+        key = (normalize_title(event.title),
+               (event.venue or "").casefold() or "city:" + (event.city or "").casefold(),
                event.region or "")
         groups.setdefault(key, []).append(event)
     collapsed = []

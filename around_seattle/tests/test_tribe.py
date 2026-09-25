@@ -68,6 +68,14 @@ def test_skips_virtual_hidden_and_malformed_items():
     assert no_venue.summary == "An intimate duo set."
 
 
+def test_summary_strips_markup_runs():
+    item = {"id": 999, "status": "publish", "hide_from_listings": False, "is_virtual": False,
+           "title": "Trivia Night", "start_date": "2026-09-26 19:00:00", "timezone": "America/Los_Angeles",
+           "all_day": False, "excerpt": "** 6:00 p.m. ** doors"}
+    event = tribe.to_event(item, CONFIG)
+    assert event.summary == "6:00 p.m. doors"
+
+
 def test_unexpected_response_raises(window):
     http = FakeHttp({CONFIG.url: '{"code": "rest_no_route"}'})
     with pytest.raises(SourceError, match="unexpected response"):

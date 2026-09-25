@@ -1,7 +1,7 @@
 import pytest
 
 from around_seattle.text import (clean_inline, html_to_text, join_lines, parse_price, safe_url, scrub_contacts,
-                                 truncate)
+                                 tidy_summary, truncate)
 
 
 def test_html_to_text_breaks_blocks_and_decodes_entities():
@@ -48,6 +48,16 @@ def test_parse_price(raw, expected):
 def test_scrub_contacts_removes_emails_and_phones():
     text = "Questions? Email jane.doe@example.org or call 206-555-0100 today."
     assert scrub_contacts(text) == "Questions? Email or call today."
+
+
+@pytest.mark.parametrize("raw, expected", [
+    ("** 6:00 p.m. **", "6:00 p.m."),
+    ("__Doors__  open   at 6", "Doors open at 6"),
+    ("No markup here", "No markup here"),
+    ("5 * 3 = 15", "5 * 3 = 15"),  # a single "*" is not a run
+])
+def test_tidy_summary_removes_markup_runs_and_collapses_whitespace(raw, expected):
+    assert tidy_summary(raw) == expected
 
 
 @pytest.mark.parametrize("raw, expected", [

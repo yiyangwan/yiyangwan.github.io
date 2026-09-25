@@ -13,6 +13,7 @@ _HAS_FREE = re.compile(r"\bfree\b", re.IGNORECASE)
 _PAID = re.compile(r"\$\s*[1-9]")
 _EMAIL = re.compile(r"[\w.+-]+@[\w-]+(?:\.[\w-]+)+")
 _PHONE = re.compile(r"(?<!\d)(?:\+?1[\s.-]?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}(?!\d)")
+_MARKUP_RUN = re.compile(r"[*_]{2,}")
 
 
 class _TextExtractor(HTMLParser):
@@ -90,6 +91,11 @@ def parse_price(value: object) -> tuple[str | None, bool | None]:
 def scrub_contacts(text: str) -> str:
     """Remove email addresses and phone numbers (feeds often include staff contacts)."""
     return " ".join(_PHONE.sub(" ", _EMAIL.sub(" ", text)).split())
+
+
+def tidy_summary(text: str) -> str:
+    """Strip markdown-style emphasis runs (``** bold **``, ``__underline__``) and collapse whitespace."""
+    return " ".join(_MARKUP_RUN.sub(" ", text).split())
 
 
 def safe_url(value: object) -> str | None:
