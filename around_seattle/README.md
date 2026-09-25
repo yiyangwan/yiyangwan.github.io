@@ -20,8 +20,10 @@ and yesterday's data stays up.
 
 ## Run locally
 
+Python 3.12 or newer is required.
+
 ```bash
-python3 -m venv /tmp/around-venv
+python3.12 -m venv /tmp/around-venv
 /tmp/around-venv/bin/python -m pip install -r around_seattle/requirements.txt -r around_seattle/requirements-dev.txt
 /tmp/around-venv/bin/python -m pytest around_seattle --cov=around_seattle --cov-config=around_seattle/.coveragerc
 node --test around_seattle/js_tests/*.test.mjs

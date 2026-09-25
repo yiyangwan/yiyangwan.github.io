@@ -53,6 +53,15 @@ def test_event_all_day_with_no_end_emits_effective_end():
     assert data["end"] == effective_end(event).isoformat() == "2026-09-27T00:00:00-07:00"
 
 
+@pytest.mark.parametrize("start, expected", [
+    (datetime(2026, 11, 1, tzinfo=LA), ("2026-11-01T00:00:00-07:00", "2026-11-02T00:00:00-08:00")),  # falls back
+    (datetime(2027, 3, 14, tzinfo=LA), ("2027-03-14T00:00:00-08:00", "2027-03-15T00:00:00-07:00")),  # springs ahead
+])
+def test_event_all_day_with_no_end_on_a_dst_day_ends_at_the_next_local_midnight(start, expected):
+    data = schema._event(make_event(all_day=True, end=None, start=start))
+    assert (data["start"], data["end"]) == expected
+
+
 def test_event_timed_with_no_end_still_emits_null():
     event = make_event(all_day=False, end=None)
     data = schema._event(event)
