@@ -1,4 +1,5 @@
 [run]
+data_file = around_seattle/.coverage
 omit =
     */tests/*
     */preview.py
