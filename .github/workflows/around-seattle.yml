@@ -36,7 +36,7 @@ jobs:
       - name: Test pipeline
         run: python -m pytest around_seattle -q
       - name: Test page logic
-        run: node --test around_seattle/js_tests/
+        run: node --test around_seattle/js_tests/*.test.mjs
       - name: Build data
         env:
           TICKETMASTER_API_KEY: ${{ secrets.TICKETMASTER_API_KEY }}
