@@ -1,0 +1,26 @@
+{
+  "events": [
+    {
+      "id": 501, "status": "publish", "hide_from_listings": false, "is_virtual": false,
+      "title": "Global Rhythms: Ganesh Rajagopalan with Marina Albero",
+      "url": "https://townhallseattle.org/event/global-rhythms/",
+      "description": "<p>An evening of Carnatic violin and piano.</p><p>Questions: box@example.org</p>",
+      "excerpt": "",
+      "start_date": "2026-09-25 19:30:00", "end_date": "2026-09-25 19:30:00", "timezone": "America/Los_Angeles",
+      "all_day": false, "cost": "$10 – $35 Sliding Scale",
+      "categories": [{"name": "Arts &amp; Culture"}],
+      "venue": {"venue": "The Forum", "address": "1119 8th Ave", "city": "Seattle", "state": "WA"}
+    },
+    {
+      "id": 502, "status": "publish", "hide_from_listings": false, "is_virtual": false,
+      "title": "Fall Harvest Festival at Remlinger&#8217;s",
+      "url": "https://experienceredmond.com/event/fall-harvest-festival/",
+      "description": "<p>Pumpkins, a corn maze, and farm rides.</p>", "excerpt": "",
+      "start_date": "2026-10-03 00:00:00", "end_date": "2026-10-04 23:59:59", "timezone": "America/Los_Angeles",
+      "all_day": true, "cost": "Free",
+      "categories": [{"name": "Kids &amp; Family"}],
+      "venue": {"venue": "Remlinger Farms", "address": "32610 NE 32nd St", "city": "Carnation", "province": "WA"}
+    }
+  ],
+  "total": 5, "total_pages": 2
+}

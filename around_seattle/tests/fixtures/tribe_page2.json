@@ -1,0 +1,24 @@
+{
+  "events": [
+    {
+      "id": 503, "status": "publish", "hide_from_listings": false, "is_virtual": true,
+      "title": "Livestream: Author Talk", "url": "https://townhallseattle.org/event/stream/",
+      "start_date": "2026-09-30 19:00:00", "end_date": "2026-09-30 20:00:00", "timezone": "America/Los_Angeles",
+      "all_day": false, "cost": "", "categories": [], "venue": []
+    },
+    {
+      "id": 504, "status": "publish", "hide_from_listings": true,
+      "title": "Private Rental", "url": "https://townhallseattle.org/event/private/",
+      "start_date": "2026-10-01 18:00:00", "end_date": "2026-10-01 21:00:00", "timezone": "America/Los_Angeles",
+      "all_day": false, "cost": "", "categories": [], "venue": []
+    },
+    {
+      "id": 505, "status": "publish", "hide_from_listings": false, "is_virtual": false,
+      "title": "Perfume Genius (Duo)", "url": "https://townhallseattle.org/event/perfume-genius/",
+      "description": "", "excerpt": "<p>An intimate duo set.</p>",
+      "start_date": "2026-11-20 20:00:00", "end_date": "2026-11-20 22:30:00", "timezone": "America/Los_Angeles",
+      "all_day": false, "cost": "$45", "categories": [{"name": "Rentals"}], "venue": []
+    }
+  ],
+  "total": 5, "total_pages": 2
+}
