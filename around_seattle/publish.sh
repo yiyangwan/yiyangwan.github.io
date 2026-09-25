@@ -4,6 +4,10 @@ set -euo pipefail
 
 src="${1:?usage: publish.sh PATH_TO_JSON}"
 branch="${AROUND_SEATTLE_BRANCH:-around-seattle-data}"
+if [ "$branch" = "main" ] || [ "$branch" = "master" ]; then
+  echo "error: refusing to publish to $branch" >&2
+  exit 1
+fi
 remote="${AROUND_SEATTLE_REMOTE:-origin}"
 file="around-seattle.json"
 

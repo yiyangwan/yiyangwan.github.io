@@ -72,3 +72,13 @@ def test_missing_input_fails(repos, tmp_path):
     result = run(["bash", str(SCRIPT), str(tmp_path / "missing.json")], work, env, check=False)
     assert result.returncode != 0
     assert "missing or empty" in result.stderr
+
+
+@pytest.mark.parametrize("branch", ["main", "master"])
+def test_refuses_to_publish_to_main_or_master(repos, tmp_path, branch):
+    _, work, env = repos
+    data = tmp_path / "data.json"
+    data.write_text('{"v": 1}', encoding="utf-8")
+    result = run(["bash", str(SCRIPT), str(data)], work, {**env, "AROUND_SEATTLE_BRANCH": branch}, check=False)
+    assert result.returncode != 0
+    assert f"refusing to publish to {branch}" in result.stderr
