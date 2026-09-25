@@ -56,6 +56,25 @@ def test_malformed_xml_raises():
         civicplus.parse("<?xml version='1.0'?><rss><channel><item>", CONFIG)
 
 
+def test_feed_with_no_items_is_ok():
+    feed = "<?xml version='1.0'?><rss version='2.0'><channel><title>Calendar</title></channel></rss>"
+    assert civicplus.parse(feed, CONFIG) == []
+
+
+def test_feed_whose_items_all_fail_to_convert_raises():
+    feed = ("<?xml version='1.0'?><rss version='2.0'><channel><item><title>Date TBD Event</title></item>"
+            "<item><title></title><EventDates>October 3, 2026</EventDates></item></channel></rss>")
+    with pytest.raises(SourceError, match="could not parse any items"):
+        civicplus.parse(feed, CONFIG)
+
+
+@pytest.mark.parametrize("prefix", ["\ufeff", "\ufeff\r\n  "])
+def test_leading_byte_order_mark_and_blank_lines_are_ignored(prefix):
+    feed = read_fixture("civicplus_redmond.xml")
+    expected = [(event.title, event.start) for event in civicplus.parse(feed, CONFIG)]
+    assert [(event.title, event.start) for event in civicplus.parse(prefix + feed, CONFIG)] == expected
+
+
 def test_entity_declarations_are_refused():
     bomb = ('<?xml version="1.0"?><!DOCTYPE rss [<!ENTITY a "aaaa">]>'
             '<rss><channel><item><title>&a;</title></item></channel></rss>')

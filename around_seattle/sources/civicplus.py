@@ -22,20 +22,25 @@ def collect(config: SourceConfig, http, window: Window) -> list[Event]:
 
 
 def parse(text: str, config: SourceConfig) -> list[Event]:
-    head = text.lstrip()[:200].lower()
+    # A byte order mark would fail the RSS check, and blank lines before the XML declaration would fail the parse.
+    feed = text.lstrip("\ufeff \t\r\n")
+    head = feed[:200].lower()
     if not (head.startswith("<?xml") or head.startswith("<rss")):
         raise SourceError("not an RSS feed")  # typically a bot-challenge HTML page
     try:
-        root = ElementTree.fromstring(text)
+        root = ElementTree.fromstring(feed)
     except (ElementTree.ParseError, DefusedXmlException) as exc:
         raise SourceError("invalid RSS") from exc
+    items = list(root.iter("item"))
     events = []
-    for item in root.iter("item"):
+    for item in items:
         # Namespace URIs differ per city, so match child elements by local name.
         fields = {child.tag.rsplit("}", 1)[-1]: (child.text or "").strip() for child in item}
         event = _to_event(fields, config)
         if event is not None:
             events.append(event)
+    if items and not events:  # a feed whose format changed would otherwise look healthy and empty
+        raise SourceError("could not parse any items")
     return events
 
 

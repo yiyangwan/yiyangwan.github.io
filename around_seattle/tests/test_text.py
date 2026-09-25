@@ -1,3 +1,5 @@
+import json
+
 import pytest
 
 from around_seattle.text import (clean_inline, html_to_text, join_lines, parse_price, safe_url, scrub_contacts,
@@ -13,6 +15,12 @@ def test_html_to_text_keeps_bare_angle_brackets_and_handles_empty():
     assert html_to_text("Kids <5 free") == "Kids <5 free"
     assert html_to_text(None) == ""
     assert html_to_text("") == ""
+
+
+def test_html_to_text_drops_lone_surrogates_so_the_output_encodes():
+    text = html_to_text("a\ud83cb")  # half of a UTF-16 pair, as a JSON "\ud83c" escape decodes
+    assert text == "ab"
+    assert json.dumps({"title": text}, ensure_ascii=False).encode("utf-8") == b'{"title": "ab"}'
 
 
 def test_clean_inline_and_join_lines():

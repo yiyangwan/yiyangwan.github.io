@@ -103,6 +103,35 @@ def test_main_fails_when_every_source_fails(config_dir, tmp_path):
     assert not out.exists()
 
 
+def run_a_year_later(config_dir, tmp_path, http):
+    """Build a year after the fixtures' dates: every feed still parses, but every event in it has ended."""
+    out = tmp_path / "out" / "around-seattle.json"
+    later = NOW.replace(year=NOW.year + 1)
+    code = build.main(["--out", str(out), "--now", later.isoformat(), "--config-dir", str(config_dir)],
+                      http=http, env={})
+    return code, out
+
+
+def test_main_writes_nothing_when_no_events_are_left(config_dir, tmp_path, capsys):
+    code, out = run_a_year_later(config_dir, tmp_path, fixture_http())
+    captured = capsys.readouterr()
+    assert code == 2
+    assert not out.exists()
+    assert "error: no events after filtering; nothing written" in captured.err
+    assert "seattle-gov: ok, 0 events" in captured.out
+
+
+def test_main_writes_nothing_when_no_events_are_left_and_one_source_failed(config_dir, tmp_path, capsys):
+    http = fixture_http()
+    http.routes = {url: text for url, text in http.routes.items() if url != "https://example.org/redmond.xml"}
+    code, out = run_a_year_later(config_dir, tmp_path, http)
+    captured = capsys.readouterr()
+    assert code == 2
+    assert not out.exists()
+    assert "redmond-city: error, 0 events (HTTP 404)" in captured.out
+    assert "error: no events after filtering; nothing written" in captured.err
+
+
 def test_main_fails_on_invalid_output(config_dir, tmp_path, monkeypatch):
     def reject(output):
         raise schema.SchemaError("events[0]: bad")

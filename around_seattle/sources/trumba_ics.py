@@ -28,8 +28,11 @@ def parse(text: str, config: SourceConfig) -> list[Event]:
         calendar = Calendar.from_ical(text)
     except ValueError as exc:
         raise SourceError("invalid iCal") from exc
-    events = (_to_event(component, config) for component in calendar.walk("VEVENT"))
-    return [event for event in events if event is not None]
+    components = calendar.walk("VEVENT")
+    events = [event for event in (_to_event(component, config) for component in components) if event is not None]
+    if components and not events:  # a feed whose format changed would otherwise look healthy and empty
+        raise SourceError("could not parse any items")
+    return events
 
 
 def _as_list(value) -> list:

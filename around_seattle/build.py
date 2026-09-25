@@ -128,6 +128,11 @@ def main(argv=None, *, http=None, env=None) -> int:
         return 2
 
     events = process(results, configs, window, further)
+    if not events:
+        # Feeds that answer but leave nothing to show mean a silent breakage somewhere. An empty page is never right
+        # for sixty days of these calendars, so keep yesterday's data up instead.
+        print("error: no events after filtering; nothing written", file=sys.stderr)
+        return 2
     try:
         weather_data = weather.collect(client)
     except Exception as exc:  # a weather outage must not stop the rest of the build

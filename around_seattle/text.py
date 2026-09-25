@@ -14,6 +14,8 @@ _PAID = re.compile(r"\$\s*[1-9]")
 _EMAIL = re.compile(r"[\w.+-]+@[\w-]+(?:\.[\w-]+)+")
 _PHONE = re.compile(r"(?<!\d)(?:\+?1[\s.-]?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}(?!\d)")
 _MARKUP_RUN = re.compile(r"[*_]{2,}")
+# Half of a UTF-16 pair, which a JSON "\ud83c" escape decodes to; UTF-8 cannot encode it, so writing the output fails.
+_SURROGATES = re.compile(r"[\ud800-\udfff]")
 
 
 class _TextExtractor(HTMLParser):
@@ -44,11 +46,11 @@ class _TextExtractor(HTMLParser):
 
 
 def html_to_text(value: object) -> str:
-    """Plain text with one line per block; entities decoded; blank lines dropped."""
+    """Plain text with one line per block; entities decoded; blank lines and lone surrogates dropped."""
     if not value:
         return ""
     parser = _TextExtractor()
-    parser.feed(str(value))
+    parser.feed(_SURROGATES.sub("", str(value)))
     parser.close()
     lines = (_SPACES.sub(" ", line).strip() for line in "".join(parser.parts).splitlines())
     return "\n".join(line for line in lines if line)

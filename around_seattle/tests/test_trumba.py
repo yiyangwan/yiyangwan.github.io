@@ -65,6 +65,17 @@ def test_invalid_calendar_raises_source_error():
         trumba_ics.parse("<!DOCTYPE html><html>Just a moment...</html>", CONFIG)
 
 
+def test_calendar_with_no_events_is_ok():
+    assert trumba_ics.parse("BEGIN:VCALENDAR\nVERSION:2.0\nEND:VCALENDAR\n", CONFIG) == []
+
+
+def test_calendar_whose_events_all_fail_to_convert_raises():
+    ics = ("BEGIN:VCALENDAR\nBEGIN:VEVENT\nSUMMARY:No start time\nUID:bad-1\nEND:VEVENT\n"
+           "BEGIN:VEVENT\nDTSTART;TZID=America/Los_Angeles:20260926T190000\nUID:bad-2\nEND:VEVENT\nEND:VCALENDAR\n")
+    with pytest.raises(SourceError, match="could not parse any items"):
+        trumba_ics.parse(ics, CONFIG)
+
+
 def test_summary_strips_markup_runs():
     ics = ("BEGIN:VCALENDAR\nBEGIN:VEVENT\nSUMMARY:Trivia Night\n"
           "DTSTART;TZID=America/Los_Angeles:20260926T190000\n"
