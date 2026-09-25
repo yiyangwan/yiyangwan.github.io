@@ -50,6 +50,7 @@ def test_load_valid(tmp_path):
 @pytest.mark.parametrize("old, new, message", [
     ("region: seattle", "region: tacoma", "bad region or category"),
     ('from: "10-01"', 'from: "10-1"', "from must be MM-DD"),
+    ('from: "10-01"', 'from: "04-31"', "from must be a real date"),
     ("url: https://www.kubotagarden.org/", "url: javascript:alert(1)", "url and source must be http"),
     ("  title: Fall color at Kubota Garden\n", "", "missing title"),
 ])

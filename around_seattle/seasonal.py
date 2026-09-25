@@ -33,6 +33,11 @@ def _pick(entry, index: int) -> SeasonalPick:
     for key in ("from", "to"):
         if not _MONTH_DAY.match(str(entry[key])):
             raise ValueError(f"seasonal pick {ident}: {key} must be MM-DD")
+        month, day = (int(part) for part in str(entry[key]).split("-"))
+        try:
+            date(2000, month, day)  # 2000 is a leap year, so 02-29 stays valid
+        except ValueError:
+            raise ValueError(f"seasonal pick {ident}: {key} must be a real date") from None
     if safe_url(entry["url"]) is None or safe_url(entry["source"]) is None:
         raise ValueError(f"seasonal pick {ident}: url and source must be http(s)")
     free = entry.get("free")

@@ -48,6 +48,21 @@ def test_collect_treats_malformed_payload_as_failure():
     assert weather.collect(http) is None
 
 
+def test_collect_treats_null_periods_as_failure():
+    http = FakeHttp({url: '{"properties": {"periods": [null]}}' for url in weather.FORECAST_URLS.values()})
+    assert weather.collect(http) is None
+
+
+def test_collect_isolates_a_wrongly_typed_period_to_its_region():
+    good = read_fixture("nws_seattle.json")
+    bad = good.replace('"probabilityOfPrecipitation": {"unitCode": "wmoUnit:percent", "value": 94}',
+                       '"probabilityOfPrecipitation": 5', 1)
+    http = FakeHttp({weather.FORECAST_URLS["seattle"]: bad, weather.FORECAST_URLS["eastside"]: good})
+    data = weather.collect(http)
+    assert data["seattle"] is None
+    assert len(data["eastside"]["periods"]) == 6
+
+
 def test_sun_for_window(window):
     days = sun.for_window(window)
     assert len(days) == 15

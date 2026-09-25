@@ -25,10 +25,10 @@ def _fill(primary: Event, other: Event) -> Event:
 
 
 def merge_duplicates(events: list[Event], weights: dict[str, int]) -> list[Event]:
-    """One event per (title, start date). The heavier source wins; other start times become more_dates."""
+    """One event per (title, start date, region). The heavier source wins; later start times become more_dates."""
     groups: dict[tuple, list[Event]] = {}
     for event in events:
-        groups.setdefault((normalize_title(event.title), event.start.date()), []).append(event)
+        groups.setdefault((normalize_title(event.title), event.start.date(), event.region), []).append(event)
     merged = []
     for group in groups.values():
         ranked = sorted(group, key=lambda e: (-weights.get(e.source_id, 0), e.start, e.source_id, e.uid))
@@ -41,10 +41,12 @@ def merge_duplicates(events: list[Event], weights: dict[str, int]) -> list[Event
 
 
 def collapse_recurring(events: list[Event]) -> list[Event]:
-    """Collapse a repeating series (same title and venue) into its next occurrence."""
+    """Collapse a repeating series (same title, venue, city, and region) into its next occurrence."""
     groups: dict[tuple, list[Event]] = {}
     for event in events:
-        groups.setdefault((normalize_title(event.title), (event.venue or "").casefold()), []).append(event)
+        key = (normalize_title(event.title), (event.venue or "").casefold(), (event.city or "").casefold(),
+               event.region or "")
+        groups.setdefault(key, []).append(event)
     collapsed = []
     for group in groups.values():
         ordered = sorted(group, key=lambda e: e.start)

@@ -29,6 +29,14 @@ def test_merge_keeps_other_sessions_on_the_same_day_as_more_dates():
     assert merged[0].more_dates == (datetime(2026, 9, 26, 14, 0, tzinfo=LA),)
 
 
+def test_merge_keeps_same_day_pairs_in_different_regions_apart():
+    seattle = make_event(uid="s", city="Seattle", region="seattle")
+    bellevue = make_event(uid="b", city="Bellevue", region="eastside")
+    merged = merge_duplicates([seattle, bellevue], {"test": 20})
+    assert sorted((event.uid, event.region, event.more_dates) for event in merged) == [
+        ("b", "eastside", ()), ("s", "seattle", ())]
+
+
 def test_collapse_recurring_series_by_title_and_venue():
     weekly = [make_event(uid=str(i), title="Trivia Night", venue="Pub", end=None,
                          start=datetime(2026, 10, 1 + 7 * i, 19, 0, tzinfo=LA)) for i in range(4)]
@@ -39,3 +47,12 @@ def test_collapse_recurring_series_by_title_and_venue():
     series = next(event for event in collapsed if event.venue == "Pub")
     assert series.start == datetime(2026, 10, 1, 19, 0, tzinfo=LA)
     assert len(series.more_dates) == 3
+
+
+def test_collapse_recurring_keeps_same_title_in_different_cities_apart():
+    seattle = make_event(uid="s", title="Farmers Market", venue=None, city="Seattle", region="seattle", end=None,
+                         start=datetime(2026, 9, 27, 10, 0, tzinfo=LA))
+    redmond = make_event(uid="r", title="Farmers Market", venue=None, city="Redmond", region="eastside", end=None,
+                         start=datetime(2026, 9, 28, 10, 0, tzinfo=LA))
+    collapsed = collapse_recurring([seattle, redmond])
+    assert [(event.city, event.more_dates) for event in collapsed] == [("Seattle", ()), ("Redmond", ())]
