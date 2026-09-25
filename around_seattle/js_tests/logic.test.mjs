@@ -216,9 +216,20 @@ test("headline, forecast, sunset, and week strip copy", () => {
   assert.equal(L.sunsetLine({ "2026-09-25": { sunset: "2026-09-25T19:01:00-07:00" } }, "2026-09-25"),
     "Sunset at 7:01 pm.");
   assert.equal(L.sunsetLine({}, "2026-09-25"), "");
-  const strip = L.weekStrip([period({ isDaytime: false }), period(), period({ start: "2026-09-26T06:00:00-07:00" })]);
+  const strip = L.weekStrip([period({ isDaytime: false }), period(),
+    period({ start: "2026-09-26T06:00:00-07:00", end: "2026-09-26T18:00:00-07:00" })], at("2026-09-25T05:00:00-07:00"));
   assert.deepEqual(strip.map((d) => d.label), ["Fri", "Sat"]);
   assert.equal(strip[0].text, "Friday: 62°, mostly sunny");
+});
+
+test("weekStrip leaves out daytime periods that have ended, then takes seven days", () => {
+  const keys = ["2026-09-25", "2026-09-26", "2026-09-27", "2026-09-28", "2026-09-29", "2026-09-30", "2026-10-01",
+    "2026-10-02"];
+  const periods = keys.map((key) => period({ start: `${key}T06:00:00-07:00`, end: `${key}T18:00:00-07:00` }));
+  assert.deepEqual(L.weekStrip(periods, at("2026-09-25T09:00:00-07:00")).map((d) => d.key), keys.slice(0, 7));
+  const evening = L.weekStrip(periods, at("2026-09-25T19:00:00-07:00"));
+  assert.deepEqual(evening.map((d) => d.key), keys.slice(1));
+  assert.deepEqual(evening.map((d) => d.label), ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"]);
 });
 
 test("time and date formatting", () => {

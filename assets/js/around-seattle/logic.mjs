@@ -219,8 +219,8 @@ export function sunsetLine(sun, key) {
   return value ? `Sunset at ${formatTime(new Date(value))}.` : "";
 }
 
-export function weekStrip(periods) {
-  return (periods ?? []).filter((item) => item.isDaytime).slice(0, 7).map((item) => {
+export function weekStrip(periods, now) {
+  return (periods ?? []).filter((item) => item.isDaytime && new Date(item.end) > now).slice(0, 7).map((item) => {
     const key = dayKey(new Date(item.start));
     const day = weekday(key);
     return { key, label: WEEKDAYS_SHORT[day], temperature: item.temperature, condition: item.condition,

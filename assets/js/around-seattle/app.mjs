@@ -148,7 +148,7 @@ function renderHero(now) {
   const forecast = byId("around-forecast");
   forecast.replaceChildren(...lines.map((line) => el("span", { text: line })));
   forecast.hidden = lines.length === 0;
-  const days = weekStrip(periods);
+  const days = weekStrip(periods, now);
   const week = byId("around-week");
   week.replaceChildren(...days.map((day) => el("li", { className: "around-week__day" }, [
     el("span", { className: "around-week__name", text: day.label, "aria-hidden": "true" }),
