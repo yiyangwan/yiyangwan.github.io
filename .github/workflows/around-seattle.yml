@@ -1,0 +1,61 @@
+name: Around Seattle data
+
+on:
+  schedule:
+    - cron: "17 13 * * *"  # 06:17 PDT / 05:17 PST, off the hour to avoid the top-of-hour queue
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "around_seattle/**"
+      - "_data/around_seattle/**"
+      - ".github/workflows/around-seattle.yml"
+
+permissions:
+  contents: write  # push to the around-seattle-data branch
+  actions: write  # keepalive: re-enable this workflow on scheduled runs
+
+concurrency:
+  group: around-seattle-data
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    if: github.repository == 'yiyangwan/yiyangwan.github.io'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97  # v7.0.0
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: around_seattle/requirements*.txt
+      - name: Install dependencies
+        run: python -m pip install -r around_seattle/requirements.txt -r around_seattle/requirements-dev.txt
+      - name: Test pipeline
+        run: python -m pytest around_seattle -q
+      - name: Test page logic
+        run: node --test around_seattle/js_tests/
+      - name: Build data
+        env:
+          TICKETMASTER_API_KEY: ${{ secrets.TICKETMASTER_API_KEY }}
+        run: python -m around_seattle.build --out "$RUNNER_TEMP/around-seattle.json"
+      - name: Publish to the data branch
+        run: bash around_seattle/publish.sh "$RUNNER_TEMP/around-seattle.json"
+      - name: Purge the jsDelivr copy (best effort)
+        continue-on-error: true
+        env:
+          REPO: ${{ github.repository }}
+        run: curl -fsS -m 30 "https://purge.jsdelivr.net/gh/${REPO}@around-seattle-data/around-seattle.json"
+      - name: Keep the schedule enabled (best effort)
+        if: github.event_name == 'schedule'
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: >-
+          curl -fsS -m 30 -X PUT
+          -H "Authorization: Bearer ${GH_TOKEN}"
+          -H "Accept: application/vnd.github+json"
+          "https://api.github.com/repos/${REPO}/actions/workflows/around-seattle.yml/enable"
