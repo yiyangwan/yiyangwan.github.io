@@ -1,0 +1,156 @@
+/* Around Seattle (/around-seattle/). Everything is scoped under .around, so other pages are unaffected. */
+
+@font-face {
+  font-family: "Overpass";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/assets/fonts/overpass/overpass-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329,
+    U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "Overpass";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/assets/fonts/overpass/overpass-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+.around {
+  --fir: #173a2e;
+  --fir-deep: #0f2a20;
+  --slate: #44545c;
+  --paper: #ffffff;
+  --mist: #f1f4f5;
+  --sound: #1f5f8b;
+  --type-festival: #b0306a;
+  --type-music: #5b3f99;
+  --type-market: #8a5a00;
+  --type-outdoors: #2e6b3f;
+  --type-arts: #1f5f8b;
+  --type-other: #5c6b73;
+  --sky: #e9eef0;
+  --fog: 1;
+  --wrap: 70rem;
+  --column: 48rem;
+  --gutter: 4.5rem;
+  font-family: "Overpass", "Helvetica Neue", Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--slate);
+  background: var(--paper);
+}
+.around *, .around *::before, .around *::after { box-sizing: border-box; }
+.around h1, .around h2, .around h3, .around h4, .around p, .around ol, .around ul, .around li,
+.around form, .around fieldset, .around legend, .around label { margin: 0; padding: 0; }
+.around h1, .around h2, .around h3, .around h4 { font-family: inherit; line-height: 1.2; color: var(--fir); }
+.around a { color: var(--fir); text-decoration: underline; text-decoration-color: rgba(23, 58, 46, 0.35);
+  text-decoration-thickness: 1px; text-underline-offset: 0.2em; }
+.around a:hover { color: var(--sound); text-decoration-color: currentColor; }
+.around :focus-visible { outline: 2px solid var(--sound); outline-offset: 3px; }
+.around [hidden] { display: none !important; }
+.no-js .around-js { display: none !important; }
+.around-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0);
+  clip-path: inset(50%); white-space: nowrap; }
+.around-sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
+
+/* Hero: the forecast sets the sky tone and how much fog hides the mountain. */
+.around-hero { background: var(--sky); transition: background-color 1.6s ease; }
+.around-hero[data-sky="out"] { --sky: #d9e8f2; --fog: 0.12; }
+.around-hero[data-sky="peek"] { --sky: #e2e9ee; --fog: 0.5; }
+.around-hero[data-sky="hiding"] { --sky: #e5e8ea; --fog: 0.88; }
+.around-hero[data-sky="unknown"] { --sky: #e9eef0; --fog: 0.7; }
+.around-hero__inner { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 1.5rem 2.5rem;
+  align-items: end; max-width: var(--wrap); margin: 0 auto; padding: 2.5rem 1.25rem 0; }
+.around-hero__text { align-self: start; padding-bottom: 2.25rem; }
+.around-title { font-size: 1.125rem; font-weight: 700; }
+.around-intro { margin-top: 0.25rem; max-width: 34rem; color: var(--fir); }
+.around-headline { margin-top: 2.25rem; font-size: clamp(2.2rem, 5vw, 3.6rem); font-weight: 800; line-height: 1.05;
+  letter-spacing: -0.01em; color: var(--fir); text-wrap: balance; }
+.around-forecast { margin-top: 0.9rem; font-size: 1.125rem; color: var(--fir); font-variant-numeric: tabular-nums; }
+.around-forecast span { display: block; }
+.around-week { display: flex; gap: 1.1rem; margin-top: 1.75rem; padding-bottom: 0.25rem; list-style: none;
+  overflow-x: auto; font-variant-numeric: tabular-nums; }
+.around-week__day { display: grid; justify-items: center; gap: 0.15rem; min-width: 2.6rem; color: var(--fir); }
+.around-week__name { font-size: 0.875rem; font-weight: 700; }
+.around-wx { width: 1.6rem; height: 1.6rem; fill: none; stroke: currentColor; stroke-width: 1.75;
+  stroke-linecap: round; stroke-linejoin: round; }
+.around-mountain { display: block; width: 100%; height: auto; }
+.around-mountain .fog { opacity: var(--fog); transition: opacity 1.6s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.around-mountain .fog rect { fill: var(--sky); transition: fill 1.6s ease; }
+
+/* Filters: flat chips; the selected state is a Fir fill. */
+.around-filters { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 2.25rem; max-width: var(--wrap);
+  margin: 0 auto; padding: 1.5rem 1.25rem 0.5rem; }
+.around .around-chips { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; min-width: 0; margin: 0;
+  border: 0; }
+.around .around-chips legend { float: left; width: auto; margin: 0 0.5rem 0 0; padding: 0; border: 0;
+  font-weight: 700; color: var(--fir); }
+.around .around-chip { position: relative; display: inline-flex; margin: 0; color: var(--fir); cursor: pointer; }
+.around .around-chip input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; padding: 0;
+  opacity: 0; cursor: pointer; }
+.around-chip span { display: inline-block; padding: 0.32rem 0.75rem 0.18rem; border: 1.5px solid var(--fir);
+  border-radius: 2px; font-size: 0.95rem; line-height: 1.35; }
+.around-chip:hover span { background: var(--mist); }
+.around-chip input:checked + span { background: var(--fir); color: var(--paper); }
+.around-chip input:checked:hover + span, .around-chip:hover input:checked + span { background: var(--fir-deep); }
+.around-chip input:focus-visible + span { outline: 2px solid var(--sound); outline-offset: 2px; }
+
+/* Content */
+.around-main { max-width: var(--wrap); margin: 0 auto; padding: 0.5rem 1.25rem 2rem; }
+.around-status { min-height: 1.5em; font-size: 0.95rem; }
+.around-notice { max-width: var(--column); margin-top: 1rem; padding: 0.8rem 1rem 0.7rem; color: var(--fir);
+  background: var(--mist); border-left: 4px solid var(--sound); }
+.around-notice > * + * { margin-top: 0.5rem; }
+.around-links { display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; margin-top: 0.5rem; list-style: none; }
+.around-section { max-width: var(--column); margin-top: 3rem; }
+.around-section > h2 { font-size: 1.953rem; font-weight: 800; line-height: 1.1; }
+.around-list { display: grid; gap: 1.25rem; margin-top: 1rem; list-style: none; }
+.around-ev { padding-left: 0.9rem; border-left: 4px solid var(--type-other); }
+.around-ev--festival { border-left-color: var(--type-festival); }
+.around-ev--music { border-left-color: var(--type-music); }
+.around-ev--market { border-left-color: var(--type-market); }
+.around-ev--outdoors { border-left-color: var(--type-outdoors); }
+.around-ev--arts { border-left-color: var(--type-arts); }
+.around-ev__title { font-size: 1.125rem; font-weight: 700; line-height: 1.25; }
+.around-ev--featured .around-ev__title { font-size: 1.563rem; line-height: 1.15; }
+.around-ev__when { margin-top: 0.2rem; font-variant-numeric: tabular-nums; }
+.around-ev__kind { font-size: 0.95rem; font-weight: 700; color: var(--type-other); }
+.around-ev--festival .around-ev__kind { color: var(--type-festival); }
+.around-ev--music .around-ev__kind { color: var(--type-music); }
+.around-ev--market .around-ev__kind { color: var(--type-market); }
+.around-ev--outdoors .around-ev__kind { color: var(--type-outdoors); }
+.around-ev--arts .around-ev__kind { color: var(--type-arts); }
+.around-ev__summary { max-width: 68ch; margin-top: 0.35rem; }
+.around-ev__summary--line, .around-ev__summary--two { display: -webkit-box; -webkit-box-orient: vertical;
+  overflow: hidden; }
+.around-ev__summary--line { -webkit-line-clamp: 1; line-clamp: 1; }
+.around-ev__summary--two { -webkit-line-clamp: 2; line-clamp: 2; }
+.around-ev__more { margin-top: 0.15rem; font-size: 0.95rem; }
+.around .around-more { margin-top: 0.75rem; padding: 0.2rem 0; border: 0; background: none; color: var(--sound);
+  font: inherit; font-weight: 700; text-decoration: underline; text-underline-offset: 0.2em; cursor: pointer; }
+.around-empty { margin-top: 0.75rem; }
+.around-day { display: grid; grid-template-columns: var(--gutter) minmax(0, 1fr); gap: 0 1rem; margin-top: 1.5rem; }
+.around-day__head { display: grid; align-content: start; }
+.around-day__weekday { font-size: 1.25rem; font-weight: 800; line-height: 1.1; }
+.around-day__date { font-size: 0.95rem; font-weight: 400; color: var(--slate); }
+.around-day__body > .around-list, .around-day__body > .around-empty { margin-top: 0; }
+.around-weekblock { margin-top: 1.75rem; }
+.around-weekblock__head { font-size: 1.25rem; font-weight: 700; }
+.around-footer { max-width: var(--wrap); margin: 0 auto; padding: 2.5rem 1.25rem 3rem; font-size: 0.95rem; }
+.around-footer p + p { margin-top: 0.35rem; }
+
+@media (max-width: 760px) {
+  .around-hero__inner { grid-template-columns: minmax(0, 1fr); padding-top: 1.75rem; }
+  .around-hero__text { padding-bottom: 0.5rem; }
+  .around-filters { gap: 0.75rem; }
+  .around-day { grid-template-columns: 3.25rem minmax(0, 1fr); gap: 0 0.75rem; }
+  .around-section { margin-top: 2.5rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .around-hero, .around-mountain .fog, .around-mountain .fog rect { transition: none; }
+}

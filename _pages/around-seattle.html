@@ -1,0 +1,74 @@
+---
+layout: around-seattle
+title: "Around Seattle"
+permalink: /around-seattle/
+author_profile: false
+excerpt: "Things worth going out for in Seattle and on the Eastside, updated every morning."
+data_url: "https://raw.githubusercontent.com/yiyangwan/yiyangwan.github.io/around-seattle-data/around-seattle.json"
+fallback_data_url: "https://cdn.jsdelivr.net/gh/yiyangwan/yiyangwan.github.io@around-seattle-data/around-seattle.json"
+---
+{% capture around_links %}<ul class="around-links">{% for source in site.data.around_seattle.sources.sources %}{% unless source.secret_env %}<li><a href="{{ source.homepage }}">{{ source.name }}</a></li>{% endunless %}{% endfor %}</ul>{% endcapture %}
+<div class="around" id="around" data-src="{{ page.data_url }}" data-fallback-src="{{ page.fallback_data_url }}">
+  {% include around-seattle/weather-icons.svg %}
+  <header class="around-hero" data-sky="loading">
+    <div class="around-hero__inner">
+      <div class="around-hero__text">
+        <h1 class="around-title">Around Seattle</h1>
+        <p class="around-intro">Things worth going out for in Seattle and on the Eastside, updated every morning from local calendars.</p>
+        <p class="around-headline" id="around-headline">Checking the sky…</p>
+        <p class="around-forecast" id="around-forecast" hidden></p>
+        <ol class="around-week" id="around-week" role="list" aria-label="Seven-day forecast" hidden></ol>
+      </div>
+      {% include around-seattle/mountain.svg %}
+    </div>
+  </header>
+
+  <form class="around-filters around-js" id="around-filters" aria-label="Filter events">
+    <fieldset class="around-chips">
+      <legend>Where</legend>
+      <label class="around-chip"><input type="radio" name="region" value="all" checked><span>Everywhere</span></label>
+      <label class="around-chip"><input type="radio" name="region" value="seattle"><span>Seattle</span></label>
+      <label class="around-chip"><input type="radio" name="region" value="eastside"><span>Eastside</span></label>
+    </fieldset>
+    <fieldset class="around-chips">
+      <legend>What</legend>
+      <label class="around-chip"><input type="checkbox" name="type" value="festival"><span>Festivals &amp; fairs</span></label>
+      <label class="around-chip"><input type="checkbox" name="type" value="music"><span>Music &amp; stage</span></label>
+      <label class="around-chip"><input type="checkbox" name="type" value="market"><span>Markets &amp; food</span></label>
+      <label class="around-chip"><input type="checkbox" name="type" value="outdoors"><span>Outdoors</span></label>
+      <label class="around-chip"><input type="checkbox" name="type" value="arts"><span>Arts &amp; ideas</span></label>
+    </fieldset>
+    <label class="around-chip around-chip--free"><input type="checkbox" name="free" value="1"><span>Free only</span></label>
+  </form>
+
+  <main class="around-main" id="main">
+    <p class="around-status around-js" id="around-status" role="status"></p>
+    <div class="around-notice" id="around-notice" hidden></div>
+    <section class="around-section around-js" id="around-today" aria-labelledby="around-today-h">
+      <h2 id="around-today-h">Today</h2>
+      <div class="around-body"><p class="around-empty">Loading events…</p></div>
+    </section>
+    <section class="around-section around-js" id="around-weekend" aria-labelledby="around-weekend-h">
+      <h2 id="around-weekend-h">This weekend</h2>
+      <div class="around-body"></div>
+    </section>
+    <section class="around-section around-js" id="around-coming" aria-labelledby="around-coming-h">
+      <h2 id="around-coming-h">Coming up</h2>
+      <div class="around-body"></div>
+    </section>
+    <section class="around-section around-js" id="around-further" aria-labelledby="around-further-h">
+      <h2 id="around-further-h">Further ahead</h2>
+      <div class="around-body"></div>
+    </section>
+    <section class="around-section around-js" id="around-season" aria-labelledby="around-season-h">
+      <h2 id="around-season-h">In season</h2>
+      <div class="around-body"></div>
+    </section>
+    <noscript>
+      <p class="around-empty">This page needs JavaScript to load today's events. You can browse the calendars directly:</p>
+      {{ around_links }}
+    </noscript>
+    <template id="around-source-links">{{ around_links }}</template>
+  </main>
+  <footer class="around-footer" id="around-footer"></footer>
+</div>
