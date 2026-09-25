@@ -72,6 +72,40 @@ export function coversDay(event, key) {
   return dayKey(event.start) <= key && key <= lastDayKey(event);
 }
 
+function daysBetween(fromKey, toKey) {
+  return Math.round((keyToUtc(toKey) - keyToUtc(fromKey)) / DAY_MS);
+}
+
+// The instant a Pacific day starts: 07:00 UTC in daylight time, 08:00 UTC in standard time. Clocks change at 2 am,
+// so exactly one of the two is midnight on that day.
+function localMidnight(key) {
+  const base = keyToUtc(key).getTime();
+  return [7, 8].map((hours) => new Date(base + hours * HOUR_MS))
+    .find((instant) => dayKey(instant) === key && laParts(instant).hour === 0);
+}
+
+// A repeat keeps the first occurrence's length. All-day repeats count whole days from local midnight, because a
+// fixed length in hours ends an hour early or late on a DST day.
+function repeatEnd(event, start) {
+  if (!event.end) return null;
+  if (!event.allDay) return new Date(start.getTime() + (event.end - event.start));
+  const days = daysBetween(dayKey(event.start), lastDayKey(event)) + 1;
+  return localMidnight(addDays(dayKey(start), days));
+}
+
+// The pipeline folds a series' later sessions and weeks into moreDates. Once the listed occurrence ends, the next one
+// that has not ended takes its place, so the series stays on the page until its last date.
+export function rollForward(event, now) {
+  if (effectiveEnd(event) > now) return event;
+  const dates = event.moreDates ?? [];
+  for (const [index, start] of dates.entries()) {
+    const next = Object.freeze({ ...event, start, end: repeatEnd(event, start),
+      moreDates: Object.freeze(dates.slice(index + 1)) });
+    if (effectiveEnd(next) > now) return next;
+  }
+  return null;
+}
+
 export function parseData(raw) {
   const generatedAt = new Date(typeof raw?.generatedAt === "string" ? raw.generatedAt : Number.NaN);
   const valid = raw && raw.schemaVersion === SCHEMA_VERSION && Array.isArray(raw.events)
@@ -115,7 +149,7 @@ export function mondayOf(key) {
 export function planSections(events, now, nearDays = NEAR_DAYS) {
   const todayKey = dayKey(now);
   const nearEndKey = addDays(todayKey, nearDays);
-  const upcoming = events.filter((event) => effectiveEnd(event) > now);
+  const upcoming = events.map((event) => rollForward(event, now)).filter(Boolean);
   const running = upcoming.filter((event) => event.ongoing && dayKey(event.start) <= todayKey).sort(byRank);
   const runningIds = new Set(running.map((event) => event.id));
   const dated = upcoming.filter((event) => !runningIds.has(event.id));

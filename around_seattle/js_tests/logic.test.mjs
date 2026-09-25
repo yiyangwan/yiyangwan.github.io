@@ -112,6 +112,72 @@ test("planSections ranks by score, then start", () => {
   assert.deepEqual(plan.today.map((e) => e.id), ["high", "tie-early", "low"]);
 });
 
+test("rollForward returns an unended event unchanged", () => {
+  const event = ev({ moreDates: [at("2026-10-03T11:00:00-07:00")] });
+  assert.equal(L.rollForward(event, at("2026-09-26T15:00:00-07:00")), event);
+});
+
+test("rollForward moves to a later session the same day once the first has ended", () => {
+  const now = at("2026-09-26T14:00:00-07:00");
+  const event = ev({ id: "sessions", start: at("2026-09-26T11:00:00-07:00"), end: at("2026-09-26T13:00:00-07:00"),
+    moreDates: [at("2026-09-26T17:00:00-07:00")] });
+  assert.equal(L.formatMoreDates(event), "Also 5 pm");
+  const next = L.rollForward(event, now);
+  assert.equal(next.start.toISOString(), at("2026-09-26T17:00:00-07:00").toISOString());
+  assert.equal(next.end.toISOString(), at("2026-09-26T19:00:00-07:00").toISOString());
+  assert.deepEqual(next.moreDates, []);
+  assert.ok(Object.isFrozen(next) && Object.isFrozen(next.moreDates));
+  assert.equal(event.start.toISOString(), at("2026-09-26T11:00:00-07:00").toISOString());
+  const plan = L.planSections([event], now);
+  assert.deepEqual(plan.today.map((e) => [e.id, L.formatWhen(e)]), [["sessions", "5 pm to 7 pm"]]);
+});
+
+test("rollForward moves a weekly series past its first date", () => {
+  const now = at("2026-09-23T09:00:00-07:00"); // Wednesday
+  const event = ev({ id: "weekly", start: at("2026-09-19T18:00:00-07:00"), end: at("2026-09-19T20:00:00-07:00"),
+    moreDates: [at("2026-09-26T18:00:00-07:00"), at("2026-10-03T18:00:00-07:00"), at("2026-10-10T18:00:00-07:00")] });
+  const next = L.rollForward(event, now);
+  assert.equal(next.start.toISOString(), at("2026-09-26T18:00:00-07:00").toISOString());
+  assert.equal(next.end.toISOString(), at("2026-09-26T20:00:00-07:00").toISOString());
+  assert.equal(L.formatMoreDates(next), "Also Oct 3 and Oct 10");
+  assert.equal(L.rollForward({ ...event, end: null }, now).end, null);
+  const plan = L.planSections([event], now);
+  assert.deepEqual(plan.weekend.map((d) => [d.key, d.events.map((e) => e.id)]),
+    [["2026-09-26", ["weekly"]], ["2026-09-27", []]]);
+});
+
+test("rollForward ends an all-day repeat at local midnight across the fall DST change", () => {
+  // Sundays: Oct 25 (daylight time), Nov 1 (clocks fall back at 2 am), Nov 8 (standard time).
+  const sundays = ev({ allDay: true, start: at("2026-10-25T00:00:00-07:00"), end: at("2026-10-26T00:00:00-07:00"),
+    moreDates: [at("2026-11-01T00:00:00-07:00"), at("2026-11-08T00:00:00-08:00")] });
+  const next = L.rollForward(sundays, at("2026-10-31T12:00:00-07:00"));
+  assert.equal(next.start.toISOString(), at("2026-11-01T00:00:00-07:00").toISOString());
+  assert.equal(next.end.toISOString(), at("2026-11-02T00:00:00-08:00").toISOString());
+  assert.deepEqual(next.moreDates.map((d) => d.toISOString()), [at("2026-11-08T00:00:00-08:00").toISOString()]);
+  // Late on Nov 1 that day is still on; a fixed 24-hour length would have ended it at 11 pm.
+  const late = L.rollForward(sundays, at("2026-11-01T23:30:00-08:00"));
+  assert.equal(late.start.toISOString(), next.start.toISOString());
+  // A two-day weekend keeps its length in days: Oct 31 to Nov 1 ends at midnight after Nov 1.
+  const weekend = ev({ allDay: true, start: at("2026-10-24T00:00:00-07:00"), end: at("2026-10-26T00:00:00-07:00"),
+    moreDates: [at("2026-10-31T00:00:00-07:00")] });
+  const rolled = L.rollForward(weekend, at("2026-10-27T12:00:00-07:00"));
+  assert.equal(rolled.end.toISOString(), at("2026-11-02T00:00:00-08:00").toISOString());
+  assert.equal(L.formatWhen(rolled), "Oct 31 to Nov 1");
+});
+
+test("rollForward drops an event with no date left, and planSections leaves it out", () => {
+  const now = at("2026-09-30T12:00:00-07:00");
+  const over = ev({ id: "over", start: at("2026-09-19T18:00:00-07:00"), end: at("2026-09-19T20:00:00-07:00"),
+    moreDates: [at("2026-09-26T18:00:00-07:00")] });
+  const once = ev({ id: "once", start: at("2026-09-29T18:00:00-07:00"), end: null });
+  assert.equal(L.rollForward(over, now), null);
+  assert.equal(L.rollForward(once, now), null);
+  const plan = L.planSections([over, once], now);
+  const placed = [...plan.today, ...plan.running, ...[...plan.weekend, ...plan.comingUp, ...plan.furtherAhead]
+    .flatMap((day) => day.events)];
+  assert.deepEqual(placed, []);
+});
+
 test("matchesFilters by region, types, and free", () => {
   const item = ev({ region: "eastside", category: "music", free: false });
   assert.ok(L.matchesFilters(item, { region: "all", types: [], freeOnly: false }));
