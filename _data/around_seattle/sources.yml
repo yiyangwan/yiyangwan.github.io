@@ -1,0 +1,68 @@
+# Source registry for the /around-seattle/ data pipeline (around_seattle/build.py).
+# The page also lists these homepages when its data cannot load.
+further_ahead:
+  min_score: 50
+  max_events: 30
+sources:
+  - id: seattle-gov
+    name: City of Seattle
+    homepage: https://www.seattle.gov/event-calendar
+    type: ics
+    url: https://www.trumba.com/calendars/seattlegov-city-wide.ics
+    region: seattle
+    weight: 20
+    exclude_categories: [Volunteer, Volunteer Opportunities, Animal Shelter, Boards & Commissions, Seattle City Council,
+                         City Council Meeting, Public Meetings, Public Outreach and Engagement, Seattle Fire Department,
+                         SDCI, Emergency Management, Seattle IT, Police, Grants, Training-Classes/Workshops, Virtual]
+  - id: town-hall
+    name: Town Hall Seattle
+    homepage: https://townhallseattle.org/events/
+    type: tribe
+    url: https://townhallseattle.org/wp-json/tribe/events/v1/events
+    region: seattle
+    weight: 30
+    max_pages: 4
+    min_interval_seconds: 10  # robots.txt asks for a 10 s crawl delay
+  - id: uw-seattle
+    name: University of Washington
+    homepage: https://www.washington.edu/calendar/
+    type: ics
+    url: https://www.trumba.com/calendars/sea_campus.ics
+    region: seattle
+    weight: 10
+    require_category: true
+    exclude_categories: [Workshops, Information Sessions, Academics, Meetings, Conferences, Student Activities,
+                         Dates of Instruction, Holidays]
+  - id: experience-redmond
+    name: Experience Redmond
+    homepage: https://experienceredmond.com/events/
+    type: tribe
+    url: https://experienceredmond.com/wp-json/tribe/events/v1/events
+    region: eastside
+    weight: 22
+    max_pages: 4
+  - id: redmond-city
+    name: City of Redmond
+    homepage: https://www.redmond.gov/calendar.aspx
+    type: civicplus
+    url: https://www.redmond.gov/RSSFeed.aspx?ModID=58&CID=Community-Events-22
+    region: eastside
+    weight: 18
+  - id: issaquah-city
+    name: City of Issaquah
+    homepage: https://www.issaquahwa.gov/calendar.aspx
+    type: civicplus
+    url: https://www.issaquahwa.gov/RSSFeed.aspx?ModID=58&CID=All-calendar.xml
+    region: eastside
+    weight: 16
+  - id: ticketmaster
+    name: Ticketmaster
+    homepage: https://www.ticketmaster.com/
+    type: ticketmaster
+    url: https://app.ticketmaster.com/discovery/v2/events.json
+    region: null
+    weight: 20
+    max_pages: 5
+    min_interval_seconds: 0.25  # the API allows 5 requests per second
+    respect_robots: false  # documented API; access is governed by its terms of use
+    secret_env: TICKETMASTER_API_KEY
