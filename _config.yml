@@ -138,6 +138,8 @@ exclude:
   # CV/yiyangwang_cv.tex as readable plain text plus every file under
   # CV/backups/. The published CV is files/yiyangwang_cv.pdf only.
   - CV
+  # around_seattle/ is the Python data pipeline for /around-seattle/ (source only).
+  - around_seattle
   - Capfile
   - Gemfile
   - Gruntfile.js
