@@ -73,7 +73,10 @@ export function coversDay(event, key) {
 }
 
 export function parseData(raw) {
-  if (!raw || raw.schemaVersion !== SCHEMA_VERSION || !Array.isArray(raw.events)) {
+  const generatedAt = new Date(typeof raw?.generatedAt === "string" ? raw.generatedAt : Number.NaN);
+  const valid = raw && raw.schemaVersion === SCHEMA_VERSION && Array.isArray(raw.events)
+    && !Number.isNaN(generatedAt.getTime());
+  if (!valid) {
     throw new Error("Unsupported data format");
   }
   const toDate = (value) => (value ? new Date(value) : null);
@@ -86,7 +89,7 @@ export function parseData(raw) {
     }))
     .filter((event) => !Number.isNaN(event.start.getTime()));
   return Object.freeze({
-    generatedAt: new Date(raw.generatedAt),
+    generatedAt,
     events: Object.freeze(events),
     sources: Object.freeze(raw.sources ?? []),
     weather: raw.weather ?? null,
@@ -302,8 +305,12 @@ export function resolveDataUrls(location, dataset, now = new Date()) {
   const isLocal = location.hostname === "localhost" || location.hostname === "127.0.0.1";
   const override = new URLSearchParams(location.search).get("data");
   if (isLocal && override) {
-    const url = new URL(override, location.href);
-    if (url.origin === location.origin) return [url.href];
+    try {
+      const url = new URL(override, location.href);
+      if (url.origin === location.origin) return [url.href];
+    } catch {
+      // A malformed override falls back to the published data below.
+    }
   }
   const cacheKey = `v=${dayKey(now)}T${pad(laParts(now).hour)}`;
   return [dataset.src, dataset.fallbackSrc].filter(Boolean)

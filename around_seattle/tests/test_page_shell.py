@@ -21,6 +21,12 @@ def test_page_has_every_hook_app_needs():
     assert re.findall(r'name="region" value="([a-z]+)"', PAGE) == ["all", "seattle", "eastside"]
 
 
+
+def test_root_opts_out_of_mathjax_in_markup():
+    root = re.search(r'<div class="([^"]*)" id="around"', PAGE)
+    assert root, "root element"
+    assert {"tex2jax_ignore", "mathjax_ignore"} <= set(root.group(1).split())
+
 def test_weather_sprite_has_a_symbol_per_condition():
     ids = re.findall(r'<symbol id="wx-([a-z-]+)"', ICONS.read_text(encoding="utf-8"))
     assert sorted(ids) == sorted(CONDITIONS)

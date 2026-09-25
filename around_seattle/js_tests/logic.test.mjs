@@ -56,6 +56,15 @@ test("parseData converts dates and rejects other versions", () => {
   assert.ok(Object.isFrozen(data));
 });
 
+test("parseData rejects a missing or invalid generatedAt", () => {
+  const base = { schemaVersion: 1, sources: [], weather: null, sun: {}, seasonal: [], events: [] };
+  assert.throws(() => L.parseData(base), /Unsupported data format/);
+  assert.throws(() => L.parseData({ ...base, generatedAt: null }), /Unsupported data format/);
+  assert.throws(() => L.parseData({ ...base, generatedAt: "not a date" }), /Unsupported data format/);
+  assert.equal(L.parseData({ ...base, generatedAt: "2026-09-25T13:17:00Z" }).generatedAt.toISOString(),
+    "2026-09-25T13:17:00.000Z");
+});
+
 test("weekendPlan for weekdays, Saturday, and Sunday", () => {
   assert.deepEqual(L.weekendPlan("2026-09-25"), { label: "This weekend", keys: ["2026-09-26", "2026-09-27"] });
   assert.deepEqual(L.weekendPlan("2026-09-22"), { label: "This weekend", keys: ["2026-09-26", "2026-09-27"] });
@@ -230,5 +239,12 @@ test("resolveDataUrls adds a cache key and allows overrides only on localhost", 
     ["https://raw.example/a.json?v=2026-09-25T07", "https://cdn.example/a.json?v=2026-09-25T07"]);
   assert.deepEqual(
     L.resolveDataUrls(new URL("http://127.0.0.1:4000/around-seattle/?data=https://evil.example/x.json"), dataset, now),
+    ["https://raw.example/a.json?v=2026-09-25T07", "https://cdn.example/a.json?v=2026-09-25T07"]);
+});
+
+test("resolveDataUrls falls back to production URLs on a malformed localhost override", () => {
+  const dataset = { src: "https://raw.example/a.json", fallbackSrc: "https://cdn.example/a.json" };
+  const now = at("2026-09-25T07:40:00-07:00");
+  assert.deepEqual(L.resolveDataUrls(new URL("http://localhost:4000/around-seattle/?data=http://[bad"), dataset, now),
     ["https://raw.example/a.json?v=2026-09-25T07", "https://cdn.example/a.json?v=2026-09-25T07"]);
 });

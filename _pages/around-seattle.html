@@ -7,8 +7,8 @@ excerpt: "Things worth going out for in Seattle and on the Eastside, updated eve
 data_url: "https://raw.githubusercontent.com/yiyangwan/yiyangwan.github.io/around-seattle-data/around-seattle.json"
 fallback_data_url: "https://cdn.jsdelivr.net/gh/yiyangwan/yiyangwan.github.io@around-seattle-data/around-seattle.json"
 ---
-{% capture around_links %}<ul class="around-links">{% for source in site.data.around_seattle.sources.sources %}{% unless source.secret_env %}<li><a href="{{ source.homepage }}">{{ source.name }}</a></li>{% endunless %}{% endfor %}</ul>{% endcapture %}
-<div class="around" id="around" data-src="{{ page.data_url }}" data-fallback-src="{{ page.fallback_data_url }}">
+{% capture around_links %}<ul class="around-links">{% for source in site.data.around_seattle.sources.sources %}{% unless source.secret_env %}<li><a href="{{ source.homepage | escape }}">{{ source.name | escape }}</a></li>{% endunless %}{% endfor %}</ul>{% endcapture %}
+<div class="around tex2jax_ignore mathjax_ignore" id="around" data-src="{{ page.data_url }}" data-fallback-src="{{ page.fallback_data_url }}">
   {% include around-seattle/weather-icons.svg %}
   <header class="around-hero" data-sky="loading">
     <div class="around-hero__inner">
@@ -70,5 +70,5 @@ fallback_data_url: "https://cdn.jsdelivr.net/gh/yiyangwan/yiyangwan.github.io@ar
     </noscript>
     <template id="around-source-links">{{ around_links }}</template>
   </main>
-  <footer class="around-footer" id="around-footer"></footer>
+  <div class="around-footer" id="around-footer"></div>
 </div>
