@@ -21,16 +21,32 @@ def collect(config: SourceConfig, http, window: Window) -> list[Event]:
         items = data.get("events") if isinstance(data, dict) else None
         if not isinstance(items, list):
             raise SourceError("unexpected response")
-        events.extend(event for event in (to_event(item, config) for item in items) if event is not None)
-        if page >= int(data.get("total_pages") or 0):
+        events.extend(event for event in (_safe_event(item, config) for item in items) if event is not None)
+        if page >= _page_count(data.get("total_pages")):
             break
     return [event for event in events if in_window(event, window)]
+
+
+def _page_count(value) -> int:
+    """The feed's page count, or 0 (stop after this page) when it is not a number."""
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return 0
+
+
+def _safe_event(item, config: SourceConfig) -> Event | None:
+    """to_event for one item; a malformed item is skipped instead of failing the whole source."""
+    try:
+        return to_event(item, config)
+    except (TypeError, ValueError, AttributeError, KeyError):
+        return None
 
 
 def _zone(name) -> ZoneInfo:
     try:
         return ZoneInfo(name) if name else LA
-    except (ZoneInfoNotFoundError, ValueError):
+    except (ZoneInfoNotFoundError, ValueError, TypeError):
         return LA
 
 

@@ -33,10 +33,26 @@ def collect(config: SourceConfig, http, window: Window, env=None) -> list[Event]
         if not isinstance(data, dict):
             raise SourceError("unexpected response")
         items = (data.get("_embedded") or {}).get("events") or []
-        events.extend(event for event in (to_event(item, config) for item in items) if event is not None)
-        if page + 1 >= int((data.get("page") or {}).get("totalPages") or 0):
+        events.extend(event for event in (_safe_event(item, config) for item in items) if event is not None)
+        if page + 1 >= _page_count((data.get("page") or {}).get("totalPages")):
             break
     return [event for event in events if in_window(event, window)]
+
+
+def _page_count(value) -> int:
+    """The response's page count, or 0 (stop after this page) when it is not a number."""
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return 0
+
+
+def _safe_event(item, config: SourceConfig) -> Event | None:
+    """to_event for one item; a malformed item is skipped instead of failing the whole source."""
+    try:
+        return to_event(item, config)
+    except (TypeError, ValueError, AttributeError, KeyError):
+        return None
 
 
 def _start(info: dict) -> tuple[datetime | None, bool]:

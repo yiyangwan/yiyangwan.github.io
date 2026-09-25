@@ -72,3 +72,14 @@ def test_unexpected_response_raises(window):
     http = FakeHttp({CONFIG.url: '{"code": "rest_no_route"}'})
     with pytest.raises(SourceError, match="unexpected response"):
         tribe.collect(CONFIG, http, window)
+
+
+def test_collect_isolates_malformed_items_and_stops_on_invalid_page_count(window):
+    bad_zone = {"title": "Bad", "start_date": "2026-09-26 10:00:00", "timezone": 5}
+    # A non-string time zone falls back to Los Angeles instead of raising.
+    assert tribe.to_event(bad_zone, CONFIG).start == datetime(2026, 9, 26, 10, 0, tzinfo=LA)
+    # A non-list "categories" still raises inside to_event, so collect skips that item alone.
+    page = {"events": [items("tribe_page1.json")[0], {**bad_zone, "categories": 5}], "total_pages": "n/a"}
+    http = FakeHttp({CONFIG.url: json.dumps(page)})
+    assert [event.uid for event in tribe.collect(CONFIG, http, window)] == ["town-hall:501"]
+    assert len(http.calls) == 1

@@ -65,3 +65,17 @@ def test_unexpected_response_raises(window):
     http = FakeHttp({CONFIG.url: "[]"})
     with pytest.raises(SourceError, match="unexpected response"):
         ticketmaster.collect(CONFIG, http, window, env=ENV)
+
+
+def test_collect_isolates_malformed_items_and_stops_on_invalid_page_count(window):
+    page = json.loads(read_fixture("ticketmaster_page0.json"))
+    concert, ballet, *rest = page["_embedded"]["events"]
+    malformed = [
+        {**concert, "dates": {"start": concert["dates"]["start"], "status": "onsale"}},  # status is a string
+        {**ballet, "classifications": ["Music"]},  # classifications are strings
+    ]
+    body = {"_embedded": {"events": [*malformed, *rest]}, "page": {**page["page"], "totalPages": "x"}}
+    http = FakeHttp({CONFIG.url: json.dumps(body)})
+    events = ticketmaster.collect(CONFIG, http, window, env=ENV)
+    assert [event.uid for event in events] == ["ticketmaster:tm4", "ticketmaster:tm7"]
+    assert len(http.calls) == 1
