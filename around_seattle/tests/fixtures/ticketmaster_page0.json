@@ -1,0 +1,38 @@
+{
+  "_embedded": {
+    "events": [
+      {"name": "Big Thief", "id": "tm1", "url": "https://www.ticketmaster.com/event/tm1",
+       "dates": {"start": {"localDate": "2026-10-02", "localTime": "19:30:00"}, "status": {"code": "onsale"}},
+       "classifications": [{"segment": {"name": "Music"}, "genre": {"name": "Rock"}, "subGenre": {"name": "Indie Rock"}}],
+       "priceRanges": [{"type": "standard", "currency": "USD", "min": 45.0, "max": 95.0}],
+       "_embedded": {"venues": [{"name": "Climate Pledge Arena", "city": {"name": "Seattle"},
+                                 "state": {"stateCode": "WA"}, "address": {"line1": "334 1st Ave N"}}]}},
+      {"name": "The Nutcracker", "id": "tm2", "url": "https://www.ticketmaster.com/event/tm2",
+       "dates": {"start": {"localDate": "2026-11-21", "localTime": "14:00:00"}, "status": {"code": "onsale"}},
+       "classifications": [{"segment": {"name": "Arts & Theatre"}, "genre": {"name": "Dance"}, "subGenre": {"name": "Undefined"}}],
+       "priceRanges": [{"type": "standard", "currency": "USD", "min": 30.0, "max": 30.0}],
+       "_embedded": {"venues": [{"name": "Meydenbauer Center Theatre", "city": {"name": "Bellevue"}, "state": {"stateCode": "WA"}}]}},
+      {"name": "PARKING: Big Thief", "id": "tm3", "url": "https://www.ticketmaster.com/event/tm3",
+       "dates": {"start": {"localDate": "2026-10-02", "localTime": "19:30:00"}, "status": {"code": "onsale"}},
+       "classifications": [{"segment": {"name": "Music"}}],
+       "_embedded": {"venues": [{"name": "Climate Pledge Arena", "city": {"name": "Seattle"}}]}},
+      {"name": "Tacoma Symphony: Autumn", "id": "tm4", "url": "https://www.ticketmaster.com/event/tm4",
+       "dates": {"start": {"localDate": "2026-10-10", "localTime": "19:30:00"}, "status": {"code": "onsale"}},
+       "classifications": [{"segment": {"name": "Music"}, "genre": {"name": "Classical"}}],
+       "_embedded": {"venues": [{"name": "Pantages Theater", "city": {"name": "Tacoma"}, "state": {"stateCode": "WA"}}]}},
+      {"name": "Seahawks vs. Rams", "id": "tm5", "url": "https://www.ticketmaster.com/event/tm5",
+       "dates": {"start": {"localDate": "2026-10-11", "localTime": "13:05:00"}, "status": {"code": "onsale"}},
+       "classifications": [{"segment": {"name": "Sports"}, "genre": {"name": "Football"}}],
+       "_embedded": {"venues": [{"name": "Lumen Field", "city": {"name": "Seattle"}}]}},
+      {"name": "Cancelled Show", "id": "tm6", "url": "https://www.ticketmaster.com/event/tm6",
+       "dates": {"start": {"localDate": "2026-10-12", "localTime": "20:00:00"}, "status": {"code": "cancelled"}},
+       "classifications": [{"segment": {"name": "Music"}}],
+       "_embedded": {"venues": [{"name": "The Showbox", "city": {"name": "Seattle"}}]}},
+      {"name": "Jazz Night", "id": "tm7", "url": "https://www.ticketmaster.com/event/tm7",
+       "dates": {"start": {"localDate": "2026-10-10", "noSpecificTime": true}, "status": {"code": "onsale"}},
+       "classifications": [{"segment": {"name": "Music"}, "genre": {"name": "Jazz"}}],
+       "_embedded": {"venues": [{"name": "Jazz Alley", "city": {"name": "Seattle"}}]}}
+    ]
+  },
+  "page": {"size": 200, "totalElements": 7, "totalPages": 1, "number": 0}
+}
