@@ -1,0 +1,36 @@
+<?xml version="1.0"?><rss version="2.0" xmlns:calendarEvent="https://www.redmond.gov/Calendar.aspx"><channel>
+	<title>Redmond, WA - Calendar - Community Events</title>
+	<link>https://www.redmond.gov/Calendar.aspx</link>
+	<description>Redmond, WA - Get the latest events</description>
+	<item>
+		<title>2nd Annual Flapjacks &amp; Flannel Breakfast </title>
+		<link>https://www.redmond.gov/Calendar.aspx?EID=3538</link>
+		<description>&lt;strong&gt;Event date:&lt;/strong&gt; October 3, 2026 &lt;br&gt;&lt;strong&gt;Event Time: &lt;/strong&gt;09:30 AM - 12:00 PM&lt;br&gt;&lt;strong&gt;Location:&lt;/strong&gt; &lt;br&gt;8703 160th Ave NE&lt;br&gt;Redmond, WA 98052</description>
+		<calendarEvent:EventDates> October 3, 2026 </calendarEvent:EventDates>
+		<calendarEvent:EventTimes>09:30 AM - 12:00 PM</calendarEvent:EventTimes>
+		<calendarEvent:Location>8703 160th Ave NERedmond, WA 98052</calendarEvent:Location>
+		<guid isPermaLink="false">https://www.redmond.gov/Calendar.aspx?EID=3538/639229207430000000</guid>
+	</item>
+	<item>
+		<title>Salmon Days Festival</title>
+		<link>https://example.org/salmon-days</link>
+		<description>&lt;strong&gt;Event date:&lt;/strong&gt; October 3, 2026 - October 4, 2026&lt;br&gt;&lt;strong&gt;Location:&lt;/strong&gt; &lt;br&gt;Downtown Issaquah&lt;br&gt;Issaquah, WA</description>
+		<calendarEvent:EventDates>October 3, 2026 - October 4, 2026</calendarEvent:EventDates>
+		<calendarEvent:EventTimes></calendarEvent:EventTimes>
+		<calendarEvent:Location>Downtown Issaquah</calendarEvent:Location>
+	</item>
+	<item>
+		<title>City Council Business Meeting</title>
+		<link>https://www.redmond.gov/Calendar.aspx?EID=3600</link>
+		<description>&lt;strong&gt;Event date:&lt;/strong&gt; October 6, 2026&lt;br&gt;&lt;strong&gt;Event Time: &lt;/strong&gt;07:00 PM - 09:00 PM&lt;br&gt;&lt;strong&gt;Location:&lt;/strong&gt; &lt;br&gt;City Hall&lt;br&gt;15670 NE 85th St&lt;br&gt;Redmond, WA 98052</description>
+		<calendarEvent:EventDates>October 6, 2026</calendarEvent:EventDates>
+		<calendarEvent:EventTimes>07:00 PM - 09:00 PM</calendarEvent:EventTimes>
+		<calendarEvent:Location>City Hall15670 NE 85th StRedmond, WA 98052</calendarEvent:Location>
+	</item>
+	<item>
+		<title>Date TBD Event</title>
+		<link>https://www.redmond.gov/Calendar.aspx?EID=3700</link>
+		<description>To be announced</description>
+		<calendarEvent:EventDates>TBD</calendarEvent:EventDates>
+	</item>
+</channel></rss>
