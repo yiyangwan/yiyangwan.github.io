@@ -33,9 +33,10 @@ def _alternation(cities) -> str:
 
 
 # Feeds sometimes drop the separator ("160th Ave NERedmond, WA"), so the state anchors this match.
-_BEFORE_STATE = re.compile(rf"({_alternation(_DISPLAY.values())})(?=\s*,?\s*(?:WA|Washington)\b)", re.IGNORECASE)
+_BEFORE_STATE = re.compile(rf"({_alternation(_DISPLAY.values())})(?=\s*,?\s*(?:WA|Washington)\b)",
+                           re.IGNORECASE | re.ASCII)
 # Without a state, only in-area names count, so "123 Kent St" does not drop an event.
-_AS_WORD = re.compile(rf"\b({_alternation(SEATTLE_CITIES + EASTSIDE_CITIES)})\b", re.IGNORECASE)
+_AS_WORD = re.compile(rf"\b({_alternation(SEATTLE_CITIES + EASTSIDE_CITIES)})\b", re.IGNORECASE | re.ASCII)
 
 
 def detect_city(*texts: str | None) -> str | None:

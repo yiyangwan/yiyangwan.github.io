@@ -19,16 +19,20 @@ def _words(*patterns: str) -> re.Pattern[str]:
 
 # Deliberately absent: bare "council" (Fremont Arts Council runs parades), bare "volunteer"
 # (Volunteer Park), "suite" (The Nutcracker Suite), and "parking" (PARK(ing) Day).
+# Also excluded: "class" in hyphenated compounds (World-Class Jazz Festival), "closed caption"
+# (Closed Captioned Screening), and "hearing loop", "hearing aid", and "hearing impaired"
+# (Hearing Loop Concert).
 NOISE = _words(
     r"city council", r"council meetings?", r"councilmembers?", r"community council",
-    r"commissions?", r"committees?", r"board meetings?", r"public hearings?", r"hearings?",
+    r"commissions?", r"committees?", r"board meetings?", r"public hearings?",
+    r"hearings?(?!\s+(?:loop|aid|impaired))",
     r"advisory (?:board|council|group|committee)s?", r"meetings?",
     r"office hours", r"info(?:rmation)? sessions?", r"webinars?", r"orientations?",
     r"story ?times?", r"baby ?times?", r"toddlers?", r"preschool",
-    r"class(?:es)?", r"courses?", r"lessons?", r"trainings?",
+    r"(?<!-)class(?:es)?(?!-)", r"courses?", r"lessons?", r"trainings?",
     r"online only", r"virtual (?:event|program|session)s?", r"via zoom", r"on zoom", r"zoom meetings?",
     r"livestream(?:ed)? only",
-    r"cancell?ed", r"postponed", r"closed", r"closures?",
+    r"cancell?ed", r"postponed", r"closed(?!\s+caption)", r"closures?",
     r"volunteer (?:opportunit(?:y|ies)|events?|shifts?|orientations?)", r"work part(?:y|ies)", r"ivy pulls?",
     r"support groups?", r"tax help", r"job fairs?", r"career fairs?", r"hiring events?",
     r"blood drives?", r"vaccin(?:e|ation) clinics?", r"flu shots?",

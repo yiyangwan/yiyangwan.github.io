@@ -18,6 +18,13 @@ def test_detect_city(text, expected):
     assert detect_city(text) == expected
 
 
+def test_lookalike_letters_neither_match_nor_raise():
+    # U+0131 (dotless i) and U+0130 (dotted capital I) match ASCII "i" under Unicode IGNORECASE.
+    assert detect_city("Kırkland, WA 98033") is None
+    assert detect_city("İssaquah Community Center") is None
+    assert detect_city("KIRKLAND, WA") == "Kirkland"
+
+
 def test_structured_city_sets_region():
     placed = assign_region(make_event(city="Carnation"), "seattle")
     assert (placed.city, placed.region) == ("Carnation", "eastside")

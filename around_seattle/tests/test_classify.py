@@ -15,6 +15,8 @@ from around_seattle.tests.conftest import make_config, make_event
     "CANCELLED: Jazz in the Park",
     "Virtual Event: Author Talk",
     "Public Hearing on Zoning",
+    "Park Closed for Maintenance",
+    "Zoning Hearing",
 ])
 def test_noise_titles(title):
     assert is_noise(make_event(title=title), make_config())
@@ -27,6 +29,9 @@ def test_noise_titles(title):
     "Town Hall Seattle Presents: Naomi Klein",
     "Masterclass Recital",
     "Salmon Days Festival",
+    "World-Class Jazz Festival",
+    "Closed Captioned Screening: Coco",
+    "Hearing Loop Concert",
 ])
 def test_not_noise_titles(title):
     assert not is_noise(make_event(title=title), make_config())
