@@ -96,7 +96,8 @@ def process(results, configs, window: Window, further: dict) -> list[Event]:
             placed = regions.assign_region(event, config.region)
             if placed is None:
                 continue
-            typed = replace(placed, category=classify.categorize(placed))
+            # An adapter may set the category from its source's own taxonomy; "other" means it did not.
+            typed = placed if placed.category != "other" else replace(placed, category=classify.categorize(placed))
             if config.require_category and typed.category == "other":
                 continue
             kept.append(typed)

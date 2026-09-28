@@ -5,16 +5,22 @@ import os
 import re
 from datetime import datetime, time, timedelta, timezone
 
+from ..classify import TYPE_PATTERNS
 from ..models import LA, Event, SourceConfig, SourceError, SourceSkipped, Window, in_window
 from ..text import clean_inline, safe_url
 
 SEATTLE_TACOMA_DMA = 385
 PAGE_SIZE = 200
 KEPT_SEGMENTS = frozenset({"music", "arts & theatre", "miscellaneous", "film"})
+# For these, Ticketmaster's classification beats title words ("Hail The Sun w/ A Lot Like Birds" is a band).
+PERFORMANCE_SEGMENTS = frozenset({"music", "arts & theatre", "film"})
 DROPPED_STATUSES = frozenset({"cancelled", "canceled", "postponed"})
 # Ticketmaster lists parking and upsells as their own "events".
-ADD_ON = re.compile(r"\b(?:parking|vip|suites?|premium seating|platinum|upgrades?|gift cards?|packages?)\b",
-                    re.IGNORECASE)
+ADD_ON = re.compile(r"\b(?:parking|vip|suites?|premium seating|platinum|upgrades?|gift cards?|packages?"
+                    r"|not an event ticket)\b", re.IGNORECASE)
+# Title notes that keep a listing from merging with its twin: "X - MOVED TO THE NEPTUNE", "X (Odyssey 3 Day Pass)".
+TITLE_NOTES = (re.compile(r"\s*[-–—(]\s*moved to\b[^)]*\)?\s*$", re.IGNORECASE),
+               re.compile(r"\s*\([^()]*\bpass(?:es)?\)\s*$", re.IGNORECASE))
 UTC_FORMAT = "%Y-%m-%dT%H:%M:%SZ"
 
 
@@ -92,8 +98,9 @@ def _price(ranges) -> str | None:
 def to_event(item, config: SourceConfig) -> Event | None:
     if not isinstance(item, dict):
         return None
-    title = clean_inline(item.get("name"))
-    if not title or ADD_ON.search(title):
+    listing = clean_inline(item.get("name"))
+    title = _strip_notes(listing)
+    if not title or ADD_ON.search(listing):
         return None
     dates = item.get("dates") or {}
     if str((dates.get("status") or {}).get("code", "")).casefold() in DROPPED_STATUSES:
@@ -124,4 +131,18 @@ def to_event(item, config: SourceConfig) -> Event | None:
         url=safe_url(item.get("url")),
         price=_price(item.get("priceRanges")),
         raw_categories=tuple(name for name in (segment, *genres) if name and name.casefold() != "undefined"),
+        category=_category(segment, listing),
     )
+
+
+def _strip_notes(listing: str) -> str:
+    for note in TITLE_NOTES:
+        listing = note.sub("", listing)
+    return listing
+
+
+def _category(segment: str, listing: str) -> str:
+    """A performance is music (the page's "Music & stage") or a festival; "other" leaves the rest to the classifier."""
+    if segment.casefold() not in PERFORMANCE_SEGMENTS:
+        return "other"
+    return "festival" if TYPE_PATTERNS["festival"].search(listing) else "music"

@@ -216,3 +216,12 @@ def test_process_filters_places_and_selects(window):
     events = build.process(results, [city, uw], window, {"min_score": 50, "max_events": 30})
     assert [event.title for event in events] == ["Harvest Festival", "Lantern Festival"]
     assert (events[0].score, events[0].region, events[0].category) == (55, "seattle", "festival")
+
+
+def test_process_keeps_a_category_the_source_set(window):
+    config = make_config(id="tm", region="seattle")
+    events = (make_event(source_id="tm", uid="1", title="Hail The Sun w/ A Lot Like Birds", category="music"),
+              make_event(source_id="tm", uid="2", title="Birds of the Arboretum"))
+    kept = build.process([SourceResult(config, "ok", events)], [config], window, {"min_score": 50, "max_events": 30})
+    assert {event.title: event.category for event in kept} == {
+        "Hail The Sun w/ A Lot Like Birds": "music", "Birds of the Arboretum": "outdoors"}

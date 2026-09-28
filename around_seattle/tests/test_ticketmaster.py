@@ -3,6 +3,7 @@ from datetime import datetime
 
 import pytest
 
+from around_seattle import dedupe
 from around_seattle.models import LA, SourceError, SourceSkipped
 from around_seattle.sources import ticketmaster
 from around_seattle.tests.conftest import FakeHttp, make_config, read_fixture
@@ -51,6 +52,41 @@ def test_event_fields():
     jazz = ticketmaster.to_event(items[6], CONFIG)
     assert jazz.all_day is True
     assert jazz.end == datetime(2026, 10, 11, 0, 0, tzinfo=LA)
+
+
+def _listing(name, segment="Music"):
+    """The fixture's first concert under another name and segment."""
+    item = json.loads(read_fixture("ticketmaster_page0.json"))["_embedded"]["events"][0]
+    item["name"] = name
+    item["classifications"][0]["segment"]["name"] = segment
+    return item
+
+
+def test_drops_listings_that_are_not_event_tickets():
+    item = _listing("WAMU Theater Amplified Access: Kai Wachi (Not an Event Ticket)")
+    assert ticketmaster.to_event(item, CONFIG) is None
+
+
+def test_strips_venue_moves_and_ticket_tiers_so_duplicates_merge():
+    moved = ticketmaster.to_event(_listing("Killswitch Engage - MOVED TO THE NEPTUNE"), CONFIG)
+    assert moved.title == "Killswitch Engage"
+    tiers = [ticketmaster.to_event(_listing(f"Starstuff: A Festival of Solo Artists ({tier} 3 Day Pass)"), CONFIG)
+             for tier in ("Odyssey", "Voyager Deluxe")]
+    assert [event.title for event in tiers] == ["Starstuff: A Festival of Solo Artists"] * 2
+    assert len(dedupe.merge_duplicates(tiers, {"ticketmaster": 20})) == 1
+
+
+def test_performances_keep_ticketmasters_category_over_title_words():
+    def category(name, segment="Music"):
+        return ticketmaster.to_event(_listing(name, segment), CONFIG).category
+
+    assert category("Hail The Sun w/ A Lot Like Birds") == "music"
+    assert category("Jane Remover: Live Exhibit") == "music"
+    assert category("Hamlet", segment="Arts & Theatre") == "music"
+    assert category("Metropolis (1927)", segment="Film") == "music"
+    assert category("Starstuff: A Festival of Solo Artists") == "festival"
+    assert category("Bumbershoot (Weekend Festival Pass)") == "festival"  # the stripped note still counts
+    assert category("Lumen Field Stadium Tours", segment="Miscellaneous") == "other"  # left to the classifier
 
 
 def test_paginates_until_total_pages(window):
