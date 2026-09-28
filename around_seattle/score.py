@@ -11,6 +11,7 @@ WEEKEND_BONUS = 5
 FREE_BONUS = 3
 ANNUAL_BONUS = 3
 RECURRING_PENALTY = 12
+SHORT_RUN_DAYS = 4  # a festival listed once per day, Friday to Sunday, is a short run, not a recurring listing
 LOW_VALUE_PENALTY = 10
 FRIDAY_EVENING_HOUR = 17
 ANNUAL = re.compile(r"\bannual\b", re.IGNORECASE)
@@ -28,8 +29,13 @@ def score(event: Event, source_weight: int) -> int:
         total += FREE_BONUS
     if ANNUAL.search(event.title):
         total += ANNUAL_BONUS
-    if len(event.more_dates) >= 2:  # three or more occurrences in the 60-day window
+    if len(event.more_dates) >= 2 and _run_days(event) > SHORT_RUN_DAYS:  # three or more dates, spread out
         total -= RECURRING_PENALTY
     if LOW_VALUE.search(event.title):
         total -= LOW_VALUE_PENALTY
     return max(0, min(100, total))
+
+
+def _run_days(event: Event) -> int:
+    """Calendar days from the first date of a series to its last."""
+    return (max(event.more_dates).date() - event.start.date()).days + 1

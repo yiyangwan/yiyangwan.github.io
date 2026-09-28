@@ -3,8 +3,8 @@ from datetime import datetime
 
 import pytest
 
-from around_seattle import dedupe
-from around_seattle.models import LA, SourceError, SourceSkipped
+from around_seattle import build, dedupe
+from around_seattle.models import LA, SourceError, SourceResult, SourceSkipped
 from around_seattle.sources import ticketmaster
 from around_seattle.tests.conftest import FakeHttp, make_config, read_fixture
 
@@ -74,6 +74,21 @@ def test_strips_venue_moves_and_ticket_tiers_so_duplicates_merge():
              for tier in ("Odyssey", "Voyager Deluxe")]
     assert [event.title for event in tiers] == ["Starstuff: A Festival of Solo Artists"] * 2
     assert len(dedupe.merge_duplicates(tiers, {"ticketmaster": 20})) == 1
+
+
+def test_a_festival_listed_per_tier_and_per_day_shows_once(window):
+    def festival_pass(uid, tier, day):
+        item = _listing(f"Starstuff: A Festival of Solo Artists ({tier})")
+        item["id"] = uid
+        item["dates"]["start"] = {"localDate": f"2026-10-{day}", "noSpecificTime": True}
+        return item
+
+    items = [festival_pass("t1", "Odyssey 3 Day Pass", 23), festival_pass("t2", "Voyager Deluxe 3 Day Pass", 23),
+             *(festival_pass(f"d{day}", "Single Day Pass", day) for day in (23, 24, 25))]
+    events = tuple(ticketmaster.to_event(item, CONFIG) for item in items)
+    kept = build.process([SourceResult(CONFIG, "ok", events)], [CONFIG], window, {"min_score": 50, "max_events": 30})
+    assert [(e.title, e.category, e.score, len(e.more_dates)) for e in kept] == [
+        ("Starstuff: A Festival of Solo Artists", "festival", 55, 2)]
 
 
 def test_performances_keep_ticketmasters_category_over_title_words():

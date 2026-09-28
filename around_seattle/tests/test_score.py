@@ -38,6 +38,18 @@ def test_multi_day_bonus_only_for_two_to_four_days():
     assert score(six_days, 20) == 50
 
 
+def test_recurring_penalty_skips_a_short_run_of_days():
+    friday = dict(start=datetime(2026, 10, 23, 0, 0, tzinfo=LA), end=datetime(2026, 10, 24, 0, 0, tzinfo=LA),
+                  all_day=True, category="festival")
+    weekend = make_event(**friday, more_dates=(datetime(2026, 10, 24, 0, 0, tzinfo=LA),
+                                               datetime(2026, 10, 25, 0, 0, tzinfo=LA)))
+    four_days = make_event(**friday, more_dates=tuple(datetime(2026, 10, day, 0, 0, tzinfo=LA) for day in range(24, 27)))
+    daily = make_event(**friday, more_dates=tuple(datetime(2026, 10, day, 0, 0, tzinfo=LA) for day in range(24, 28)))
+    assert score(weekend, 20) == 55  # a festival listed once per day, Friday to Sunday
+    assert score(four_days, 20) == 55  # Friday to Monday is still a short run
+    assert score(daily, 20) == 43  # five days in a row is a recurring listing
+
+
 def test_score_is_clamped():
     assert score(make_event(**WEDNESDAY), 95) == 100
     assert score(make_event(**{**WEDNESDAY, "category": "other", "title": "Bingo"}), 0) == 0
