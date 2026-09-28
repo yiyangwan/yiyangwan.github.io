@@ -66,3 +66,4 @@ sources:
     min_interval_seconds: 0.25  # the API allows 5 requests per second
     respect_robots: false  # documented API; access is governed by its terms of use
     secret_env: TICKETMASTER_API_KEY
+    day_cap: 2  # at most two shows among a day's top picks; the rest rank last, under "Show more"

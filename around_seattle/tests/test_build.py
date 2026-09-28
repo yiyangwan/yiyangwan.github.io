@@ -63,6 +63,7 @@ def test_repo_config_and_seasonal_picks_load():
     ticketmaster = configs[-1]
     assert (ticketmaster.secret_env, ticketmaster.respect_robots, ticketmaster.region) == (
         "TICKETMASTER_API_KEY", False, None)
+    assert [c.day_cap for c in configs] == [None] * 6 + [2]
     picks = seasonal.load(build.DEFAULT_CONFIG_DIR / "seasonal.yml")
     assert picks
     assert len({pick.id for pick in picks}) == len(picks)
@@ -216,6 +217,34 @@ def test_process_filters_places_and_selects(window):
     events = build.process(results, [city, uw], window, {"min_score": 50, "max_events": 30})
     assert [event.title for event in events] == ["Harvest Festival", "Lantern Festival"]
     assert (events[0].score, events[0].region, events[0].category) == (55, "seattle", "festival")
+
+
+def test_cap_per_day_ranks_a_sources_extra_events_last():
+    friday = datetime(2026, 10, 2, 19, 0, tzinfo=LA)
+    shows = [make_event(source_id="tm", uid=f"tm{n}", title=f"Show {n}", start=friday, end=None, score=score)
+             for n, score in enumerate((46, 51, 46))]
+    local = make_event(source_id="city", uid="c1", title="Harvest Fair", start=friday, end=None, score=30)
+    saturday = make_event(source_id="tm", uid="tm9", title="Show 9", start=datetime(2026, 10, 3, 19, 0, tzinfo=LA),
+                          end=None, score=46)
+    capped = build.cap_per_day([*shows, local, saturday], {"tm": 2})
+    assert [event.score for event in capped] == [46, 51, 0, 30, 46]
+    assert [event.score for event in build.cap_per_day(shows, {"tm": 0})] == [0, 0, 0]
+
+
+def test_day_cap_also_keeps_extra_events_out_of_further_out(window):
+    config = make_config(id="tm", region="seattle", day_cap=1)
+    shows = tuple(make_event(source_id="tm", uid=f"tm{n}", title=f"Concert {n}", category="music",
+                             start=datetime(2026, 10, 24, 19 + n, 0, tzinfo=LA), end=None) for n in range(2))
+    kept = build.process([SourceResult(config, "ok", shows)], [config], window, {"min_score": 50, "max_events": 30})
+    assert [event.title for event in kept] == ["Concert 0"]
+
+
+def test_process_applies_a_sources_day_cap(window):
+    config = make_config(id="tm", region="seattle", day_cap=1)
+    shows = tuple(make_event(source_id="tm", uid=f"tm{n}", title=f"Concert {n}", category="music",
+                             start=datetime(2026, 9, 26, 19 + n, 0, tzinfo=LA), end=None) for n in range(2))
+    kept = build.process([SourceResult(config, "ok", shows)], [config], window, {"min_score": 50, "max_events": 30})
+    assert [(event.title, event.score > 0) for event in kept] == [("Concert 0", True), ("Concert 1", False)]
 
 
 def test_process_keeps_a_category_the_source_set(window):

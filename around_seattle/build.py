@@ -9,7 +9,7 @@ import json
 import os
 import sys
 from dataclasses import replace
-from datetime import datetime
+from datetime import date, datetime
 from pathlib import Path
 
 import yaml
@@ -46,6 +46,7 @@ def load_sources(path: Path) -> tuple[list[SourceConfig], dict]:
             min_interval_seconds=float(entry.get("min_interval_seconds", 0)),
             respect_robots=bool(entry.get("respect_robots", True)),
             secret_env=entry.get("secret_env"),
+            day_cap=int(entry["day_cap"]) if entry.get("day_cap") is not None else None,
         ))
     further = raw.get("further_ahead") or {}
     return configs, {"min_score": int(further.get("min_score", 50)), "max_events": int(further.get("max_events", 30))}
@@ -76,6 +77,20 @@ def run_sources(configs, http, window: Window, env) -> list[SourceResult]:
     return results
 
 
+def cap_per_day(events: list[Event], caps: dict[str, int]) -> list[Event]:
+    """Past its day_cap, a source's events on a day score 0: last in the day's list, and out of "Further out"."""
+    counts: dict[tuple[str, date], int] = {}
+    demoted: set[int] = set()
+    for index in sorted(range(len(events)), key=lambda i: (-events[i].score, events[i].start, events[i].title)):
+        event = events[index]
+        if event.source_id in caps:
+            key = (event.source_id, event.start.date())
+            counts[key] = counts.get(key, 0) + 1
+            if counts[key] > caps[event.source_id]:
+                demoted.add(index)
+    return [replace(event, score=0) if index in demoted else event for index, event in enumerate(events)]
+
+
 def select(events: list[Event], window: Window, further: dict) -> list[Event]:
     near = [e for e in events if e.start.date() <= window.near_end]
     far = [e for e in events if e.start.date() > window.near_end and e.category in PRIORITY_CATEGORIES
@@ -103,7 +118,8 @@ def process(results, configs, window: Window, further: dict) -> list[Event]:
             kept.append(typed)
     collapsed = dedupe.collapse_recurring(dedupe.merge_duplicates(kept, weights))
     scored = [replace(e, ongoing=is_ongoing(e), score=score(e, weights[e.source_id])) for e in collapsed]
-    return select(scored, window, further)
+    caps = {config.id: config.day_cap for config in configs if config.day_cap is not None}
+    return select(cap_per_day(scored, caps), window, further)
 
 
 def main(argv=None, *, http=None, env=None) -> int:

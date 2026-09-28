@@ -40,7 +40,8 @@ only on `localhost` and `127.0.0.1`.
 Add an entry to `_data/around_seattle/sources.yml` with one of the supported `type` values: `ics` (Trumba
 iCal), `tribe` (WordPress The Events Calendar REST API), `civicplus` (CivicPlus calendar RSS), or
 `ticketmaster`. Check the site's robots.txt and terms first, add a fixture and tests for anything new, and use
-`exclude_categories` for a source's own noise categories.
+`exclude_categories` for a source's own noise categories. `day_cap` keeps a busy source from taking every visible
+slot: past that many events on a day, the rest rank last.
 
 ## Seasonal picks
 

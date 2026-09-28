@@ -55,6 +55,7 @@ class SourceConfig:
     min_interval_seconds: float = 0.0
     respect_robots: bool = True
     secret_env: str | None = None
+    day_cap: int | None = None  # at most this many of the source's events among a day's top picks
 
 
 @dataclass(frozen=True)
