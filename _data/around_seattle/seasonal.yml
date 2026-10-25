@@ -25,9 +25,9 @@
   url: https://botanicgardens.uw.edu/washington-park-arboretum/visit/seasonal-highlights/
   free: true
   from: "10-01"
-  to: "11-15"
+  to: "10-31"
   source: https://botanicgardens.uw.edu/washington-park-arboretum/visit/seasonal-highlights/
-  verified: 2026-09-25
+  verified: 2026-10-25
 - id: kubota-fall-color
   title: Fall color at Kubota Garden
   summary: Japanese maples color the ponds and hillsides of this city garden in Rainier Beach.
@@ -38,9 +38,9 @@
   url: https://www.kubotagarden.org/
   free: true
   from: "10-01"
-  to: "11-15"
+  to: "11-01"
   source: https://www.kubotagarden.org/
-  verified: 2026-09-25
+  verified: 2026-10-25
 - id: remlinger-fall-harvest
   title: Fall Harvest Festival at Remlinger Farms
   summary: Pumpkin patch, corn maze, and farm rides on fall weekends in the Snoqualmie Valley.
