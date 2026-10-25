@@ -1,4 +1,4 @@
-"""Trumba iCal feeds (seattle.gov city-wide calendar, UW Seattle campus calendar)."""
+"""Trumba iCal feeds (the seattle.gov city-wide calendar)."""
 from __future__ import annotations
 
 from datetime import date, datetime, time

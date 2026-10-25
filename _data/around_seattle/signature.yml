@@ -1,0 +1,460 @@
+# Signature events for /around-seattle/: the annual festivals, celebrations, and holiday traditions worth planning
+# around. These are public factual claims. Every date range names the official page that states it (source) and the
+# day it was checked (verified). The page lists only dated entries, so an entry without upcoming dates shows nothing,
+# and the build log names it ("needs its next dates") so its next dates can be added once they are announced.
+#
+# Fields: id, title, summary (one neutral sentence on what happens there), place, city, region (seattle or eastside),
+# category (festival, music, market, outdoors, arts), url (official page), free (true, false, or omitted when it
+# varies or the official page does not say), usually (when it normally happens), match (optional feed titles for the
+# same event), and dates. Each date range has from and to (inclusive) and may have starts and ends, quoted "HH:MM"
+# times on the first and last day; without them, the event is listed as all day.
+
+# Fall
+
+- id: seattle-coffee-festival
+  title: Seattle Coffee Festival
+  summary: Specialty roasters and coffee shops pour tastings in a Magnuson Park hangar, with snacks and live music; tickets are sold by session.
+  place: Magnuson Park Hangar 30
+  city: Seattle
+  region: seattle
+  category: market
+  url: https://www.seattlecoffeefestival.com/
+  free: false
+  usually: late October
+  dates:
+    # The homepage gives the dates; the session times (9 am to 4:30 pm) are on /explore.
+    - {from: 2026-10-24, to: 2026-10-25, starts: "09:00", ends: "16:30",
+       source: "https://www.seattlecoffeefestival.com/", verified: 2026-10-24}
+
+- id: seattle-restaurant-week
+  title: Seattle Restaurant Week
+  summary: Two weeks of set menus at $20, $35, $50, and $65 at restaurants, bars, cafes, and pop-ups across greater Seattle.
+  place: Restaurants across greater Seattle
+  city: Seattle
+  region: seattle
+  category: market
+  url: https://srweek.org/
+  usually: the last two weeks of October
+  dates:
+    - {from: 2026-10-18, to: 2026-10-31, source: "https://srweek.org/", verified: 2026-10-25}
+
+- id: issaquah-salmon-days
+  title: Issaquah Salmon Days
+  summary: Issaquah's annual salmon festival fills downtown with a parade, entertainment, activities, and vendors.
+  place: Downtown Issaquah
+  city: Issaquah
+  region: eastside
+  category: festival
+  url: https://www.salmondays.org/
+  usually: the first weekend of October
+  match: [Salmon Days]
+  dates:
+    - {from: 2026-10-03, to: 2026-10-04, starts: "10:00", ends: "18:00",
+       source: "https://www.salmondays.org/sd-2026-festival-information", verified: 2026-10-25}
+
+- id: halloween-train
+  title: Halloween Train
+  summary: Trains run from the Snoqualmie and North Bend depots on October weekends, with hot cider, cider pressing, apple coring, and live music.
+  place: Northwest Railway Museum
+  city: Snoqualmie
+  region: eastside
+  category: festival
+  url: https://trainmuseum.org/upcoming-events/halloween/
+  free: false
+  usually: October weekends
+  dates:
+    - {from: 2026-10-10, to: 2026-10-11, source: "https://trainmuseum.org/", verified: 2026-10-25}
+    - {from: 2026-10-17, to: 2026-10-18, source: "https://trainmuseum.org/", verified: 2026-10-25}
+    - {from: 2026-10-24, to: 2026-10-25, source: "https://trainmuseum.org/", verified: 2026-10-25}
+    - {from: 2026-10-31, to: 2026-11-01, source: "https://trainmuseum.org/", verified: 2026-10-25}
+
+- id: dia-de-muertos-seattle-center
+  title: Día de Muertos Festival Seattle
+  summary: Community altars, sugar skull and paper flower workshops, sand painting, and music fill the Armory at this free Festál festival.
+  place: Seattle Center Armory
+  city: Seattle
+  region: seattle
+  category: festival
+  url: https://www.seattlecenter.com/events/featured-events/festal/dia-de-muertos
+  free: true
+  usually: the weekend nearest November 1
+  match: [Dia de Muertos Festival Seattle]
+  dates:
+    - {from: 2026-10-31, to: 2026-11-01, starts: "11:00", ends: "18:00",
+       source: "https://www.seattlecenter.com/events/featured-events/festal/dia-de-muertos", verified: 2026-10-24}
+
+- id: diwali-lights-of-india
+  title: "Diwali: Lights of India"
+  summary: Classical Indian music and dance, food, henna, and art workshops mark the festival of lights at this free Festál festival.
+  place: Seattle Center Armory
+  city: Seattle
+  region: seattle
+  category: festival
+  url: https://www.seattlecenter.com/events/featured-events/festal/diwali-lights-of-india
+  free: true
+  usually: early November
+  dates:
+    - {from: 2026-11-07, to: 2026-11-07, starts: "12:00", ends: "18:00",
+       source: "https://www.seattlecenter.com/events/featured-events/festal/diwali-lights-of-india",
+       verified: 2026-10-24}
+
+- id: seattle-hmong-new-year
+  title: Seattle Hmong New Year
+  summary: The end of the harvest season, celebrated with traditional clothing, dance, and food at this free Festál festival.
+  place: Seattle Center Armory
+  city: Seattle
+  region: seattle
+  category: festival
+  url: https://www.seattlecenter.com/events/featured-events/festal/hmong-new-year
+  free: true
+  usually: mid-November
+  dates:
+    - {from: 2026-11-14, to: 2026-11-14,
+       source: "https://www.seattlecenter.com/events/featured-events/festal/hmong-new-year", verified: 2026-10-24}
+
+# Holidays
+
+- id: bellevue-downtown-ice-rink
+  title: Bellevue Downtown Ice Rink
+  summary: A seasonal rink with more than 9,000 square feet of real ice in Bellevue Downtown Park, open daily through the holidays.
+  place: Bellevue Downtown Park
+  city: Bellevue
+  region: eastside
+  category: outdoors
+  url: https://www.bellevueicerink.com/
+  free: false
+  usually: mid-November to mid-January
+  dates:
+    - {from: 2026-11-13, to: 2027-01-18,
+       source: "https://www.bellevuedowntown.com/post/bellevue-downtown-ice-rink-opens-november-13-for-the-holiday-season",
+       verified: 2026-10-25}
+
+- id: westlake-tree-lighting
+  title: Tree Lighting Celebration at Westlake Park
+  summary: Downtown's holiday season opens with crafts and costumed characters, then the tree and star are lit at 5 pm, followed by fireworks.
+  place: Westlake Park
+  city: Seattle
+  region: seattle
+  category: festival
+  url: https://downtownseattle.org/event/tree-lighting-celebration-at-westlake-park/
+  free: true
+  usually: the day after Thanksgiving
+  dates:
+    - {from: 2026-11-27, to: 2026-11-27, starts: "11:00", ends: "18:00",
+       source: "https://downtownseattle.org/event/tree-lighting-celebration-at-westlake-park/", verified: 2026-10-24}
+
+- id: gingerbread-village
+  title: Gingerbread Village
+  summary: Six-foot gingerbread structures, designed by architects and baked by Sheraton chefs, raise money for type 1 diabetes research.
+  place: Sheraton Grand Seattle
+  city: Seattle
+  region: seattle
+  category: festival
+  url: https://www.breakthrought1d.org/greaternorthwest/2026/10/09/sheraton-grand-seattle-gingerbread-village/
+  usually: mid-November through New Year's Day
+  dates:
+    - {from: 2026-11-19, to: 2027-01-01,
+       source: "https://www.breakthrought1d.org/greaternorthwest/2026/10/09/sheraton-grand-seattle-gingerbread-village/",
+       verified: 2026-10-25}
+
+- id: seattle-christmas-market
+  title: Seattle Christmas Market
+  summary: A ticketed holiday market around Fisher Pavilion, with a carousel, food and drink huts, and daily Santa photos; closed Thanksgiving and Christmas Day.
+  place: Seattle Center
+  city: Seattle
+  region: seattle
+  category: market
+  url: https://seattlechristmasmarket.com/
+  free: false
+  usually: the Friday before Thanksgiving through December 26
+  dates:
+    - {from: 2026-11-20, to: 2026-12-26,
+       source: "https://seattlechristmasmarket.com/seattle-christmas-market-returns-for-2026/", verified: 2026-10-25}
+    - {from: 2026-12-31, to: 2026-12-31,
+       source: "https://seattlechristmasmarket.com/seattle-christmas-market-returns-for-2026/", verified: 2026-10-25}
+
+- id: seattle-center-winterfest
+  title: Seattle Center Winterfest
+  summary: Five weeks of holiday events at Seattle Center, with a model train village in the Armory, Saturday ice sculpting, weekend stage shows, and free Friday movie nights.
+  place: Seattle Center
+  city: Seattle
+  region: seattle
+  category: festival
+  url: https://seattlecenter.com/events/featured-events/winterfest
+  usually: the day after Thanksgiving through New Year's Eve
+  dates:
+    - {from: 2026-11-27, to: 2026-12-31, source: "https://seattlecenter.com/events/featured-events/winterfest",
+       verified: 2026-10-25}
+
+- id: pnb-nutcracker
+  title: "Pacific Northwest Ballet: George Balanchine's The Nutcracker"
+  summary: Pacific Northwest Ballet's annual holiday production at McCaw Hall, with the PNB Orchestra.
+  place: McCaw Hall
+  city: Seattle
+  region: seattle
+  category: music
+  url: https://www.pnb.org/nutcracker/
+  free: false
+  usually: the day after Thanksgiving through late December
+  dates:
+    - {from: 2026-11-27, to: 2026-12-27, source: "https://www.pnb.org/nutcracker/", verified: 2026-10-25}
+
+- id: christmas-ship-festival
+  title: Christmas Ship Festival
+  summary: Argosy's Christmas Ship, with a live choir aboard, sails to waterfront communities around Seattle and the Eastside; book a sailing or listen from shore.
+  place: Seattle and Eastside shorelines
+  city: Seattle
+  region: seattle
+  category: festival
+  url: https://www.argosycruises.com/christmas-ship-festival-schedule/
+  usually: the day after Thanksgiving through December 23
+  dates:
+    - {from: 2026-11-27, to: 2026-12-23, source: "https://www.argosycruises.com/christmas-ship-festival-schedule/",
+       verified: 2026-10-25}
+
+- id: urban-craft-uprising-winter
+  title: Urban Craft Uprising Winter Show
+  summary: An independent craft and design market at the Seattle Center Exhibition Hall, free to attend.
+  place: Seattle Center Exhibition Hall
+  city: Seattle
+  region: seattle
+  category: market
+  url: https://urbancraftuprising.com/ucu-winter-show/
+  free: true
+  usually: the first weekend of December
+  dates:
+    - {from: 2026-12-05, to: 2026-12-06, starts: "10:00", ends: "17:00",
+       source: "https://urbancraftuprising.com/ucu-winter-show/", verified: 2026-10-25}
+
+- id: new-years-at-the-needle
+  title: New Year's at the Needle
+  summary: The Space Needle's fireworks show just before midnight, with a free celebration across the Seattle Center grounds through the evening.
+  place: Space Needle and Seattle Center
+  city: Seattle
+  region: seattle
+  category: festival
+  url: https://seattlecenter.com/events/featured-events/new-years-eve
+  free: true
+  usually: New Year's Eve
+  dates:
+    - {from: 2026-12-31, to: 2026-12-31, source: "https://seattlecenter.com/events/featured-events/new-years-eve",
+       verified: 2026-10-25}
+
+- id: kirkland-winterfest
+  title: WinterFest at Kirkland Urban
+  summary: A holiday afternoon of Santa photos, carolers, ice sculpting, and kids' crafts, ending with the downtown tree lighting at 6:15 pm in Peter Kirk Park.
+  place: Kirkland Urban
+  city: Kirkland
+  region: eastside
+  category: festival
+  url: https://kirklandurban.com/2026/10/15/winterfest-2026/
+  free: true
+  usually: the Saturday after Thanksgiving
+  dates:
+    - {from: 2026-11-28, to: 2026-11-28, starts: "15:00", ends: "19:00",
+       source: "https://kirklandurban.com/2026/10/15/winterfest-2026/", verified: 2026-10-25}
+
+- id: santa-trains
+  title: Santa Trains
+  summary: The railway museum's holiday trains, run every year since 1969; weekend trips from North Bend visit Santa in a restored chapel car, and Friday trips climb to the top of Snoqualmie Falls.
+  place: Northwest Railway Museum
+  city: Snoqualmie
+  region: eastside
+  category: festival
+  url: https://trainmuseum.org/upcoming-events/santa/
+  free: false
+  usually: the four weekends after Thanksgiving
+  dates:
+    - {from: 2026-11-28, to: 2026-11-29, source: "https://trainmuseum.org/", verified: 2026-10-25}
+    - {from: 2026-12-04, to: 2026-12-06, source: "https://trainmuseum.org/", verified: 2026-10-25}
+    - {from: 2026-12-11, to: 2026-12-13, source: "https://trainmuseum.org/", verified: 2026-10-25}
+    - {from: 2026-12-18, to: 2026-12-20, source: "https://trainmuseum.org/", verified: 2026-10-25}
+
+- id: redmond-lights
+  title: Redmond Lights
+  summary: Redmond's winter celebration opens in Downtown Park with light art, a luminary trail, live performances, and free crafts; the light art stays up in Downtown Park and Esterra Park through January 4.
+  place: Redmond Downtown Park
+  city: Redmond
+  region: eastside
+  category: festival
+  url: https://www.redmond.gov/1139/Redmond-Lights
+  usually: the first Saturday in December
+  dates:
+    - {from: 2026-12-05, to: 2026-12-05, starts: "16:00", ends: "20:00",
+       source: "https://www.redmond.gov/1139/Redmond-Lights", verified: 2026-10-25}
+
+# Winter and spring
+
+- id: tet-in-seattle
+  title: Tết in Seattle
+  summary: The Vietnamese Lunar New Year at Seattle Center, with lion dances, firecrackers, martial arts, and dance, at this free Festál festival.
+  place: Seattle Center
+  city: Seattle
+  region: seattle
+  category: festival
+  url: https://www.tetinseattle.org/
+  free: true
+  usually: a weekend near the Lunar New Year
+  match: [Tet in Seattle]
+  dates:
+    - {from: 2027-01-30, to: 2027-01-31, source: "https://www.tetinseattle.org/", verified: 2026-10-25}
+
+- id: lunar-new-year-cid
+  title: Lunar New Year Celebration in the Chinatown-International District
+  summary: The neighborhood's free Lunar New Year celebration, with lion and dragon dances, martial arts, and a food walk through local restaurants.
+  place: Hing Hay Park
+  city: Seattle
+  region: seattle
+  category: festival
+  url: https://www.seattlechinatownid.com/experiences/lunar-new-year
+  free: true
+  usually: a Saturday in February or March
+  dates: []
+
+- id: northwest-flower-garden-festival
+  title: Northwest Flower & Garden Festival
+  summary: Show gardens, a plant market, and daily seminars fill the Seattle Convention Center for five days.
+  place: Seattle Convention Center
+  city: Seattle
+  region: seattle
+  category: festival
+  url: https://www.gardenshow.com/
+  free: false
+  usually: mid-February
+  dates:
+    - {from: 2027-02-17, to: 2027-02-21, starts: "09:00", ends: "18:00",
+       source: "https://www.gardenshow.com/plan-your-visit/hours-faqs", verified: 2026-10-25}
+
+- id: seattle-cherry-blossom-festival
+  title: Seattle Cherry Blossom & Japanese Cultural Festival
+  summary: A free weekend of Japanese and Japanese American culture at Seattle Center, with taiko drumming, arts, and a tea ceremony.
+  place: Seattle Center
+  city: Seattle
+  region: seattle
+  category: festival
+  url: https://seattlecherryblossomfestival.org/
+  free: true
+  usually: April
+  dates:
+    - {from: 2027-04-09, to: 2027-04-11, starts: "11:00", ends: "17:00",
+       source: "https://seattlecherryblossomfestival.org/", verified: 2026-10-25}
+
+- id: seattle-international-film-festival
+  title: Seattle International Film Festival
+  summary: The 53rd SIFF screens features and shorts from around the world at SIFF Cinemas and venues across the city.
+  place: SIFF Cinemas and venues across Seattle
+  city: Seattle
+  region: seattle
+  category: festival
+  url: https://www.siff.net/festival
+  usually: May
+  match: [SIFF]
+  dates:
+    - {from: 2027-05-13, to: 2027-05-23, source: "https://www.siff.net/festival", verified: 2026-10-25}
+
+- id: northwest-folklife-festival
+  title: Northwest Folklife Festival
+  summary: Seattle Center's Memorial Day weekend festival of music, dance, crafts, and food from the cultures of the Pacific Northwest.
+  place: Seattle Center
+  city: Seattle
+  region: seattle
+  category: festival
+  url: https://nwfolklife.org/festival/home.html
+  usually: Memorial Day weekend
+  match: [Folklife]
+  dates:
+    - {from: 2027-05-28, to: 2027-05-31, source: "https://nwfolklife.org/festival/home.html", verified: 2026-10-25}
+
+# Summer
+
+- id: fremont-fair
+  title: Fremont Fair
+  summary: Fremont's free street fair for the summer solstice, with nearly 300 craft and food vendors, music, and the Solstice Parade.
+  place: Fremont
+  city: Seattle
+  region: seattle
+  category: festival
+  url: https://fremontfair.com/
+  free: true
+  usually: the weekend nearest the summer solstice
+  match: [Fremont Solstice]
+  dates: []
+
+- id: seattle-pridefest
+  title: Seattle PrideFest
+  summary: A free two-day Pride festival, on Capitol Hill and at Seattle Center.
+  place: Capitol Hill and Seattle Center
+  city: Seattle
+  region: seattle
+  category: festival
+  url: https://www.seattlepridefest.org/
+  free: true
+  usually: the last weekend of June
+  match: [PrideFest]
+  dates:
+    - {from: 2027-06-26, to: 2027-06-27, source: "https://www.seattlepridefest.org/", verified: 2026-10-25}
+
+- id: redmond-derby-days
+  title: Redmond Derby Days
+  summary: Redmond's summer festival, with bike races, parades, live music, games, and food.
+  place: Downtown Redmond
+  city: Redmond
+  region: eastside
+  category: festival
+  url: https://www.redmond.gov/1138/Derby-Days
+  usually: July
+  match: [Derby Days]
+  dates:
+    - {from: 2027-07-09, to: 2027-07-10, source: "https://www.redmond.gov/1138/Derby-Days", verified: 2026-10-25}
+
+- id: bellevue-arts-fair-weekend
+  title: Bellevue Arts Fair Weekend
+  summary: Bellevue's three-day celebration of community, culture, and the arts, including the Bellevue Arts Museum's arts fair.
+  place: Downtown Bellevue
+  city: Bellevue
+  region: eastside
+  category: arts
+  url: https://www.bellevuearts.org/
+  usually: the last full weekend of July
+  match: [Bellevue Arts Fair]
+  dates:
+    - {from: 2027-07-23, to: 2027-07-25, source: "https://www.bellevuearts.org/", verified: 2026-10-25}
+
+- id: seafair-torchlight-parade
+  title: Seafair Torchlight Parade
+  summary: Seafair's free evening parade along the Seattle waterfront, with floats, marching bands, and cultural performances.
+  place: Seattle waterfront
+  city: Seattle
+  region: seattle
+  category: festival
+  url: https://www.seafair.org/torchlight-parade/
+  free: true
+  usually: a Saturday in late July
+  match: [Torchlight Parade]
+  dates: []
+
+- id: seafair-weekend-festival
+  title: Seafair Weekend Festival
+  summary: Hydroplane races and the Boeing Seafair Air Show with the U.S. Navy Blue Angels, on Lake Washington and at Genesee Park.
+  place: Genesee Park and Lake Washington
+  city: Seattle
+  region: seattle
+  category: festival
+  url: https://www.seafair.org/
+  usually: late July or early August
+  dates:
+    - {from: 2027-08-06, to: 2027-08-08,
+       source: "https://www.seafair.org/u-s-navy-blue-angels-announce-return-to-seattle-for-boeing-seafair-air-show-in-2027/",
+       verified: 2026-10-25}
+
+- id: bumbershoot
+  title: Bumbershoot
+  summary: Seattle's arts and music festival at Seattle Center over Labor Day weekend.
+  place: Seattle Center
+  city: Seattle
+  region: seattle
+  category: music
+  url: https://bumbershoot.com/
+  usually: Labor Day weekend
+  dates:
+    - {from: 2027-09-04, to: 2027-09-05, source: "https://bumbershoot.com/", verified: 2026-10-25}

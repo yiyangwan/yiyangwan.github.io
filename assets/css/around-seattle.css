@@ -146,6 +146,11 @@
 .around-ev__summary--line { -webkit-line-clamp: 1; line-clamp: 1; }
 .around-ev__summary--two { -webkit-line-clamp: 2; line-clamp: 2; }
 .around-ev__more { margin-top: 0.15rem; font-size: 0.95rem; }
+/* Don't miss: the curated picks, as cards in up to three columns across the full page width. */
+.around-section--picks { max-width: var(--wrap); }
+.around-list--picks { grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr)); gap: 1rem; }
+.around-list--picks > .around-ev { padding: 0.8rem 1rem 0.9rem; background: var(--mist); }
+.around-list--picks .around-ev__title { font-size: 1.25rem; }
 .around .around-more { margin-top: 0.75rem; padding: 0.2rem 0; border: 0; background: none; color: var(--sound);
   font: inherit; font-weight: 700; text-decoration: underline; text-underline-offset: 0.2em; cursor: pointer; }
 .around-empty { margin-top: 0.75rem; }

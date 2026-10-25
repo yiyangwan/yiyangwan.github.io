@@ -81,3 +81,17 @@ def test_tidy_summary_removes_markup_runs_and_collapses_whitespace(raw, expected
 ])
 def test_safe_url(raw, expected):
     assert safe_url(raw) == expected
+
+
+def test_scrub_contacts_stays_fast_on_a_long_run_without_an_at_sign():
+    import time
+    from around_seattle.text import scrub_contacts
+    started = time.perf_counter()
+    scrubbed = scrub_contacts("a" * 200_000 + " write to someone@example.org")
+    assert time.perf_counter() - started < 1.0
+    assert scrubbed == "a" * 2000
+
+
+def test_safe_url_rejects_a_lone_surrogate():
+    from around_seattle.text import safe_url
+    assert safe_url("https://example.org/events/\ud83c") is None

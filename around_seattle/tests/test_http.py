@@ -122,3 +122,38 @@ def test_min_interval_paces_requests_to_the_same_host():
     client.get_text(FEED, respect_robots=False, min_interval=10)
     client.get_text(FEED, respect_robots=False, min_interval=10)
     assert sleeps == [7.0]
+
+
+SQUARESPACE_ROBOTS = """User-agent: *
+Disallow: /config
+Disallow: /api/
+Allow: /api/ui-extensions/
+Disallow:/*?format=json
+Disallow:/*&format=json
+Disallow:/*?month=*
+"""
+PAGE = "https://feeds.example.org/events"
+
+
+def test_robots_rules_apply_to_the_query_string():
+    client, session, _ = make_client({ROBOTS: FakeResponse(200, SQUARESPACE_ROBOTS), PAGE: FakeResponse(200, "{}")})
+    with pytest.raises(FetchError, match="robots.txt disallows"):
+        client.get_json(PAGE, {"format": "json"})
+    with pytest.raises(FetchError, match="robots.txt disallows"):
+        client.get_json(PAGE, {"view": "list", "format": "json"})
+    assert PAGE not in session.calls
+    assert client.get_json(PAGE, {"view": "list"}) == {}
+
+
+def test_robots_wildcards_and_allow_overrides_follow_rfc_9309():
+    client, _, _ = make_client({ROBOTS: FakeResponse(200, SQUARESPACE_ROBOTS),
+                                "https://feeds.example.org/api/ui-extensions/x": FakeResponse(200, "ok")})
+    with pytest.raises(FetchError, match="robots.txt disallows"):
+        client.get_text("https://feeds.example.org/api/data")
+    assert client.get_text("https://feeds.example.org/api/ui-extensions/x") == "ok"
+
+
+def test_a_group_for_our_agent_replaces_the_star_group():
+    robots = "User-agent: *\nDisallow: /\n\nUser-agent: AroundSeattle\nDisallow: /private\n"
+    client, _, _ = make_client({ROBOTS: FakeResponse(200, robots), FEED: FakeResponse(200, "x")})
+    assert client.get_text(FEED) == "x"

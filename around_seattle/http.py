@@ -3,10 +3,10 @@ from __future__ import annotations
 
 import json
 import time
-from urllib import robotparser
 from urllib.parse import urlsplit
 
 import requests
+from protego import Protego
 
 from .models import SourceError
 
@@ -20,16 +20,16 @@ class FetchError(SourceError):
 
 
 class _Robots:
-    """robots.txt rules for one host. Fetch failures follow RFC 9309 section 2.3.1."""
+    """robots.txt rules for one host, matched per RFC 9309 (wildcards, longest match); fetch failures per 2.3.1."""
 
-    def __init__(self, parser: robotparser.RobotFileParser | None, allow_all: bool) -> None:
+    def __init__(self, parser: Protego | None, allow_all: bool) -> None:
         self._parser = parser
         self._allow_all = allow_all
 
     def allows(self, url: str) -> bool:
         if self._parser is None:
             return self._allow_all
-        return self._parser.can_fetch(ROBOTS_AGENT, url)
+        return self._parser.can_fetch(url, ROBOTS_AGENT)
 
 
 class HttpClient:
@@ -54,7 +54,9 @@ class HttpClient:
 
     def _get(self, url, params, min_interval, respect_robots, headers):
         host = urlsplit(url).netloc
-        if respect_robots and not self._robots_for(url).allows(url):
+        # Rules can name query strings ("Disallow: /*?format=json"), so check the URL as it will be requested.
+        target = requests.Request("GET", url, params=params).prepare().url
+        if respect_robots and not self._robots_for(url).allows(target):
             raise FetchError("robots.txt disallows")
         for attempt in (1, 2):
             self._pace(host, min_interval)
@@ -99,6 +101,4 @@ class HttpClient:
             return _Robots(None, allow_all=True)  # unavailable: no restrictions
         if response.status_code != 200:
             return _Robots(None, allow_all=False)
-        parser = robotparser.RobotFileParser()
-        parser.parse(response.text.splitlines())
-        return _Robots(parser, allow_all=True)
+        return _Robots(Protego.parse(response.text), allow_all=True)

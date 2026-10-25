@@ -335,3 +335,115 @@ test("resolveDataUrls falls back to production URLs on a malformed localhost ove
   assert.deepEqual(L.resolveDataUrls(new URL("http://localhost:4000/around-seattle/?data=http://[bad"), dataset, now),
     ["https://raw.example/a.json?v=2026-09-25T07", "https://cdn.example/a.json?v=2026-09-25T07"]);
 });
+
+test("parseData keeps the highlight flag and defaults it to false", () => {
+  const data = L.parseData({
+    schemaVersion: 1, generatedAt: "2026-10-24T13:17:00Z", sources: [], weather: null, sun: {}, seasonal: [],
+    events: [
+      { ...ev({ id: "a" }), start: "2026-10-24T09:00:00-07:00", end: null, moreDates: [], highlight: true },
+      { ...ev({ id: "b" }), start: "2026-10-24T09:00:00-07:00", end: null, moreDates: [] },
+      { ...ev({ id: "c" }), start: "2026-10-24T09:00:00-07:00", end: null, moreDates: [], highlight: "yes" },
+    ],
+  });
+  assert.deepEqual(data.events.map((e) => e.highlight), [true, false, false]);
+});
+
+test("planSections lists signature events of the next two weeks as picks, before any other section", () => {
+  const now = at("2026-10-24T09:30:00-07:00"); // Saturday
+  const events = [
+    ev({ id: "coffee", highlight: true, start: at("2026-10-24T09:00:00-07:00"), end: at("2026-10-25T16:30:00-07:00") }),
+    ev({ id: "muertos", highlight: true, allDay: true, start: at("2026-10-31T00:00:00-07:00"),
+         end: at("2026-11-02T00:00:00-08:00") }),
+    ev({ id: "market", highlight: true, ongoing: true, allDay: true, start: at("2026-10-20T00:00:00-07:00"),
+         end: at("2026-12-25T00:00:00-08:00") }),
+    ev({ id: "lighting", highlight: true, start: at("2026-11-27T11:00:00-08:00"), end: at("2026-11-27T18:00:00-08:00") }),
+    ev({ id: "show", start: at("2026-10-24T20:00:00-07:00"), end: null }),
+    ev({ id: "exhibit", ongoing: true, allDay: true, start: at("2026-10-01T00:00:00-07:00"),
+         end: at("2026-12-01T00:00:00-08:00") }),
+  ];
+  const plan = L.planSections(events, now);
+  assert.deepEqual(plan.picks.map((e) => e.id), ["coffee", "muertos", "market"]); // month-long runs come last
+  assert.deepEqual(plan.today.map((e) => e.id), ["show"]);
+  assert.deepEqual(plan.weekend.flatMap((d) => d.events.map((e) => e.id)), []);
+  assert.deepEqual(plan.running.map((e) => e.id), ["exhibit"]);
+  assert.deepEqual(plan.furtherAhead.map((w) => [w.key, w.events.map((e) => e.id)]), [["2026-11-23", ["lighting"]]]);
+});
+
+test("formatPickWhen says when a pick is on, relative to today", () => {
+  const today = "2026-10-24"; // Saturday
+  const coffee = ev({ start: at("2026-10-24T09:00:00-07:00"), end: at("2026-10-25T16:30:00-07:00") });
+  assert.equal(L.formatPickWhen(coffee, today), "Today through Sun, Oct 25");
+  assert.equal(L.formatPickWhen(ev({ start: at("2026-10-23T09:00:00-07:00"), end: at("2026-10-26T16:30:00-07:00") }),
+    today), "Now through Mon, Oct 26");
+  assert.equal(L.formatPickWhen(coffee, "2026-10-25"), "Last day today");
+  assert.equal(L.formatPickWhen(ev({ start: at("2026-10-24T11:00:00-07:00"), end: at("2026-10-24T18:00:00-07:00") }),
+    today), "Today, 11 am to 6 pm");
+  assert.equal(L.formatPickWhen(ev({ allDay: true, start: at("2026-10-24T00:00:00-07:00"),
+    end: at("2026-10-25T00:00:00-07:00") }), today), "Today");
+  assert.equal(L.formatPickWhen(ev({ allDay: true, start: at("2026-10-25T00:00:00-07:00"),
+    end: at("2026-10-26T00:00:00-07:00") }), today), "Tomorrow");
+  assert.equal(L.formatPickWhen(ev({ allDay: true, start: at("2026-10-25T00:00:00-07:00"),
+    end: at("2026-10-28T00:00:00-07:00") }), today), "Tomorrow through Tue, Oct 27");
+  assert.equal(L.formatPickWhen(ev({ allDay: true, start: at("2026-10-31T00:00:00-07:00"),
+    end: at("2026-11-02T00:00:00-08:00") }), today), "Sat, Oct 31 to Sun, Nov 1");
+  assert.equal(L.formatPickWhen(ev({ start: at("2026-11-07T11:00:00-08:00"), end: at("2026-11-07T17:00:00-08:00") }),
+    today), "Sat, Nov 7, 11 am to 5 pm");
+});
+
+test("todayEmptyLine points to the picks when one is on today", () => {
+  const now = at("2026-10-24T09:30:00-07:00");
+  const coffee = ev({ id: "coffee", highlight: true, start: at("2026-10-24T09:00:00-07:00"),
+    end: at("2026-10-25T16:30:00-07:00") });
+  const muertos = ev({ id: "muertos", highlight: true, allDay: true, start: at("2026-10-31T00:00:00-07:00"),
+    end: at("2026-11-02T00:00:00-08:00") });
+  assert.equal(L.todayEmptyLine(L.planSections([coffee, muertos], now), "Nothing listed yet."),
+    "Nothing else today. See Don't miss above.");
+  assert.equal(L.todayEmptyLine(L.planSections([muertos], now), "Nothing listed yet."), "Nothing listed yet.");
+});
+
+test("pickItems lists dated picks first, then long runs and seasonal sights by which ends soonest", () => {
+  const ucu = ev({ id: "ucu", highlight: true, start: at("2026-12-05T10:00:00-08:00"), end: at("2026-12-06T17:00:00-08:00") });
+  const market = ev({ id: "market", highlight: true, allDay: true, start: at("2026-11-20T00:00:00-08:00"),
+    end: at("2026-12-27T00:00:00-08:00") });
+  const rink = ev({ id: "rink", highlight: true, allDay: true, start: at("2026-11-13T00:00:00-08:00"),
+    end: at("2027-01-19T00:00:00-08:00") });
+  const snowflake = { id: "snowflake", until: "2026-12-24" };
+  const chum = { id: "chum", until: "2026-12-05" };
+  const items = L.pickItems([ucu, market, rink], [chum, snowflake]);
+  assert.deepEqual(items.map((item) => (item.event ?? item.pick).id), ["ucu", "chum", "snowflake", "market", "rink"]);
+  assert.ok(items[0].event && items[1].pick);
+});
+
+test("rollForward takes the next range's own end when the data gives it", () => {
+  // Santa Trains: Nov 28-29, then Dec 4-6. The first range's two-day length must not carry over.
+  const trains = ev({ id: "trains", highlight: true, allDay: true, start: at("2026-11-28T00:00:00-08:00"),
+    end: at("2026-11-30T00:00:00-08:00"), moreDates: [at("2026-12-04T00:00:00-08:00"), at("2026-12-11T00:00:00-08:00")],
+    moreEnds: [at("2026-12-07T00:00:00-08:00"), at("2026-12-14T00:00:00-08:00")] });
+  const next = L.rollForward(trains, at("2026-11-30T03:00:00-08:00"));
+  assert.equal(next.end.toISOString(), at("2026-12-07T00:00:00-08:00").toISOString());
+  assert.deepEqual(next.moreEnds.map((d) => d.toISOString()), [at("2026-12-14T00:00:00-08:00").toISOString()]);
+  assert.equal(L.formatPickWhen(next, "2026-11-30"), "Fri, Dec 4 to Sun, Dec 6");
+  const parsed = L.parseData({ schemaVersion: 1, generatedAt: "2026-11-29T13:17:00Z", sources: [], weather: null,
+    sun: {}, seasonal: [], events: [{ ...trains, start: "2026-11-28T00:00:00-08:00", end: "2026-11-30T00:00:00-08:00",
+      moreDates: ["2026-12-04T00:00:00-08:00"], moreEnds: ["2026-12-07T00:00:00-08:00"] }] });
+  assert.ok(parsed.events[0].moreEnds[0] instanceof Date);
+});
+
+test("formatSeasonWhen gives the dates of a pick that has not opened yet", () => {
+  const lanterns = { from: "2026-11-13", until: "2027-01-17", place: "Woodland Park Zoo" };
+  assert.equal(L.formatSeasonWhen(lanterns, "2026-11-01"), "Nov 13 to Jan 17 at Woodland Park Zoo");
+  assert.equal(L.formatSeasonWhen(lanterns, "2026-11-13"), "Through Jan 17 at Woodland Park Zoo");
+  assert.equal(L.formatSeasonWhen({ until: "2026-11-15", place: "Kubota Garden" }, "2026-11-01"),
+    "Through Nov 15 at Kubota Garden");
+});
+
+test("picks cover the next 14 days, and a run longer than 7 days counts as long", () => {
+  const now = at("2026-10-24T09:30:00-07:00");
+  const day = (key) => ev({ id: key, highlight: true, allDay: true, start: at(`${key}T00:00:00-08:00`), end: null });
+  const plan = L.planSections([day("2026-11-07"), day("2026-11-08")], now);
+  assert.deepEqual(plan.picks.map((e) => e.id), ["2026-11-07"]);
+  const run = (days) => ev({ id: `run${days}`, highlight: true, allDay: true, start: at("2026-10-24T00:00:00-07:00"),
+    end: new Date(at("2026-10-24T00:00:00-07:00").getTime() + days * 86_400_000) });
+  const items = L.pickItems([run(8), run(7)], []);
+  assert.deepEqual(items.map((item) => item.event.id), ["run7", "run8"]);
+});

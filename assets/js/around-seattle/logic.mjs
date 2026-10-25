@@ -14,7 +14,7 @@ export const CATEGORY_LABELS = Object.freeze({
 export const FILTER_TYPES = Object.freeze(["festival", "music", "market", "outdoors", "arts"]);
 export const CONDITIONS = Object.freeze(["clear", "partly", "mostly-cloudy", "cloudy", "fog", "smoke", "rain", "snow",
   "storm"]);
-export const LIMITS = Object.freeze({ today: 5, weekendDay: 4, comingDay: 3, weekList: 50 });
+export const LIMITS = Object.freeze({ picks: 8, today: 4, weekendDay: 4, comingDay: 2, weekList: 8 });
 
 const HOUR_MS = 3_600_000;
 const DAY_MS = 24 * HOUR_MS;
@@ -94,13 +94,15 @@ function repeatEnd(event, start) {
 }
 
 // The pipeline folds a series' later sessions and weeks into moreDates. Once the listed occurrence ends, the next one
-// that has not ended takes its place, so the series stays on the page until its last date.
+// that has not ended takes its place, so the series stays on the page until its last date. A later date ends at its
+// own moreEnds entry when the data gives one, and otherwise lasts as long as the first.
 export function rollForward(event, now) {
   if (effectiveEnd(event) > now) return event;
   const dates = event.moreDates ?? [];
+  const ends = event.moreEnds ?? [];
   for (const [index, start] of dates.entries()) {
-    const next = Object.freeze({ ...event, start, end: repeatEnd(event, start),
-      moreDates: Object.freeze(dates.slice(index + 1)) });
+    const next = Object.freeze({ ...event, start, end: ends[index] ?? repeatEnd(event, start),
+      moreDates: Object.freeze(dates.slice(index + 1)), moreEnds: Object.freeze(ends.slice(index + 1)) });
     if (effectiveEnd(next) > now) return next;
   }
   return null;
@@ -120,6 +122,8 @@ export function parseData(raw) {
       start: new Date(event.start),
       end: toDate(event.end),
       moreDates: Object.freeze((event.moreDates ?? []).map((value) => new Date(value))),
+      moreEnds: Object.freeze((event.moreEnds ?? []).map((value) => new Date(value))),
+      highlight: event.highlight === true,
     }))
     .filter((event) => !Number.isNaN(event.start.getTime()));
   return Object.freeze({
@@ -133,6 +137,10 @@ export function parseData(raw) {
 }
 
 const byRank = (a, b) => b.score - a.score || a.start - b.start || a.title.localeCompare(b.title);
+// A pick that runs for more than a week (a holiday market, an ice rink) is listed after the dated events.
+const LONG_RUN_DAYS = 7;
+const isLongRun = (event) => daysBetween(dayKey(event.start), lastDayKey(event)) + 1 > LONG_RUN_DAYS;
+const byPickOrder = (a, b) => isLongRun(a) - isLongRun(b) || a.start - b.start || byRank(a, b);
 
 export function weekendPlan(todayKey) {
   const day = weekday(todayKey);
@@ -146,13 +154,17 @@ export function mondayOf(key) {
   return addDays(key, -((weekday(key) + 6) % 7));
 }
 
+// Signature events of the next two weeks come first, as picks; everything else lands in exactly one later section.
 export function planSections(events, now, nearDays = NEAR_DAYS) {
   const todayKey = dayKey(now);
   const nearEndKey = addDays(todayKey, nearDays);
   const upcoming = events.map((event) => rollForward(event, now)).filter(Boolean);
-  const running = upcoming.filter((event) => event.ongoing && dayKey(event.start) <= todayKey).sort(byRank);
-  const runningIds = new Set(running.map((event) => event.id));
-  const dated = upcoming.filter((event) => !runningIds.has(event.id));
+  const picks = upcoming.filter((event) => event.highlight && dayKey(event.start) <= nearEndKey).sort(byPickOrder);
+  const pickIds = new Set(picks.map((event) => event.id));
+  const running = upcoming
+    .filter((event) => !pickIds.has(event.id) && event.ongoing && dayKey(event.start) <= todayKey).sort(byRank);
+  const placed = new Set([...pickIds, ...running.map((event) => event.id)]);
+  const dated = upcoming.filter((event) => !placed.has(event.id));
   const used = new Set();
   const take = (key) => {
     const list = dated.filter((event) => !used.has(event.id) && coversDay(event, key)).sort(byRank);
@@ -178,7 +190,22 @@ export function planSections(events, now, nearDays = NEAR_DAYS) {
       weeks.set(monday, [...(weeks.get(monday) ?? []), event]);
     });
   const furtherAhead = [...weeks].map(([key, list]) => ({ key, events: list }));
-  return { todayKey, today, weekendLabel: weekendInfo.label, weekend, comingUp, furtherAhead, running };
+  return { todayKey, picks, today, weekendLabel: weekendInfo.label, weekend, comingUp, furtherAhead, running };
+}
+
+// Don't miss: the dated picks first, then the long runs and seasonal sights, the ones ending soonest first.
+export function pickItems(picks, seasonal) {
+  const dated = picks.filter((event) => !isLongRun(event)).map((event) => ({ event }));
+  const runs = [...picks.filter(isLongRun).map((event) => ({ event, until: lastDayKey(event) })),
+    ...seasonal.map((pick) => ({ pick, until: pick.until }))]
+    .sort((a, b) => a.until.localeCompare(b.until))
+    .map(({ until, ...item }) => item);
+  return [...dated, ...runs];
+}
+
+export function todayEmptyLine(plan, fallback) {
+  const pickToday = plan.picks.some((event) => coversDay(event, plan.todayKey));
+  return pickToday ? "Nothing else today. See Don't miss above." : fallback;
 }
 
 export function matchesFilters(item, filters = {}) {
@@ -282,11 +309,29 @@ export function formatDated(event) {
   return event.allDay ? date : `${date}, ${formatWhen(event)}`;
 }
 
+const dayLabel = (key) => `${WEEKDAYS_SHORT[weekday(key)]}, ${formatShortDate(key)}`;
+
+export function formatPickWhen(event, todayKey) {
+  const firstKey = dayKey(event.start);
+  const lastKey = lastDayKey(event);
+  const hours = event.allDay ? "" : `, ${formatWhen(event)}`;
+  if (firstKey < todayKey && lastKey > todayKey) return `Now through ${dayLabel(lastKey)}`;
+  if (firstKey < todayKey && lastKey === todayKey) return "Last day today";
+  if (firstKey === todayKey) return firstKey === lastKey ? `Today${hours}` : `Today through ${dayLabel(lastKey)}`;
+  if (firstKey === addDays(todayKey, 1)) {
+    return firstKey === lastKey ? `Tomorrow${hours}` : `Tomorrow through ${dayLabel(lastKey)}`;
+  }
+  return firstKey === lastKey ? `${dayLabel(firstKey)}${hours}` : `${dayLabel(firstKey)} to ${dayLabel(lastKey)}`;
+}
+
 export function formatUntil(event) {
   return `Through ${formatShortDate(lastDayKey(event))}`;
 }
 
-export function formatSeasonWhen(pick) {
+export function formatSeasonWhen(pick, todayKey) {
+  if (pick.from && todayKey && pick.from > todayKey) {
+    return `${formatShortDate(pick.from)} to ${formatShortDate(pick.until)} at ${pick.place}`;
+  }
   return `Through ${formatShortDate(pick.until)} at ${pick.place}`;
 }
 

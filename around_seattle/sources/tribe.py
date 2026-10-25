@@ -1,4 +1,4 @@
-"""WordPress "The Events Calendar" REST API (Town Hall Seattle, Experience Redmond)."""
+"""WordPress "The Events Calendar" REST API (the zoo, Downtown Seattle Association, Town Hall, Experience Redmond)."""
 from __future__ import annotations
 
 from datetime import datetime, time, timedelta

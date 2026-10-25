@@ -3,3 +3,4 @@ icalendar==7.3.0
 PyYAML==6.0.3
 astral==3.2
 defusedxml==0.7.1
+protego==0.7.0

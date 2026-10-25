@@ -66,3 +66,11 @@ def test_collapse_recurring_keeps_same_title_in_different_cities_apart():
                          start=datetime(2026, 9, 28, 10, 0, tzinfo=LA))
     collapsed = collapse_recurring([seattle, redmond])
     assert [(event.city, event.more_dates) for event in collapsed] == [("Seattle", ()), ("Redmond", ())]
+
+
+def test_title_mentions_whole_words_after_normalizing():
+    from around_seattle.dedupe import title_mentions
+    assert title_mentions("Seattle Center Westlake Tree Lighting 2026", ("westlake tree lighting",))
+    assert title_mentions("WildLanterns: 21+ Night Owls", ("wildlanterns",))
+    assert not title_mentions("Seattle Coffee Festivals Weekend", ("seattle coffee festival",))
+    assert not title_mentions("Anything", ("",))

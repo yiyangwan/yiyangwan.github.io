@@ -39,10 +39,13 @@ def test_to_output_shape():
                                     "status": "skipped", "count": 0, "error": "no API key configured"}
     event = output["events"][0]
     assert set(event) == schema.EVENT_KEYS
+    assert event["highlight"] is False
+    assert event["moreEnds"] == []
     assert event["start"] == "2026-09-26T11:00:00-07:00"
     assert len(event["moreDates"]) == 6
     assert len(event["id"]) == 12
     assert output["seasonal"][0]["until"] == "2026-11-15"
+    assert output["seasonal"][0]["from"] == "2026-09-01"
     assert output["seasonal"][0]["free"] is True
     schema.validate(output)
 
@@ -76,6 +79,8 @@ def test_event_timed_with_no_end_still_emits_null():
     (lambda o: o["events"][0].update(url="javascript:alert(1)"), "url"),
     (lambda o: o["events"][0].update(score=101), "score"),
     (lambda o: o["events"][0].update(free="yes"), "free"),
+    (lambda o: o["events"][0].update(highlight=1), "highlight"),
+    (lambda o: o["events"][0].update(moreEnds="2026-10-01"), "moreEnds"),
     (lambda o: o["events"][0].pop("ongoing"), "keys"),
     (lambda o: o["events"].append(dict(o["events"][0])), "duplicate id"),
     (lambda o: o["sources"][0].update(status="maybe"), "status"),
@@ -87,3 +92,7 @@ def test_validate_rejects(mutate, message):
     mutate(output)
     with pytest.raises(schema.SchemaError, match=message):
         schema.validate(output)
+
+
+def test_event_id_accepts_a_lone_surrogate_in_a_feed_uid():
+    assert len(schema.event_id(make_event(uid="tm:\ud83c"))) == 12

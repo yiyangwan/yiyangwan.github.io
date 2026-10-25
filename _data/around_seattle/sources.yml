@@ -1,9 +1,41 @@
 # Source registry for the /around-seattle/ data pipeline (around_seattle/build.py).
 # The page also lists these homepages when its data cannot load.
+# Each source is a calendar that is curated at the source: a venue's or organizer's own programs, or a
+# category of a wider calendar. weight is how much a listing from it counts toward an event's score.
+near:
+  min_score: 45  # an event in the next two weeks needs this score to be listed at all
 further_ahead:
-  min_score: 50
-  max_events: 30
+  min_score: 62
+  max_events: 10
 sources:
+  - id: woodland-park-zoo
+    name: Woodland Park Zoo
+    homepage: https://www.zoo.org/events/
+    type: tribe
+    url: https://www.zoo.org/wp-json/tribe/events/v1/events
+    region: seattle
+    weight: 32
+    max_pages: 4
+    min_interval_seconds: 2
+  - id: downtown-seattle
+    name: Downtown Seattle Association
+    homepage: https://www.downtownseattle.org/events/
+    type: tribe
+    url: https://www.downtownseattle.org/wp-json/tribe/events/v1/events
+    region: seattle
+    weight: 28
+    max_pages: 2
+    min_interval_seconds: 2
+  - id: town-hall
+    name: Town Hall Seattle
+    homepage: https://townhallseattle.org/events/
+    type: tribe
+    url: https://townhallseattle.org/wp-json/tribe/events/v1/events
+    region: seattle
+    weight: 32
+    include_categories: [Town Hall Presents]  # its own programs; most other listings are rentals
+    max_pages: 4
+    min_interval_seconds: 10  # robots.txt asks for a 10 s crawl delay
   - id: seattle-gov
     name: City of Seattle
     homepage: https://www.seattle.gov/event-calendar
@@ -11,28 +43,10 @@ sources:
     url: https://www.trumba.com/calendars/seattlegov-city-wide.ics
     region: seattle
     weight: 20
+    include_categories: [Festivals/Fairs, Holiday/Seasonal Events]
     exclude_categories: [Volunteer, Volunteer Opportunities, Animal Shelter, Boards & Commissions, Seattle City Council,
                          City Council Meeting, Public Meetings, Public Outreach and Engagement, Seattle Fire Department,
                          SDCI, Emergency Management, Seattle IT, Police, Grants, Training-Classes/Workshops, Virtual]
-  - id: town-hall
-    name: Town Hall Seattle
-    homepage: https://townhallseattle.org/events/
-    type: tribe
-    url: https://townhallseattle.org/wp-json/tribe/events/v1/events
-    region: seattle
-    weight: 30
-    max_pages: 4
-    min_interval_seconds: 10  # robots.txt asks for a 10 s crawl delay
-  - id: uw-seattle
-    name: University of Washington
-    homepage: https://www.washington.edu/calendar/
-    type: ics
-    url: https://www.trumba.com/calendars/sea_campus.ics
-    region: seattle
-    weight: 10
-    require_category: true
-    exclude_categories: [Workshops, Information Sessions, Academics, Meetings, Conferences, Student Activities,
-                         Dates of Instruction, Holidays]
   - id: experience-redmond
     name: Experience Redmond
     homepage: https://experienceredmond.com/events/
@@ -40,19 +54,13 @@ sources:
     url: https://experienceredmond.com/wp-json/tribe/events/v1/events
     region: eastside
     weight: 22
+    include_categories: [Featured Events, Holiday, Concerts, Redmond Arts]
     max_pages: 4
   - id: redmond-city
     name: City of Redmond
     homepage: https://www.redmond.gov/calendar.aspx
     type: civicplus
     url: https://www.redmond.gov/RSSFeed.aspx?ModID=58&CID=Community-Events-22
-    region: eastside
-    weight: 18
-  - id: issaquah-city
-    name: City of Issaquah
-    homepage: https://www.issaquahwa.gov/calendar.aspx
-    type: civicplus
-    url: https://www.issaquahwa.gov/RSSFeed.aspx?ModID=58&CID=All-calendar.xml
     region: eastside
     weight: 16
   - id: ticketmaster
@@ -61,9 +69,15 @@ sources:
     type: ticketmaster
     url: https://app.ticketmaster.com/discovery/v2/events.json
     region: null
-    weight: 20
+    weight: 14
     max_pages: 5
     min_interval_seconds: 0.25  # the API allows 5 requests per second
     respect_robots: false  # documented API; access is governed by its terms of use
     secret_env: TICKETMASTER_API_KEY
-    day_cap: 2  # at most two shows among a day's top picks; the rest rank last, under "Show more"
+    day_cap: 2  # at most two shows a day; the rest fall below the listing floor
+    # Shows at arena and major venues are kept, arenas ranking higher; at midsize venues, only acts with a
+    # Wikipedia page are kept. Every other venue's shows are left out.
+    arena_venues: [Climate Pledge Arena, Lumen Field, T-Mobile Park, WAMU Theater]
+    major_venues: [Paramount Theatre, Moore Theatre, 5th Avenue Theatre, Benaroya Hall, Taper Auditorium, McCaw Hall,
+                   Marymoor Park, Chateau Ste. Michelle]
+    midsize_venues: [Neptune Theatre, Showbox, The Crocodile]

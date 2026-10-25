@@ -18,6 +18,12 @@ def normalize_title(title: str) -> str:
     return " ".join(text.split())
 
 
+def title_mentions(title: str, names) -> bool:
+    """Whether the normalized title contains one of the normalized names as whole words."""
+    padded = f" {normalize_title(title)} "
+    return any(name and f" {name} " in padded for name in names)
+
+
 def _fill(primary: Event, other: Event) -> Event:
     updates = {name: getattr(other, name) for name in _FILLABLE
                if getattr(primary, name) in (None, "") and getattr(other, name) not in (None, "")}

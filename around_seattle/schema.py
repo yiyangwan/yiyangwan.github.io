@@ -13,7 +13,8 @@ from .weather import SEVERITY
 SCHEMA_VERSION = 1
 STATUSES = ("ok", "error", "skipped")
 EVENT_KEYS = frozenset({"id", "title", "start", "end", "allDay", "venue", "city", "region", "category", "free",
-                        "price", "url", "summary", "source", "score", "moreDates", "ongoing"})
+                        "price", "url", "summary", "source", "score", "moreDates", "moreEnds", "ongoing",
+                        "highlight"})
 
 
 class SchemaError(ValueError):
@@ -22,7 +23,7 @@ class SchemaError(ValueError):
 
 def event_id(event: Event) -> str:
     key = f"{event.source_id}|{event.uid}|{event.start.isoformat()}"
-    return hashlib.sha1(key.encode("utf-8")).hexdigest()[:12]
+    return hashlib.sha1(key.encode("utf-8", "surrogatepass")).hexdigest()[:12]
 
 
 def _event(event: Event) -> dict:
@@ -36,7 +37,8 @@ def _event(event: Event) -> dict:
         "free": event.free, "price": event.price, "url": event.url, "summary": event.summary,
         "source": event.source_id, "score": event.score,
         "moreDates": [moment.isoformat() for moment in event.more_dates[:MAX_MORE_DATES]],
-        "ongoing": event.ongoing,
+        "moreEnds": [moment.isoformat() for moment in event.more_ends[:MAX_MORE_DATES]],
+        "ongoing": event.ongoing, "highlight": event.highlight,
     }
 
 
@@ -48,6 +50,7 @@ def _source(result: SourceResult) -> dict:
 def _seasonal(pick: SeasonalPick, window: Window) -> dict:
     return {"id": pick.id, "title": pick.title, "summary": pick.summary, "place": pick.place, "city": pick.city,
             "region": pick.region, "category": pick.category, "url": pick.url, "free": pick.free,
+            "from": seasonal_picks.opens(pick, window.today).isoformat(),
             "until": seasonal_picks.until(pick, window.today).isoformat()}
 
 
@@ -92,6 +95,10 @@ def _check_event(event: dict, where: str, seen: set) -> None:
         raise SchemaError(f"{where}: score")
     if event["free"] not in (True, False, None) or not isinstance(event["free"], (bool, type(None))):
         raise SchemaError(f"{where}: free")
+    if not isinstance(event["highlight"], bool):
+        raise SchemaError(f"{where}: highlight")
+    if not isinstance(event["moreEnds"], list) or len(event["moreEnds"]) > len(event["moreDates"]):
+        raise SchemaError(f"{where}: moreEnds")
     if event["id"] in seen:
         raise SchemaError(f"{where}: duplicate id")
     seen.add(event["id"])

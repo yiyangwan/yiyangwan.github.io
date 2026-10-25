@@ -1,8 +1,9 @@
 // Renders the Around Seattle page from the daily JSON. Every string from the data goes through textContent.
 import {
   CATEGORY_LABELS, CONDITIONS, LIMITS, dayGutter, failedLine, forecastLine, formatDated, formatKind, formatMonthDay,
-  formatMoreDates, formatSeasonWhen, formatUntil, formatWhen, formatWhere, freshnessLine, headline, isStale,
-  matchesFilters, parseData, planSections, resolveDataUrls, safeUrl, skyState, staleLine, sunsetLine, weekStrip,
+  formatMoreDates, formatPickWhen, formatSeasonWhen, formatUntil, formatWhen, formatWhere, freshnessLine, headline,
+  isStale, matchesFilters, parseData, pickItems, planSections, resolveDataUrls, safeUrl, skyState, staleLine,
+  sunsetLine, todayEmptyLine, weekStrip,
 } from "./logic.mjs";
 
 const FETCH_TIMEOUT_MS = 8000;
@@ -60,25 +61,27 @@ function titleNode(level, title, url) {
     [safe ? el("a", { href: safe, rel: "noopener noreferrer", text: title }) : title]);
 }
 
+const SUMMARY_CLAMPS = Object.freeze({ line: " around-ev__summary--line", two: " around-ev__summary--two" });
+
 function eventItem(event, { level, when, featured = false, summary = "none" }) {
   const where = formatWhere(event);
   const whenText = when(event);
   const more = formatMoreDates(event);
-  const showSummary = Boolean(event.summary) && (featured || summary === "line");
+  const clamp = featured ? "" : SUMMARY_CLAMPS[summary];
+  const showSummary = Boolean(event.summary) && clamp !== undefined;
   return el("li", { className: `around-ev around-ev--${categoryOf(event)}${featured ? " around-ev--featured" : ""}` }, [
     titleNode(level, event.title, event.url),
     el("p", { className: "around-ev__when", text: where ? `${whenText} ${where}` : whenText }),
     el("p", { className: "around-ev__kind", text: formatKind(event) }),
-    showSummary ? el("p", { className: `around-ev__summary${featured ? "" : " around-ev__summary--line"}`,
-      text: event.summary }) : null,
+    showSummary ? el("p", { className: `around-ev__summary${clamp}`, text: event.summary }) : null,
     more ? el("p", { className: "around-ev__more", text: more }) : null,
   ]);
 }
 
-function seasonalItem(pick) {
+function seasonalItem(pick, todayKey) {
   return el("li", { className: `around-ev around-ev--${categoryOf(pick)}` }, [
     titleNode(3, pick.title, pick.url),
-    el("p", { className: "around-ev__when", text: formatSeasonWhen(pick) }),
+    el("p", { className: "around-ev__when", text: formatSeasonWhen(pick, todayKey) }),
     el("p", { className: "around-ev__kind", text: formatKind(pick) }),
     el("p", { className: "around-ev__summary around-ev__summary--two", text: pick.summary }),
   ]);
@@ -99,15 +102,14 @@ function setStatus(text) {
   if (status.textContent !== text) status.textContent = text;
 }
 
-function eventList(events, { id, limit, featuredFirst = false, ...itemOptions }) {
+function moreList(items, { id, limit, render, className = "around-list" }) {
   const expanded = state.expanded.includes(id);
-  const shown = expanded ? events : events.slice(0, limit);
-  const list = el("ol", { className: "around-list", role: "list", id },
-    shown.map((event, index) => eventItem(event, { ...itemOptions, featured: featuredFirst && index === 0 })));
-  if (events.length <= limit) return [list];
+  const shown = expanded ? items : items.slice(0, limit);
+  const list = el("ol", { className, role: "list", id }, shown.map(render));
+  if (items.length <= limit) return [list];
   const button = el("button", {
     type: "button", className: "around-more", id: `${id}-more`, "aria-controls": id,
-    "aria-expanded": String(expanded), text: expanded ? "Show fewer" : `Show ${events.length - limit} more`,
+    "aria-expanded": String(expanded), text: expanded ? "Show fewer" : `Show ${items.length - limit} more`,
   });
   button.addEventListener("click", () => {
     if (expanded) {
@@ -119,6 +121,11 @@ function eventList(events, { id, limit, featuredFirst = false, ...itemOptions })
     focusTitle(byId(id)?.children[limit]);
   });
   return [list, button];
+}
+
+function eventList(events, { id, limit, featuredFirst = false, ...itemOptions }) {
+  return moreList(events, { id, limit,
+    render: (event, index) => eventItem(event, { ...itemOptions, featured: featuredFirst && index === 0 }) });
 }
 
 function dayBlock(day, limit, summary, emptyText) {
@@ -136,6 +143,12 @@ function dayBlock(day, limit, summary, emptyText) {
 
 function fill(sectionId, nodes) {
   root.querySelector(`#${sectionId} .around-body`).replaceChildren(...nodes);
+}
+
+// A section that is often empty (picks, runs) hides when there is nothing for it, unless filters emptied it.
+function fillOptional(sectionId, nodes, filters) {
+  byId(sectionId).hidden = nodes === null && !isFiltered(filters);
+  if (nodes !== null || isFiltered(filters)) fill(sectionId, nodes ?? [empty("Nothing here matches your filters.")]);
 }
 
 function renderHero(now) {
@@ -168,10 +181,18 @@ function renderSections(now) {
   const seasonal = data.seasonal.filter((pick) => matchesFilters(pick, filters));
   const none = isFiltered(filters) ? "Nothing here matches your filters." : "Nothing listed yet.";
 
+  const picks = pickItems(plan.picks, seasonal);
+  const renderPick = ({ event, pick }) => (event
+    ? eventItem(event, { level: 3, when: (item) => formatPickWhen(item, plan.todayKey), summary: "two" })
+    : seasonalItem(pick, plan.todayKey));
+  fillOptional("around-picks", picks.length
+    ? moreList(picks, { id: "list-picks", limit: LIMITS.picks, render: renderPick,
+      className: "around-list around-list--picks" })
+    : null, filters);
   fill("around-today", plan.today.length
     ? eventList(plan.today, { id: "list-today", limit: LIMITS.today, level: 3, when: formatWhen, summary: "line",
       featuredFirst: true })
-    : [empty(none)]);
+    : [empty(todayEmptyLine(plan, none))]);
   byId("around-weekend-h").textContent = plan.weekendLabel;
   fill("around-weekend", plan.weekend.map((day) => dayBlock(day, LIMITS.weekendDay, "line", none)));
   fill("around-coming", plan.comingUp.length
@@ -183,15 +204,14 @@ function renderSections(now) {
       ...eventList(week.events, { id: `list-week-${week.key}`, limit: LIMITS.weekList, level: 4, when: formatDated }),
     ]))
     : [empty(isFiltered(filters) ? none : "Nothing announced yet.")]);
-  const seasonItems = [...seasonal.map(seasonalItem),
-    ...plan.running.map((event) => eventItem(event, { level: 3, when: formatUntil, summary: "line" }))];
-  fill("around-season", seasonItems.length
-    ? [el("ol", { className: "around-list", role: "list" }, seasonItems)]
-    : [empty(none)]);
+  fillOptional("around-running", plan.running.length
+    ? [el("ol", { className: "around-list", role: "list" },
+      plan.running.map((event) => eventItem(event, { level: 3, when: formatUntil, summary: "line" })))]
+    : null, filters);
 
   const countDays = (days) => days.reduce((total, day) => total + day.events.length, 0);
-  return plan.today.length + countDays(plan.weekend) + countDays(plan.comingUp) + countDays(plan.furtherAhead)
-    + seasonItems.length;
+  return picks.length + plan.today.length + countDays(plan.weekend) + countDays(plan.comingUp)
+    + countDays(plan.furtherAhead) + plan.running.length;
 }
 
 function clearFilters() {

@@ -21,9 +21,10 @@ def test_base_score_is_source_plus_type():
     (dict(free=True), 53),
     (dict(title="12th Annual Harvest Fair"), 53),
     (dict(more_dates=(datetime(2026, 10, 7, 12, 0, tzinfo=LA), datetime(2026, 10, 14, 12, 0, tzinfo=LA))), 38),
-    (dict(title="Trivia Night"), 40),
     (dict(category="arts"), 35),
-    (dict(category="other"), 25),
+    (dict(category="music"), 40),
+    (dict(category="other"), 20),
+    (dict(boost=16), 66),
 ])
 def test_score_adjustments(changes, expected):
     assert score(make_event(**{**WEDNESDAY, **changes}), 20) == expected

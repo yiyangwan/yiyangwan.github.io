@@ -16,6 +16,9 @@ _PHONE = re.compile(r"(?<!\d)(?:\+?1[\s.-]?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}
 _MARKUP_RUN = re.compile(r"[*_]{2,}")
 # Half of a UTF-16 pair, which a JSON "\ud83c" escape decodes to; UTF-8 cannot encode it, so writing the output fails.
 _SURROGATES = re.compile(r"[\ud800-\udfff]")
+# Every caller truncates the result to a summary's length, and the email pattern is quadratic on a long run of word
+# characters, so only this much of a feed's text is scrubbed.
+SCRUB_LIMIT = 2000
 
 
 class _TextExtractor(HTMLParser):
@@ -91,7 +94,8 @@ def parse_price(value: object) -> tuple[str | None, bool | None]:
 
 
 def scrub_contacts(text: str) -> str:
-    """Remove email addresses and phone numbers (feeds often include staff contacts)."""
+    """The text's first 2,000 characters without email addresses or phone numbers (feeds often include staff contacts)."""
+    text = text[:SCRUB_LIMIT]
     return " ".join(_PHONE.sub(" ", _EMAIL.sub(" ", text)).split())
 
 
@@ -105,6 +109,8 @@ def safe_url(value: object) -> str | None:
     if not isinstance(value, str) or not value.strip():
         return None
     candidate = value.strip()
+    if _SURROGATES.search(candidate):
+        return None
     try:
         parts = urlsplit(candidate)
     except ValueError:

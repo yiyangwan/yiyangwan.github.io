@@ -170,3 +170,58 @@ def test_non_dict_page_raises_unexpected_response(window):
     http = FakeHttp({CONFIG.url: json.dumps({"_embedded": {"events": []}, "page": ["oops"]})})
     with pytest.raises(SourceError, match="unexpected response"):
         ticketmaster.collect(CONFIG, http, window, env=ENV)
+
+
+TIERED = make_config(id="ticketmaster", type="ticketmaster", region=None, respect_robots=False,
+                     url="https://app.ticketmaster.com/discovery/v2/events.json", secret_env="TICKETMASTER_API_KEY",
+                     arena_venues=("Climate Pledge Arena",), major_venues=("Benaroya Hall",),
+                     midsize_venues=("Showbox", "Neptune"))
+
+
+def _tiered(item):
+    return ticketmaster.tiered(ticketmaster.to_event(item, TIERED), item, TIERED)
+
+
+def _at(venue, wiki=False):
+    item = _listing("Some Band")
+    item["_embedded"]["venues"][0]["name"] = venue
+    if wiki:
+        item["_embedded"]["attractions"] = [
+            {"name": "Some Band", "externalLinks": {"wiki": [{"url": "https://en.wikipedia.org/wiki/Some_Band"}]}}]
+    return item
+
+
+def test_arena_and_major_venue_shows_are_kept_with_a_boost():
+    assert _tiered(_at("Climate Pledge Arena")).boost == ticketmaster.ARENA_BOOST
+    assert _tiered(_at("Benaroya Hall - S. Mark Taper Auditorium")).boost == ticketmaster.MAJOR_BOOST
+    assert ticketmaster.ARENA_BOOST > ticketmaster.MAJOR_BOOST > ticketmaster.MIDSIZE_BOOST
+
+
+def test_an_act_with_a_wikipedia_page_adds_to_the_boost():
+    assert _tiered(_at("Climate Pledge Arena", wiki=True)).boost == ticketmaster.ARENA_BOOST + ticketmaster.NOTABLE_BOOST
+
+
+def test_midsize_venue_shows_need_an_act_with_a_wikipedia_page():
+    assert _tiered(_at("Showbox SODO")) is None
+    expected = ticketmaster.MIDSIZE_BOOST + ticketmaster.NOTABLE_BOOST
+    assert _tiered(_at("The Showbox", wiki=True)).boost == expected
+    assert _tiered(_at("Neptune Theatre", wiki=True)).boost == expected
+
+
+def test_other_venues_are_dropped_when_tiers_are_configured():
+    assert _tiered(_at("Nectar Lounge", wiki=True)) is None
+    untiered = _at("Nectar Lounge")
+    assert ticketmaster.tiered(ticketmaster.to_event(untiered, CONFIG), untiered, CONFIG).boost == 0  # no tiers: keep
+
+
+def test_malformed_attractions_count_as_no_wikipedia_page():
+    item = _at("The Showbox")
+    item["_embedded"]["attractions"] = ["Some Band", {"externalLinks": ["wiki"]}, {"externalLinks": {"wiki": []}}]
+    assert _tiered(item) is None
+
+
+def test_a_page_of_shows_at_unlisted_venues_is_empty_not_failed(window):
+    config = make_config(id="ticketmaster", type="ticketmaster", region=None, respect_robots=False, url=CONFIG.url,
+                         secret_env="TICKETMASTER_API_KEY", arena_venues=("Lumen Field",))
+    http = FakeHttp({CONFIG.url: read_fixture("ticketmaster_page0.json")})
+    assert ticketmaster.collect(config, http, window, env=ENV) == []

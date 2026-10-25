@@ -14,7 +14,7 @@ from pathlib import Path
 
 import yaml
 
-from . import classify, dedupe, regions, schema, seasonal, sun, weather
+from . import classify, dedupe, regions, schema, seasonal, signature, sun, weather
 from .http import HttpClient
 from .models import (LA, PRIORITY_CATEGORIES, Event, SourceConfig, SourceError, SourceResult, SourceSkipped, Window,
                      is_ongoing)
@@ -32,6 +32,7 @@ ADAPTERS = {
 
 
 def load_sources(path: Path) -> tuple[list[SourceConfig], dict]:
+    """The source registry, and the selection limits: near_min_score, plus min_score and max_events further out."""
     raw = yaml.safe_load(Path(path).read_text(encoding="utf-8")) or {}
     configs = []
     for entry in raw.get("sources") or []:
@@ -40,16 +41,30 @@ def load_sources(path: Path) -> tuple[list[SourceConfig], dict]:
         configs.append(SourceConfig(
             id=entry["id"], name=entry["name"], homepage=entry["homepage"], type=entry["type"], url=entry["url"],
             region=entry.get("region"), weight=int(entry["weight"]),
-            exclude_categories=tuple(entry.get("exclude_categories") or ()),
+            exclude_categories=_names(entry, "exclude_categories"),
+            include_categories=_names(entry, "include_categories"),
             require_category=bool(entry.get("require_category", False)),
             max_pages=int(entry.get("max_pages", 6)),
             min_interval_seconds=float(entry.get("min_interval_seconds", 0)),
             respect_robots=bool(entry.get("respect_robots", True)),
             secret_env=entry.get("secret_env"),
             day_cap=int(entry["day_cap"]) if entry.get("day_cap") is not None else None,
+            arena_venues=_names(entry, "arena_venues"),
+            major_venues=_names(entry, "major_venues"),
+            midsize_venues=_names(entry, "midsize_venues"),
         ))
+    near = raw.get("near") or {}
     further = raw.get("further_ahead") or {}
-    return configs, {"min_score": int(further.get("min_score", 50)), "max_events": int(further.get("max_events", 30))}
+    return configs, {"near_min_score": int(near.get("min_score", 0)), "min_score": int(further.get("min_score", 50)),
+                     "max_events": int(further.get("max_events", 30))}
+
+
+def _names(entry: dict, key: str) -> tuple[str, ...]:
+    """A list of names from a source entry; a single string would otherwise be read one letter at a time."""
+    value = entry.get(key) or []
+    if not isinstance(value, list) or not all(isinstance(name, str) for name in value):
+        raise ValueError(f"source {entry.get('id')}: {key} must be a list of names")
+    return tuple(value)
 
 
 def _redact(message: str, env, names) -> str:
@@ -78,7 +93,7 @@ def run_sources(configs, http, window: Window, env) -> list[SourceResult]:
 
 
 def cap_per_day(events: list[Event], caps: dict[str, int]) -> list[Event]:
-    """Past its day_cap, a source's events on a day score 0: last in the day's list, and out of "Further out"."""
+    """Past its day_cap, a source's other events on a day score 0, below the listing floors."""
     counts: dict[tuple[str, date], int] = {}
     demoted: set[int] = set()
     for index in sorted(range(len(events)), key=lambda i: (-events[i].score, events[i].start, events[i].title)):
@@ -91,15 +106,20 @@ def cap_per_day(events: list[Event], caps: dict[str, int]) -> list[Event]:
     return [replace(event, score=0) if index in demoted else event for index, event in enumerate(events)]
 
 
-def select(events: list[Event], window: Window, further: dict) -> list[Event]:
-    near = [e for e in events if e.start.date() <= window.near_end]
+def select(events: list[Event], window: Window, limits: dict) -> list[Event]:
+    """Within two weeks, events at or above the floor; further out, only the best of the priority types."""
+    near = [e for e in events if e.start.date() <= window.near_end and e.score >= limits.get("near_min_score", 0)]
     far = [e for e in events if e.start.date() > window.near_end and e.category in PRIORITY_CATEGORIES
-           and e.score >= further["min_score"]]
-    far = sorted(far, key=lambda e: (-e.score, e.start))[: further["max_events"]]
+           and e.score >= limits["min_score"]]
+    far = sorted(far, key=lambda e: (-e.score, e.start))[: limits["max_events"]]
     return sorted(near + far, key=lambda e: (e.start, -e.score, e.title))
 
 
-def process(results, configs, window: Window, further: dict) -> list[Event]:
+def process(results, configs, window: Window, limits: dict, picks=(), seasonal_picks=()) -> list[Event]:
+    """Feed events filtered, placed, merged, scored, and selected, plus the signature events in the window.
+
+    Feed listings of a signature event or a seasonal pick are dropped; the curated entry stands for them.
+    """
     by_id = {config.id: config for config in configs}
     weights = {config.id: config.weight for config in configs}
     kept = []
@@ -108,7 +128,7 @@ def process(results, configs, window: Window, further: dict) -> list[Event]:
         for event in result.events:
             if classify.is_noise(event, config):
                 continue
-            placed = regions.assign_region(event, config.region)
+            placed = regions.assign_region(classify.fix_implausible_time(event), config.region)
             if placed is None:
                 continue
             # An adapter may set the category from its source's own taxonomy; "other" means it did not.
@@ -116,10 +136,27 @@ def process(results, configs, window: Window, further: dict) -> list[Event]:
             if config.require_category and typed.category == "other":
                 continue
             kept.append(typed)
+    kept = seasonal.absorb(signature.absorb(kept, list(picks)), seasonal.shown(list(seasonal_picks), window.today))
     collapsed = dedupe.collapse_recurring(dedupe.merge_duplicates(kept, weights))
     scored = [replace(e, ongoing=is_ongoing(e), score=score(e, weights[e.source_id])) for e in collapsed]
     caps = {config.id: config.day_cap for config in configs if config.day_cap is not None}
-    return select(cap_per_day(scored, caps), window, further)
+    highlights = [replace(e, ongoing=is_ongoing(e)) for e in signature.events(list(picks), window)]
+    return sorted(select(cap_per_day(scored, caps), window, limits) + highlights,
+                  key=lambda e: (e.start, -e.score, e.title))
+
+
+def maintenance_lines(signature_events, today: date) -> list[str]:
+    """Log lines for signature entries whose next dates need adding or checking again."""
+    lines = []
+    stale = signature.needs_dates(signature_events, today)
+    if stale:
+        noun = "entry needs its" if len(stale) == 1 else "entries need their"
+        lines.append(f"signature: {len(stale)} {noun} next dates ({', '.join(pick.id for pick in stale)})")
+    recheck = signature.needs_recheck(signature_events, today)
+    if recheck:
+        listed = ", ".join(f"{pick.id} (verified {when.verified})" for pick, when in recheck)
+        lines.append(f"signature: check these dates again: {listed}")
+    return lines
 
 
 def main(argv=None, *, http=None, env=None) -> int:
@@ -132,8 +169,9 @@ def main(argv=None, *, http=None, env=None) -> int:
     now = datetime.fromisoformat(args.now) if args.now else datetime.now(LA)
     now = now if now.tzinfo else now.replace(tzinfo=LA)
     window = Window.starting(now)
-    configs, further = load_sources(args.config_dir / "sources.yml")
-    picks = seasonal.load(args.config_dir / "seasonal.yml")
+    configs, limits = load_sources(args.config_dir / "sources.yml")
+    seasonal_picks = seasonal.load(args.config_dir / "seasonal.yml")
+    signature_events = signature.load(args.config_dir / "signature.yml")
     client = http if http is not None else HttpClient()
 
     results = run_sources(configs, client, window, env)
@@ -144,8 +182,10 @@ def main(argv=None, *, http=None, env=None) -> int:
         print("error: every event source failed; nothing written", file=sys.stderr)
         return 2
 
-    events = process(results, configs, window, further)
-    if not events:
+    for line in maintenance_lines(signature_events, window.today):
+        print(f"::warning::{line}" if env.get("GITHUB_ACTIONS") == "true" else line)
+    events = process(results, configs, window, limits, signature_events, seasonal_picks)
+    if not any(not event.highlight for event in events):
         # Feeds that answer but leave nothing to show mean a silent breakage somewhere. An empty page is never right
         # for sixty days of these calendars, so keep yesterday's data up instead.
         print("error: no events after filtering; nothing written", file=sys.stderr)
@@ -159,7 +199,7 @@ def main(argv=None, *, http=None, env=None) -> int:
         print(f"weather: ok ({', '.join(weather_data)})" if weather_data else "weather: unavailable")
     output = schema.to_output(generated_at=now, window=window, results=results, events=events,
                               weather=weather_data, sun=sun.for_window(window),
-                              seasonal=seasonal.active(picks, window.today))
+                              seasonal=seasonal.shown(seasonal_picks, window.today))
     try:
         schema.validate(output)
     except schema.SchemaError as exc:

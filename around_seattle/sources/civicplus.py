@@ -1,4 +1,4 @@
-"""CivicPlus calendar RSS (City of Redmond, City of Issaquah)."""
+"""CivicPlus calendar RSS (City of Redmond)."""
 from __future__ import annotations
 
 import re

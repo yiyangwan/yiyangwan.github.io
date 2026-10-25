@@ -13,13 +13,19 @@ def test_page_has_every_hook_app_needs():
     for hook in ["id=\"around\"", "data-src=", "data-fallback-src=", "data-sky=\"loading\"", "id=\"around-headline\"",
                  "id=\"around-forecast\"", "id=\"around-week\"", "id=\"around-filters\"", "id=\"around-status\"",
                  "id=\"around-notice\"", "id=\"around-today\"", "id=\"around-weekend\"", "id=\"around-weekend-h\"",
-                 "id=\"around-coming\"", "id=\"around-further\"", "id=\"around-season\"",
+                 "id=\"around-coming\"", "id=\"around-further\"", "id=\"around-picks\"", "id=\"around-running\"",
                  "id=\"around-source-links\"", "id=\"around-footer\"", "permalink: /around-seattle/"]:
         assert hook in PAGE, hook
     assert sorted(re.findall(r'name="type" value="([a-z-]+)"', PAGE)) == sorted(
         ["festival", "music", "market", "outdoors", "arts"])
     assert re.findall(r'name="region" value="([a-z]+)"', PAGE) == ["all", "seattle", "eastside"]
 
+
+
+def test_sections_come_in_page_order():
+    ids = re.findall(r'<section class="[^"]*" id="(around-[a-z]+)"', PAGE)
+    assert ids == ["around-picks", "around-today", "around-weekend", "around-coming", "around-running",
+                   "around-further"]
 
 
 def test_root_opts_out_of_mathjax_in_markup():

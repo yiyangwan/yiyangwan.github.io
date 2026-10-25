@@ -1,6 +1,7 @@
 # Curated seasonal picks for /around-seattle/. These are public factual claims: each entry names an
 # official source and the date it was checked. Review once a year. Windows are MM-DD, inclusive, and
-# may wrap the new year; the page shows an entry while today falls inside its window.
+# may wrap the new year; the page shows an entry while today falls inside its window. match (optional) lists
+# feed titles for the same sight, so feed listings of it are dropped in favor of the pick.
 - id: issaquah-hatchery-salmon
   title: Salmon returning to the Issaquah hatchery
   summary: Chinook and coho swim up Issaquah Creek to the hatchery, with viewing areas along the creek.
@@ -75,6 +76,7 @@
   category: festival
   url: https://bellevuebotanical.org/garden-dlights/
   free: false
+  match: [Garden d'Lights]
   from: "11-28"
   to: "01-03"
   source: https://bellevuebotanical.org/garden-dlights/
@@ -88,6 +90,7 @@
   category: festival
   url: https://www.bellevuecollection.com/snowflakelane/
   free: true
+  match: [Snowflake Lane]
   from: "11-27"
   to: "12-24"
   source: https://www.bellevuecollection.com/snowflakelane/
@@ -101,6 +104,7 @@
   category: festival
   url: https://www.zoo.org/wildlanterns
   free: false
+  match: [WildLanterns]  # the zoo's own listings of it, including its special nights
   from: "11-13"
   to: "01-17"
   source: https://www.zoo.org/wildlanterns
@@ -131,3 +135,40 @@
   to: "09-07"
   source: https://www.seattle.gov/parks/recreation/swimming-beaches
   verified: 2026-09-25
+- id: arboretum-winter-garden
+  title: Winter blooms in the Arboretum's Witt Winter Garden
+  summary: Witch hazel and mahonia bloom, sweet box and daphne scent the air, and dogwood and birch bark add color while the rest of the park is quiet.
+  place: Joseph A. Witt Winter Garden, Washington Park Arboretum
+  city: Seattle
+  region: seattle
+  category: outdoors
+  url: https://botanicgardens.uw.edu/washington-park-arboretum/gardens/joseph-a-witt-winter-garden/
+  free: true
+  from: "12-01"
+  to: "03-31"
+  source: https://botanicgardens.uw.edu/washington-park-arboretum/gardens/joseph-a-witt-winter-garden/
+  verified: 2026-10-25
+- id: ballard-locks-salmon
+  title: Salmon in the Ballard Locks fish ladder
+  summary: Salmon climb the fish ladder at the Hiram M. Chittenden Locks, and the viewing windows show them up close.
+  place: Hiram M. Chittenden Locks
+  city: Seattle
+  region: seattle
+  category: outdoors
+  url: https://www.nws.usace.army.mil/Missions/Civil-Works/Locks-and-Dams/Chittenden-Locks/
+  from: "07-01"
+  to: "09-30"
+  source: https://experience.arcgis.com/experience/779f2239705a42fba71f198d958da479/
+  verified: 2026-10-25
+- id: redmond-trestle-salmon
+  title: Salmon at the Redmond Trestle
+  summary: Coho, sockeye, and chinook pass the Redmond Trestle on the Sammamish River on their way to spawn in Bear Creek.
+  place: Redmond Trestle, Redmond Central Connector
+  city: Redmond
+  region: eastside
+  category: outdoors
+  url: https://experience.arcgis.com/experience/779f2239705a42fba71f198d958da479/
+  from: "09-01"
+  to: "10-31"
+  source: https://experience.arcgis.com/experience/779f2239705a42fba71f198d958da479/
+  verified: 2026-10-25

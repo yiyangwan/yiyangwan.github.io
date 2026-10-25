@@ -3,8 +3,8 @@ from datetime import datetime
 
 import pytest
 
-from around_seattle import build, schema, seasonal
-from around_seattle.models import LA, SourceError, SourceResult, SourceSkipped
+from around_seattle import build, schema, seasonal, signature
+from around_seattle.models import LA, SourceError, SourceResult, SourceSkipped, Window
 from around_seattle.tests.conftest import NOW, FakeHttp, make_config, make_event, read_fixture
 from around_seattle.weather import FORECAST_URLS
 
@@ -25,6 +25,14 @@ TEST_SEASONAL = """
    region: seattle, category: outdoors, url: "https://www.kubotagarden.org/", free: true, from: "09-01", to: "11-15",
    source: "https://www.kubotagarden.org/", verified: 2026-09-25}
 """
+TEST_SIGNATURE = """
+- {id: lantern-walk, title: Mid-Autumn Lantern Walk, summary: Lanterns light a walk through the park., place: Volunteer Park,
+   city: Seattle, region: seattle, category: festival, url: "https://example.org/lanterns", free: true,
+   usually: early October, match: [Lantern Walk],
+   dates: [{from: 2026-10-03, to: 2026-10-04, source: "https://example.org/lanterns", verified: 2026-09-25}]}
+- {id: folklife, title: Northwest Folklife Festival, summary: Music and dance across Seattle Center., place: Seattle Center,
+   city: Seattle, region: seattle, category: festival, url: "https://www.nwfolklife.org/", usually: Memorial Day weekend}
+"""
 
 
 @pytest.fixture
@@ -33,6 +41,7 @@ def config_dir(tmp_path):
     folder.mkdir()
     (folder / "sources.yml").write_text(TEST_SOURCES, encoding="utf-8")
     (folder / "seasonal.yml").write_text(TEST_SEASONAL, encoding="utf-8")
+    (folder / "signature.yml").write_text(TEST_SIGNATURE, encoding="utf-8")
     return folder
 
 
@@ -56,17 +65,42 @@ def run_main(config_dir, tmp_path, http):
 
 
 def test_repo_config_and_seasonal_picks_load():
-    configs, further = build.load_sources(build.DEFAULT_CONFIG_DIR / "sources.yml")
-    assert [c.id for c in configs] == ["seattle-gov", "town-hall", "uw-seattle", "experience-redmond",
-                                       "redmond-city", "issaquah-city", "ticketmaster"]
-    assert further == {"min_score": 50, "max_events": 30}
+    configs, limits = build.load_sources(build.DEFAULT_CONFIG_DIR / "sources.yml")
+    assert [c.id for c in configs] == ["woodland-park-zoo", "downtown-seattle", "town-hall", "seattle-gov",
+                                       "experience-redmond", "redmond-city", "ticketmaster"]
+    assert limits == {"near_min_score": 45, "min_score": 62, "max_events": 10}
     ticketmaster = configs[-1]
     assert (ticketmaster.secret_env, ticketmaster.respect_robots, ticketmaster.region) == (
         "TICKETMASTER_API_KEY", False, None)
+    assert "Climate Pledge Arena" in ticketmaster.arena_venues and "Paramount Theatre" in ticketmaster.major_venues
+    assert "Neptune Theatre" in ticketmaster.midsize_venues
     assert [c.day_cap for c in configs] == [None] * 6 + [2]
+    assert {c.id: c.include_categories for c in configs if c.include_categories} == {
+        "town-hall": ("Town Hall Presents",),
+        "seattle-gov": ("Festivals/Fairs", "Holiday/Seasonal Events"),
+        "experience-redmond": ("Featured Events", "Holiday", "Concerts", "Redmond Arts"),
+    }
     picks = seasonal.load(build.DEFAULT_CONFIG_DIR / "seasonal.yml")
     assert picks
     assert len({pick.id for pick in picks}) == len(picks)
+    highlights = signature.load(build.DEFAULT_CONFIG_DIR / "signature.yml")
+    assert highlights
+    assert all(when.verified for pick in highlights for when in pick.dates)
+
+
+def test_load_sources_reads_limits_and_per_source_lists(tmp_path):
+    path = tmp_path / "sources.yml"
+    path.write_text("""
+near: {min_score: 40}
+sources:
+  - {id: tm, name: TM, homepage: "https://tm.example", type: ticketmaster, url: "https://tm.example/api",
+     region: null, weight: 14, include_categories: [Music], arena_venues: [Arena], major_venues: [Theatre],
+     midsize_venues: [Hall]}
+""", encoding="utf-8")
+    configs, limits = build.load_sources(path)
+    assert limits == {"near_min_score": 40, "min_score": 50, "max_events": 30}
+    assert (configs[0].include_categories, configs[0].arena_venues, configs[0].major_venues,
+            configs[0].midsize_venues) == (("Music",), ("Arena",), ("Theatre",), ("Hall",))
 
 
 def test_unknown_source_type_is_rejected(tmp_path):
@@ -96,6 +130,40 @@ def test_main_writes_valid_output(config_dir, tmp_path):
     assert len(data["weather"]["seattle"]["periods"]) == 6
     assert "2026-09-25" in data["sun"]
     assert [pick["id"] for pick in data["seasonal"]] == ["kubota"]
+    highlights = [event for event in data["events"] if event["highlight"]]
+    assert [(e["title"], e["source"], e["allDay"]) for e in highlights] == [
+        ("Mid-Autumn Lantern Walk", "signature", True)]
+
+
+def test_main_logs_signature_events_that_need_dates(config_dir, tmp_path, capsys):
+    code, out = run_main(config_dir, tmp_path, fixture_http())
+    assert code == 0
+    assert "signature: 1 entry needs its next dates (folklife)" in capsys.readouterr().out
+
+
+def test_main_logs_signature_dates_to_check_again(config_dir, tmp_path, capsys):
+    text = TEST_SIGNATURE.replace("verified: 2026-09-25}]}", "verified: 2026-05-01}]}", 1)
+    (config_dir / "signature.yml").write_text(text, encoding="utf-8")
+    code, out = run_main(config_dir, tmp_path, fixture_http())
+    assert code == 0
+    assert "signature: check these dates again: lantern-walk (verified 2026-05-01)" in capsys.readouterr().out
+
+
+def test_main_marks_maintenance_lines_as_warnings_in_github_actions(config_dir, tmp_path, capsys):
+    out = tmp_path / "out" / "around-seattle.json"
+    code = build.main(["--out", str(out), "--now", NOW.isoformat(), "--config-dir", str(config_dir)],
+                      http=fixture_http(), env={"GITHUB_ACTIONS": "true"})
+    assert code == 0
+    assert "::warning::signature: 1 entry needs its next dates (folklife)" in capsys.readouterr().out
+
+
+def test_main_does_not_publish_signature_events_alone_when_the_feeds_have_nothing(config_dir, tmp_path, capsys):
+    next_year = TEST_SIGNATURE.replace("{from: 2026-10-03, to: 2026-10-04,", "{from: 2027-10-02, to: 2027-10-03,")
+    (config_dir / "signature.yml").write_text(next_year, encoding="utf-8")
+    code, out = run_a_year_later(config_dir, tmp_path, fixture_http())  # every feed event has ended by then
+    assert code == 2
+    assert not out.exists()
+    assert "error: no events after filtering; nothing written" in capsys.readouterr().err
 
 
 def test_main_fails_when_every_source_fails(config_dir, tmp_path):
@@ -219,6 +287,28 @@ def test_process_filters_places_and_selects(window):
     assert (events[0].score, events[0].region, events[0].category) == (55, "seattle", "festival")
 
 
+def test_process_adds_signature_events_and_absorbs_their_feed_listings(window, tmp_path):
+    (tmp_path / "signature.yml").write_text(TEST_SIGNATURE, encoding="utf-8")
+    picks = signature.load(tmp_path / "signature.yml")
+    city = make_config(id="city", region="seattle", weight=20)
+    feed = (make_event(source_id="city", uid="1", title="Lantern Walk", start=datetime(2026, 10, 3, 18, 0, tzinfo=LA),
+                       end=None),
+            make_event(source_id="city", uid="2", title="Harvest Festival"))
+    events = build.process([SourceResult(city, "ok", feed)], [city], window, {"min_score": 50, "max_events": 30},
+                           picks)
+    assert [(e.title, e.highlight) for e in events] == [("Harvest Festival", False), ("Mid-Autumn Lantern Walk", True)]
+    assert events[1].ongoing is False
+
+
+def test_process_drops_near_events_below_the_floor(window):
+    city = make_config(id="city", region="seattle", weight=20)
+    feed = (make_event(source_id="city", uid="1", title="Harvest Festival"),
+            make_event(source_id="city", uid="2", title="Car Show"))
+    limits = {"near_min_score": 45, "min_score": 50, "max_events": 30}
+    events = build.process([SourceResult(city, "ok", feed)], [city], window, limits)
+    assert [(e.title, e.score) for e in events] == [("Harvest Festival", 55)]
+
+
 def test_cap_per_day_ranks_a_sources_extra_events_last():
     friday = datetime(2026, 10, 2, 19, 0, tzinfo=LA)
     shows = [make_event(source_id="tm", uid=f"tm{n}", title=f"Show {n}", start=friday, end=None, score=score)
@@ -232,7 +322,7 @@ def test_cap_per_day_ranks_a_sources_extra_events_last():
 
 
 def test_day_cap_also_keeps_extra_events_out_of_further_out(window):
-    config = make_config(id="tm", region="seattle", day_cap=1)
+    config = make_config(id="tm", region="seattle", weight=30, day_cap=1)
     shows = tuple(make_event(source_id="tm", uid=f"tm{n}", title=f"Concert {n}", category="music",
                              start=datetime(2026, 10, 24, 19 + n, 0, tzinfo=LA), end=None) for n in range(2))
     kept = build.process([SourceResult(config, "ok", shows)], [config], window, {"min_score": 50, "max_events": 30})
@@ -254,3 +344,37 @@ def test_process_keeps_a_category_the_source_set(window):
     kept = build.process([SourceResult(config, "ok", events)], [config], window, {"min_score": 50, "max_events": 30})
     assert {event.title: event.category for event in kept} == {
         "Hail The Sun w/ A Lot Like Birds": "music", "Birds of the Arboretum": "outdoors"}
+
+
+def test_process_absorbs_feed_listings_of_seasonal_picks(window, tmp_path):
+    (tmp_path / "seasonal.yml").write_text(TEST_SEASONAL.replace("free: true,", "free: true, match: [Maple Tour],"),
+                                           encoding="utf-8")
+    picks = seasonal.load(tmp_path / "seasonal.yml")
+    city = make_config(id="city", region="seattle", weight=20)
+    feed = (make_event(source_id="city", uid="1", title="Kubota Maple Tour Festival"),
+            make_event(source_id="city", uid="2", title="Harvest Festival"))
+    events = build.process([SourceResult(city, "ok", feed)], [city], window, {"min_score": 50, "max_events": 30},
+                           seasonal_picks=picks)
+    assert [e.title for e in events] == ["Harvest Festival"]
+
+
+@pytest.mark.parametrize("field", ["include_categories", "exclude_categories", "arena_venues", "major_venues",
+                                   "midsize_venues"])
+def test_load_sources_rejects_a_scalar_where_a_list_belongs(tmp_path, field):
+    path = tmp_path / "sources.yml"
+    path.write_text(f"sources:\n  - {{id: x, name: X, homepage: 'https://x.org', type: tribe, url: 'https://x.org', "
+                    f"region: seattle, weight: 1, {field}: Town Hall Presents}}\n", encoding="utf-8")
+    with pytest.raises(ValueError, match=f"source x: {field} must be a list of names"):
+        build.load_sources(path)
+
+
+def test_process_keeps_feed_listings_of_a_seasonal_pick_that_is_not_shown_yet(tmp_path):
+    (tmp_path / "seasonal.yml").write_text(TEST_SEASONAL.replace("free: true,", "free: true, match: [Maple Tour],")
+                                           .replace('from: "09-01"', 'from: "11-01"'), encoding="utf-8")
+    picks = seasonal.load(tmp_path / "seasonal.yml")
+    city = make_config(id="city", region="seattle", weight=20)
+    tour = make_event(source_id="city", uid="1", title="Kubota Maple Tour Festival", end=None,
+                      start=datetime(2026, 11, 7, 11, 0, tzinfo=LA))
+    events = build.process([SourceResult(city, "ok", (tour,))], [city], Window.starting(NOW),
+                           {"min_score": 50, "max_events": 30}, seasonal_picks=picks)
+    assert [e.title for e in events] == ["Kubota Maple Tour Festival"]

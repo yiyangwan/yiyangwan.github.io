@@ -50,12 +50,18 @@ class SourceConfig:
     region: str | None
     weight: int
     exclude_categories: tuple[str, ...] = ()
+    include_categories: tuple[str, ...] = ()  # when set, keep only events in one of these source categories
     require_category: bool = False
     max_pages: int = 6
     min_interval_seconds: float = 0.0
     respect_robots: bool = True
     secret_env: str | None = None
-    day_cap: int | None = None  # at most this many of the source's events among a day's top picks
+    day_cap: int | None = None  # at most this many of the source's events listed on one day
+    # Ticketmaster venue tiers, as venue name fragments. Arena and major venue shows are always kept, arena shows
+    # rank higher, and midsize venue shows are kept only for acts with a Wikipedia page.
+    arena_venues: tuple[str, ...] = ()
+    major_venues: tuple[str, ...] = ()
+    midsize_venues: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -78,7 +84,10 @@ class Event:
     category: str = "other"
     score: int = 0
     more_dates: tuple[datetime, ...] = ()
+    more_ends: tuple[datetime, ...] = ()  # the end of each later date, when they differ in length (signature events)
     ongoing: bool = False
+    boost: int = 0  # score added from the source's own signals, such as a show at a major venue
+    highlight: bool = False  # a signature event from _data/around_seattle/signature.yml
 
 
 @dataclass(frozen=True)
@@ -104,6 +113,33 @@ class SeasonalPick:
     free: bool | None
     source: str
     verified: str
+    match: tuple[str, ...] = ()  # normalized titles that feeds use for the same sight
+
+
+@dataclass(frozen=True)
+class SignatureDate:
+    first: date
+    last: date  # inclusive
+    source: str  # the official page that states these dates
+    verified: str
+    starts: time | None = None  # opening time on the first day; None for an all-day listing
+    ends: time | None = None  # closing time on the last day
+
+
+@dataclass(frozen=True)
+class SignatureEvent:
+    id: str
+    title: str
+    summary: str
+    place: str
+    city: str
+    region: str
+    category: str
+    url: str
+    free: bool | None
+    usually: str  # when it normally happens, for the yearly date check
+    match: tuple[str, ...]  # normalized titles that feeds use for the same event
+    dates: tuple[SignatureDate, ...]
 
 
 def effective_end(event: Event) -> datetime:
@@ -119,10 +155,14 @@ def in_window(event: Event, window: Window) -> bool:
     return effective_end(event) > window.now and event.start.date() <= window.far_end
 
 
+def last_day(event: Event) -> date:
+    """The last calendar day the event touches (an end at midnight does not count that day)."""
+    return (effective_end(event) - timedelta(microseconds=1)).date()
+
+
 def span_days(event: Event) -> int:
-    """Number of calendar days the event touches (an end at midnight does not count that day)."""
-    last = (effective_end(event) - timedelta(microseconds=1)).date()
-    return (last - event.start.date()).days + 1
+    """Number of calendar days the event touches."""
+    return (last_day(event) - event.start.date()).days + 1
 
 
 def is_ongoing(event: Event) -> bool:

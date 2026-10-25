@@ -2,8 +2,10 @@
 from __future__ import annotations
 
 import re
+from dataclasses import replace
+from datetime import datetime, time, timedelta
 
-from .models import Event, SourceConfig
+from .models import LA, Event, SourceConfig
 from .text import clean_inline
 
 TYPE_ORDER = ("festival", "music", "market", "outdoors", "arts")
@@ -18,10 +20,11 @@ def _words(*patterns: str) -> re.Pattern[str]:
 
 
 # Deliberately absent: bare "council" (Fremont Arts Council runs parades), bare "volunteer"
-# (Volunteer Park), "suite" (The Nutcracker Suite), and "parking" (PARK(ing) Day).
-# Also excluded: "class" in hyphenated compounds (World-Class Jazz Festival), "closed caption"
-# (Closed Captioned Screening), and "hearing loop", "hearing aid", and "hearing impaired"
-# (Hearing Loop Concert).
+# (Volunteer Park), "suite" (The Nutcracker Suite), "parking" (PARK(ing) Day), bare "town hall"
+# (Town Hall Seattle is a venue, and "Town Hall Presents" is its own program), and bare "open house"
+# (Chinese Cultural Open House). Also excluded: "class" in hyphenated compounds (World-Class Jazz
+# Festival), "closed caption" (Closed Captioned Screening), and "hearing loop", "hearing aid", and
+# "hearing impaired" (Hearing Loop Concert).
 NOISE = _words(
     r"city council", r"council meetings?", r"councilmembers?", r"community council",
     r"commissions?", r"committees?", r"board meetings?", r"public hearings?",
@@ -37,7 +40,24 @@ NOISE = _words(
     r"support groups?", r"tax help", r"job fairs?", r"career fairs?", r"hiring events?",
     r"blood drives?", r"vaccin(?:e|ation) clinics?", r"flu shots?",
     r"deadlines?", r"applications?", r"registration (?:opens|closes|deadline)",
+    # Civic business and services.
+    r"(?:park|equity|cemetery|youth|planning|library|school|arts|design review|levy|transportation) boards?",
+    r"(?:police|elections?|community|virtual) town halls?", r"recycling", r"collection events?", r"hard-to-recycle",
+    r"maintenance", r"school open houses?", r"open house(?=:)", r"adoption events?", r"spot reservations?",
+    r"emergency prep\w*", r"preparedness", r"donation (?:days?|drives?|events?)", r"caregivers?",
+    r"ribbon cuttings?", r"city holiday", r"tree lots?", r"members?[- ]only",
+    # Academic and professional programs.
+    r"grand rounds", r"symposi(?:um|a)", r"conferences?(?! finals?)", r"colloqui(?:um|a)", r"speaker series",
+    r"lecture series", r"startups?", r"book clubs?", r"meetups?", r"networking",
+    # Bar nights and drop-in programs.
+    r"trivia", r"bingo", r"happy hours?", r"karaoke", r"open mics?", r"line dancing", r"drop-in", r"study hall",
+    # Venue tours and passes sold as events.
+    r"(?:stadium|ballpark|arena) tours?", r"all access pass",
+    # Sessions for one audience; the main listing of the same event stays.
+    r"senior (?:strolls?|nights?|days?|mornings?)", r"for seniors", r"low sensory", r"sensory[- ]friendly",
 )
+# A timed start from 1 am to before 5 am is almost always a mistyped pm in the source, so its hours are wrong.
+IMPLAUSIBLE_START_HOURS = range(1, 5)
 
 TYPE_PATTERNS = {
     "festival": _words(
@@ -79,12 +99,22 @@ def _norm(value: str) -> str:
 
 
 def is_noise(event: Event, config: SourceConfig) -> bool:
-    excluded = {_norm(name) for name in config.exclude_categories}
-    if any(_norm(name) in excluded for name in event.raw_categories):
+    categories = {_norm(name) for name in event.raw_categories}
+    if categories & {_norm(name) for name in config.exclude_categories}:
+        return True
+    if config.include_categories and not categories & {_norm(name) for name in config.include_categories}:
         return True
     if NOISE.search(event.title) or any(NOISE.search(name) for name in event.raw_categories):
         return True
     return _norm(event.location_text or "") in ONLINE_LOCATIONS
+
+
+def fix_implausible_time(event: Event) -> Event:
+    """An event whose listed start time is implausible keeps its date, listed as all day because its hours are wrong."""
+    if event.all_day or event.start.hour not in IMPLAUSIBLE_START_HOURS:
+        return event
+    day = datetime.combine(event.start.date(), time(0), tzinfo=LA)
+    return replace(event, start=day, end=day + timedelta(days=1), all_day=True)
 
 
 def categorize(event: Event) -> str:

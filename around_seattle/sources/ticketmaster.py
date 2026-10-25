@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import os
 import re
+from dataclasses import replace
 from datetime import datetime, time, timedelta, timezone
 
 from ..classify import TYPE_PATTERNS
@@ -22,6 +23,10 @@ ADD_ON = re.compile(r"\b(?:parking|vip|suites?|premium seating|platinum|upgrades
 TITLE_NOTES = (re.compile(r"\s*[-–—(]\s*moved to\b[^)]*\)?\s*$", re.IGNORECASE),
                re.compile(r"\s*\([^()]*\bpass(?:es)?\)\s*$", re.IGNORECASE))
 UTC_FORMAT = "%Y-%m-%dT%H:%M:%SZ"
+ARENA_BOOST = 26  # an arena or stadium show
+MAJOR_BOOST = 22  # a large theater or concert hall: a big show worth a place among a day's picks
+MIDSIZE_BOOST = 10
+NOTABLE_BOOST = 4  # an act with a Wikipedia page
 
 
 def collect(config: SourceConfig, http, window: Window, env=None) -> list[Event]:
@@ -31,7 +36,7 @@ def collect(config: SourceConfig, http, window: Window, env=None) -> list[Event]
     start = datetime.combine(window.today, time(0), tzinfo=LA).astimezone(timezone.utc)
     end = datetime.combine(window.far_end + timedelta(days=1), time(0), tzinfo=LA).astimezone(timezone.utc)
     events: list[Event] = []
-    saw_items = False
+    saw_items = parsed_any = False
     for page in range(config.max_pages):
         params = {"apikey": key, "dmaId": SEATTLE_TACOMA_DMA, "size": PAGE_SIZE, "page": page, "sort": "date,asc",
                   "startDateTime": start.strftime(UTC_FORMAT), "endDateTime": end.strftime(UTC_FORMAT)}
@@ -41,10 +46,12 @@ def collect(config: SourceConfig, http, window: Window, env=None) -> list[Event]
             raise SourceError("unexpected response")
         items = _as_dict(data.get("_embedded")).get("events") or []
         saw_items = saw_items or bool(items)
-        events.extend(event for event in (_safe_event(item, config) for item in items) if event is not None)
+        parsed = [(item, _safe_event(item, config)) for item in items]
+        parsed_any = parsed_any or any(event is not None for _, event in parsed)
+        events.extend(kept for kept in (tiered(event, item, config) for item, event in parsed) if kept is not None)
         if page + 1 >= _page_count(_as_dict(data.get("page")).get("totalPages")):
             break
-    if saw_items and not events:
+    if saw_items and not parsed_any:  # shows at unlisted venues are left out on purpose; that is not a failure
         raise SourceError("could not parse any items")
     return [event for event in events if in_window(event, window)]
 
@@ -133,6 +140,38 @@ def to_event(item, config: SourceConfig) -> Event | None:
         raw_categories=tuple(name for name in (segment, *genres) if name and name.casefold() != "undefined"),
         category=_category(segment, listing),
     )
+
+
+def tiered(event: Event | None, item: dict, config: SourceConfig) -> Event | None:
+    """The show with its venue tier's boost, or None when its venue is in no configured tier."""
+    if event is None:
+        return None
+    boost = _venue_boost(event.venue, item, config)
+    return None if boost is None else replace(event, boost=boost)
+
+
+def _venue_boost(venue_name: str | None, item: dict, config: SourceConfig) -> int | None:
+    """The score boost for a show's venue and act, or None to drop the show. With no tiers configured, keep every show."""
+    if not (config.arena_venues or config.major_venues or config.midsize_venues):
+        return 0
+    name = (venue_name or "").casefold()
+    notable = _has_wikipedia_page(item)
+    extra = NOTABLE_BOOST if notable else 0
+    for fragments, boost in ((config.arena_venues, ARENA_BOOST), (config.major_venues, MAJOR_BOOST)):
+        if any(fragment.casefold() in name for fragment in fragments):
+            return boost + extra
+    if notable and any(fragment.casefold() in name for fragment in config.midsize_venues):
+        return MIDSIZE_BOOST + extra
+    return None
+
+
+def _has_wikipedia_page(item: dict) -> bool:
+    """Whether any of the show's acts links to Wikipedia, a cheap sign of a notable act."""
+    for attraction in (item.get("_embedded") or {}).get("attractions") or []:
+        links = attraction.get("externalLinks") if isinstance(attraction, dict) else None
+        if isinstance(links, dict) and links.get("wiki"):
+            return True
+    return False
 
 
 def _strip_notes(listing: str) -> str:
