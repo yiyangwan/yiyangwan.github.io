@@ -8,5 +8,8 @@ hidden/*
 # versions of the CV — that is how a stale copy came to be served at
 # /CV/backups/ on the live site. Keep them local.
 CV/backups/
+# Backup copies (for example CV/yiyangwang_cv.tex.bak.20260909-004143) hold old CV text, so they stay local too.
+*.bak
+*.bak.*
 docs/
 
