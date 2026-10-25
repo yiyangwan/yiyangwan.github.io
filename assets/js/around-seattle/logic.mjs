@@ -14,7 +14,7 @@ export const CATEGORY_LABELS = Object.freeze({
 export const FILTER_TYPES = Object.freeze(["festival", "music", "market", "outdoors", "arts"]);
 export const CONDITIONS = Object.freeze(["clear", "partly", "mostly-cloudy", "cloudy", "fog", "smoke", "rain", "snow",
   "storm"]);
-export const LIMITS = Object.freeze({ picks: 8, today: 4, weekendDay: 4, comingDay: 2, weekList: 8 });
+export const LIMITS = Object.freeze({ picks: 8, today: 3, weekendDay: 3, comingDay: 2, weekList: 6 });
 
 const HOUR_MS = 3_600_000;
 const DAY_MS = 24 * HOUR_MS;
@@ -203,9 +203,8 @@ export function pickItems(picks, seasonal) {
   return [...dated, ...runs];
 }
 
-export function todayEmptyLine(plan, fallback) {
-  const pickToday = plan.picks.some((event) => coversDay(event, plan.todayKey));
-  return pickToday ? "Nothing else today. See Don't miss above." : fallback;
+export function todayEmptyLine(pickCount, fallback) {
+  return pickCount > 0 ? "Nothing else stands out today. See Don't miss above." : fallback;
 }
 
 export function matchesFilters(item, filters = {}) {

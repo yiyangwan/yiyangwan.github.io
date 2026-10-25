@@ -390,15 +390,9 @@ test("formatPickWhen says when a pick is on, relative to today", () => {
     today), "Sat, Nov 7, 11 am to 5 pm");
 });
 
-test("todayEmptyLine points to the picks when one is on today", () => {
-  const now = at("2026-10-24T09:30:00-07:00");
-  const coffee = ev({ id: "coffee", highlight: true, start: at("2026-10-24T09:00:00-07:00"),
-    end: at("2026-10-25T16:30:00-07:00") });
-  const muertos = ev({ id: "muertos", highlight: true, allDay: true, start: at("2026-10-31T00:00:00-07:00"),
-    end: at("2026-11-02T00:00:00-08:00") });
-  assert.equal(L.todayEmptyLine(L.planSections([coffee, muertos], now), "Nothing listed yet."),
-    "Nothing else today. See Don't miss above.");
-  assert.equal(L.todayEmptyLine(L.planSections([muertos], now), "Nothing listed yet."), "Nothing listed yet.");
+test("todayEmptyLine points to Don't miss when it has anything", () => {
+  assert.equal(L.todayEmptyLine(3, "Nothing stands out yet."), "Nothing else stands out today. See Don't miss above.");
+  assert.equal(L.todayEmptyLine(0, "Nothing stands out yet."), "Nothing stands out yet.");
 });
 
 test("pickItems lists dated picks first, then long runs and seasonal sights by which ends soonest", () => {

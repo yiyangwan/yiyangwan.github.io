@@ -179,7 +179,7 @@ function renderSections(now) {
   const { data, filters } = state;
   const plan = planSections(data.events.filter((event) => matchesFilters(event, filters)), now);
   const seasonal = data.seasonal.filter((pick) => matchesFilters(pick, filters));
-  const none = isFiltered(filters) ? "Nothing here matches your filters." : "Nothing listed yet.";
+  const none = isFiltered(filters) ? "Nothing here matches your filters." : "Nothing stands out yet.";
 
   const picks = pickItems(plan.picks, seasonal);
   const renderPick = ({ event, pick }) => (event
@@ -192,7 +192,7 @@ function renderSections(now) {
   fill("around-today", plan.today.length
     ? eventList(plan.today, { id: "list-today", limit: LIMITS.today, level: 3, when: formatWhen, summary: "line",
       featuredFirst: true })
-    : [empty(todayEmptyLine(plan, none))]);
+    : [empty(isFiltered(filters) ? none : todayEmptyLine(picks.length, none))]);
   byId("around-weekend-h").textContent = plan.weekendLabel;
   fill("around-weekend", plan.weekend.map((day) => dayBlock(day, LIMITS.weekendDay, "line", none)));
   fill("around-coming", plan.comingUp.length

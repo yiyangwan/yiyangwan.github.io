@@ -3,9 +3,9 @@
 # Each source is a calendar that is curated at the source: a venue's or organizer's own programs, or a
 # category of a wider calendar. weight is how much a listing from it counts toward an event's score.
 near:
-  min_score: 45  # an event in the next two weeks needs this score to be listed at all
+  min_score: 55  # an event in the next two weeks needs this score to be listed at all
 further_ahead:
-  min_score: 62
+  min_score: 66
   max_events: 10
 sources:
   - id: woodland-park-zoo
@@ -74,7 +74,7 @@ sources:
     min_interval_seconds: 0.25  # the API allows 5 requests per second
     respect_robots: false  # documented API; access is governed by its terms of use
     secret_env: TICKETMASTER_API_KEY
-    day_cap: 2  # at most two shows a day; the rest fall below the listing floor
+    day_cap: 1  # at most one show a day, the best-scoring; the rest fall below the listing floor
     # Shows at arena and major venues are kept, arenas ranking higher; at midsize venues, only acts with a
     # Wikipedia page are kept. Every other venue's shows are left out.
     arena_venues: [Climate Pledge Arena, Lumen Field, T-Mobile Park, WAMU Theater]

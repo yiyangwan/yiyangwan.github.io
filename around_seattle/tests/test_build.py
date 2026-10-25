@@ -68,13 +68,13 @@ def test_repo_config_and_seasonal_picks_load():
     configs, limits = build.load_sources(build.DEFAULT_CONFIG_DIR / "sources.yml")
     assert [c.id for c in configs] == ["woodland-park-zoo", "downtown-seattle", "town-hall", "seattle-gov",
                                        "experience-redmond", "redmond-city", "ticketmaster"]
-    assert limits == {"near_min_score": 45, "min_score": 62, "max_events": 10}
+    assert limits == {"near_min_score": 55, "min_score": 66, "max_events": 10}
     ticketmaster = configs[-1]
     assert (ticketmaster.secret_env, ticketmaster.respect_robots, ticketmaster.region) == (
         "TICKETMASTER_API_KEY", False, None)
     assert "Climate Pledge Arena" in ticketmaster.arena_venues and "Paramount Theatre" in ticketmaster.major_venues
     assert "Neptune Theatre" in ticketmaster.midsize_venues
-    assert [c.day_cap for c in configs] == [None] * 6 + [2]
+    assert [c.day_cap for c in configs] == [None] * 6 + [1]
     assert {c.id: c.include_categories for c in configs if c.include_categories} == {
         "town-hall": ("Town Hall Presents",),
         "seattle-gov": ("Festivals/Fairs", "Holiday/Seasonal Events"),
